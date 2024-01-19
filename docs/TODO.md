@@ -24,7 +24,9 @@
     - including those which will be inside track
   - 🚧 can specify "track"
     - ✅ specify type
-    - migrate to tracks
+    - ✅ replace `shared` and `durations` with track
+    - BUG on HMR whilst `lie` then spawn away
+    - 🚧 migrate to tracks
     - walk -> idle creates tracks
   - cross -> step frame should reverse to cross
   - step -> cross frame should continue to cross

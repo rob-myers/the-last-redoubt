@@ -37,9 +37,9 @@ declare namespace NPC {
 
     // 🚧
     //#region top-level anim
+    tr: Track;
+
     animName: SpineAnimName;
-    /** The duration of each frame in seconds. Depends on walk speed. */
-    durations: number[];
     /**
      * SpriteSheet-normalized time.
      * - starts from `0` when walk begins
@@ -57,10 +57,10 @@ declare namespace NPC {
      * - Moreover, sometimes we want to "walk-in-place" by setting this `false`.
      */
     rootMotion: boolean;
-    shared: SharedAnimData;
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
     //#endregion
+
 
     el: {// 🚧 old
       root: HTMLDivElement;
@@ -210,6 +210,7 @@ declare namespace NPC {
     
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
+    setTrack(animName: SpineAnimName, opts?: SubTrackOpts);
     showBounds(shouldShow: boolean): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     setupAnim(animName: SpineAnimName): void;
@@ -367,9 +368,9 @@ declare namespace NPC {
   }
   
   interface Track {
-    name: string;
     animName: string;
-    /** Length @see length */
+    headSkinRect: Geom.RectJson;
+    /** Body rects in SpriteSheet, length @see length */
     bodys: Geom.RectJson[];
     /** Root motion deltas, length @see length */
     deltas: null | number[];
@@ -377,12 +378,18 @@ declare namespace NPC {
     durs: number[];
     /** Undefined iff should loop */
     end?(): void;
-    /** Length @see length */
+    /** Implicit head rects on body rects in SpriteSheet, length @see length */
     heads: (Geom.RectJson & { angle: number; })[];
     /** Number of frames */
     length: number;
-    /** Length @see length */
+    /** Neck positions, length @see length */
     necks: Geom.VectJson[];
+  }
+
+  interface SubTrackOpts {
+    src?: number;
+    dst?: number;
+    end?(): void;
   }
 
 

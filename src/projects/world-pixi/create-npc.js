@@ -18,30 +18,33 @@ import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
  */
 export default function createNpc(def, api) {
   const { baseTexture } = api.npcs.tex;
-  const sharedAnimData = getSharedAnimData('idle');
+
+  const body = new Sprite(new Texture(baseTexture));
+  const head = new Sprite(new Texture(baseTexture));
+
+  body.scale.set(spineMeta.npcScaleFactor);
+  // Head anchor is neck position when idle
+  head.anchor.set(// 🚧 precompute
+    (spineMeta.anim.idle.neckPositions[0].x - spineMeta.anim.idle.headFrames[0].x) / spineMeta.anim.idle.headFrames[0].width,
+    (spineMeta.anim.idle.neckPositions[0].y - spineMeta.anim.idle.headFrames[0].y) / spineMeta.anim.idle.headFrames[0].height,
+  );
 
   return {
     key: def.key,
     classKey: def.classKey,
     epochMs: Date.now(),
     def,
-
+    tr: setTrack('idle', def.classKey, def.walkSpeed),
     animName: 'idle',
     distance: 0,
-    durations: getAnimDurations(sharedAnimData, def.walkSpeed),
     frame: 0,
     neckAngle: 0,
     rootMotion: false,
-    shared: sharedAnimData, // 🚧 move into track
     time: 0,
     walkSpeed: def.walkSpeed,
 
     el: /** @type {*} */ ({}), // Fix types during migration
-    s: {
-      body: new Sprite(new Texture(baseTexture)),
-      head: new Sprite(new Texture(baseTexture)),
-      // bounds: new Sprite(new Texture(baseTexture)),
-    },
+    s: { body, head },
 
     anim: /** @type {*} */ ({}), // Fix types during migration
     a: {
@@ -602,33 +605,23 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
     setupAnim(animName) {
-      const { a, s } = this;
+      const { a, s, tr } = this;
       this.animName = animName;
       this.time = 0;
       this.frame = 0;
       this.distance = 0;
       
-      const { headOrientKey } = spineAnimSetup[animName]
-      const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
-      
-      this.shared = getSharedAnimData(animName);
-      this.durations = getAnimDurations(this.shared, this.getSpeed());
-
-      // Changing frame width/height later deforms image
-      const bodyRect = this.shared.bodyRects[this.time];
-      const headRect = spineMeta.head[a.headSkinName].packedHead[headOrientKey];
+      // 🔔 currently every body frame has same width/height
+      const bodyRect = tr.bodys[this.frame];
       s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
+      const headRect = tr.headSkinRect;
       s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
-      // Body anchor is (0, 0) in spine world coords
-      s.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
-      // Head anchor is neck position
-      s.head.anchor.set(
-        (neckPositions[0].x - headFrames[0].x) / headFrames[0].width,
-        (neckPositions[0].y - headFrames[0].y) / headFrames[0].height,
-      );
-      
-      s.body.scale.set(spineMeta.npcScaleFactor);
+      // 🔔 currently every body frame has same width/height
+      // body anchor is (0, 0) in spine world coords
+      const localBodyBounds = spineMeta.anim[animName].animBounds;
+      body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
+
       s.body.rotation = this.getAngle();
       a.initHeadWidth = headRect.width;
 
@@ -645,6 +638,10 @@ export default function createNpc(def, api) {
     },
     setInteractRadius(radius) {
       // 🚧 currently unsupported
+    },
+    setTrack(animName, opts) {
+      // 🚧 support opts.{src,dst}
+      this.tr = setTrack(animName, def.classKey, this.walkSpeed, opts);
     },
     showBounds(shouldShow) {
       const { bounds } = this.s;
@@ -677,6 +674,7 @@ export default function createNpc(def, api) {
       switch (animName) {
         case 'walk': {
           this.rootMotion = true;
+          this.setTrack(animName);
           this.setupAnim(animName);
           // 🚧 chained rotation tweens
           // - can use `aux.sofars[i] / aux.total`
@@ -697,6 +695,7 @@ export default function createNpc(def, api) {
             this.obscureBySurfaces();
           }
           this.a.rotate = emptyTween;
+          this.setTrack(animName);
           this.setupAnim(animName);
           break;
         default:
@@ -729,7 +728,6 @@ export default function createNpc(def, api) {
         return; // Avoid infinite loop?
       }
       if (this.animName === 'walk') {
-        this.durations = getAnimDurations(this.shared, walkSpeed);
         // 🚧 chained rotate tween
         const totalMs = (this.a.aux.total - this.distance) * this.getAnimScaleFactor();
         this.a.rotate.stop().to({}, totalMs).start();
@@ -738,16 +736,16 @@ export default function createNpc(def, api) {
       this.walkSpeed = walkSpeed;
     },
     updateFrame() {
-      return this.frame = Math.floor(this.time) % this.shared.frameCount;
+      return this.frame = Math.floor(this.time) % this.tr.length;
     },
     updateHead() {
       const { body, head } = this.s;
-      const { headFrames, neckPositions } = this.shared;
+      const { heads, necks } = this.tr;
 
       // const currFrame = this.getFrame();
       const currFrame = this.frame;
-      const { angle, width } = headFrames[currFrame];
-      const neckPos = neckPositions[currFrame];
+      const { angle, width } = heads[currFrame];
+      const neckPos = necks[currFrame];
       const radians = body.rotation;
 
       head.angle = angle + body.angle + this.neckAngle;
@@ -761,17 +759,13 @@ export default function createNpc(def, api) {
       // Fix types during migration
     },
     updateSprites() {
-      const { bodyRects, rootDeltas } = this.shared;
+      const { bodys, deltas } = this.tr;
       const { body } = this.s;
 
-      // 🚧 permitting reverse is complex
-      // try "tracks" e.g. { bodyRects, durs, headRects, necks }
-      // e.g. walk -> idle is a specific non-looping "track"
-
-      body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[this.frame]), baseTexture, 0);
+      body.texture._uvs.set(/** @type {Rectangle} */ (bodys[this.frame]), baseTexture, 0);
       const radians = body.rotation;
-      if (this.rootMotion === true) {
-        const rootDelta = rootDeltas[this.frame];
+      if (deltas) {
+        const rootDelta = deltas[this.frame];
         body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
         body.y -= rootDelta * Math.cos(radians);
       }
@@ -785,7 +779,8 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
-      if (this.a.paused === true || this.shared.frameCount === 1) {
+      const { length, durs } = this.tr;
+      if (this.a.paused === true || length === 1) {
         return;
       }
       const deltaSecs = deltaRatio * (1 / 60);
@@ -793,16 +788,16 @@ export default function createNpc(def, api) {
 
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-      let lag = ((this.time % 1) * this.durations[this.frame]) + deltaSecs;
+      let lag = ((this.time % 1) * durs[this.frame]) + deltaSecs;
 
-      while (lag >= this.durations[this.frame]) {
-        lag -= this.durations[this.frame];
+      while (lag >= durs[this.frame]) {
+        lag -= durs[this.frame];
         this.time++;
-        this.distance += this.rootMotion === true ? this.shared.rootDeltas[this.frame] : 0;
-        this.frame = this.frame === this.shared.frameCount - 1 ? 0 : this.frame + 1;
+        this.distance += this.tr.deltas?.[this.frame] ?? 0;
+        this.frame = this.frame === this.tr.length - 1 ? 0 : this.frame + 1;
         shouldUpdate = true;
       }
-      this.time = Math.floor(this.time) + lag / this.durations[this.frame];
+      this.time = Math.floor(this.time) + lag / durs[this.frame];
 
       if (shouldUpdate === true) {
         this.updateSprites();
@@ -861,7 +856,7 @@ export default function createNpc(def, api) {
     },
     async walkToIdle() {
       const fr = this.frame;
-      const fc = this.shared.frameCount;
+      const fc = this.tr.length;
       this.a.paused = true;
       if (
         (fr > fc * (1/8) && fr < fc * (3/8))
@@ -914,39 +909,34 @@ export default function createNpc(def, api) {
  * @returns {NPC.NPC}
  */
 export function hotModuleReloadNpc(npc, api) {
-  const { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk } = npc;
-  return Object.assign(npc, createNpc(def, api), { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk });
+  const { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk, tr, frame, distance, time, animName } = npc;
+  return Object.assign(npc, createNpc(def, api), { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk, tr, frame, distance, time, animName });
 }
 
 /**
- * @param {NPC.SpineAnimName} animName
- * @returns {NPC.SharedAnimData}
- */
-function getSharedAnimData(animName) {
-  const { headFrames, frameCount, rootDeltas, neckPositions } = spineMeta.anim[animName];
-  return sharedAnimData[animName] ??= {
-    animName,
-    frameCount,
-    bodyRects: spineMeta.anim[animName].packedRects,
-    headFrames,
-    neckPositions,
-    rootDeltas,
-    headOrientKey: spineAnimSetup[animName].headOrientKey,
-    stationaryFps: spineAnimSetup[animName].stationaryFps,
-  };
-}
-
-/**
- * Get anim duration per frame, in seconds.
- * @param {NPC.SharedAnimData} shared 
+ * @param {NPC.SpineAnimName} animName 
+ * @param {NPC.NpcClassKey} classKey
  * @param {number} walkSpeed World units per second
+ * @param {NPC.SubTrackOpts} [opts]
  */
-function getAnimDurations(shared, walkSpeed) {
-  if (shared.rootDeltas.length) {// rootDeltas in our world coords
-    return shared.rootDeltas.map(delta => delta / walkSpeed);
-  } else {
-    return [...Array(shared.frameCount)].map(_ => 1 / shared.stationaryFps);
-  }
+function setTrack(animName, classKey, walkSpeed, opts) {
+  const { frameCount, headFrames, neckPositions, packedRects, rootDeltas } = spineMeta.anim[animName];
+  const { stationaryFps } = spineAnimSetup[animName];
+  return {
+    animName,
+    headSkinRect: spineMeta.head[
+      npcClassToSpineHeadSkin[classKey]
+    ].packedHead[
+      spineAnimSetup[animName].headOrientKey
+    ],
+    bodys: packedRects,
+    deltas: rootDeltas.length ? rootDeltas : null,
+    durs: rootDeltas.length ? rootDeltas.map(x => x / walkSpeed) : packedRects.map(_ => 1 / stationaryFps),
+    end: opts?.end,
+    heads: headFrames,
+    length: frameCount,
+    necks: neckPositions,
+  };
 }
 
 /** @type {NPC.TweenExt} */

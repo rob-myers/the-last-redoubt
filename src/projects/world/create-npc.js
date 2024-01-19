@@ -24,14 +24,13 @@ export default function createNpc(
     def,
 
     // Fix types during migration
+    tr: /** @type {*} */ ({}),
     animName: 'idle',
     walkSpeed: 1,
-    durations: [],
     distance: 0,
     frame: 0,
     neckAngle: 0,
     rootMotion: false,
-    shared: /** @type {*} */ ({}),
     time: 0,
 
     el: {
@@ -772,6 +771,9 @@ export default function createNpc(
       } else {
         this.el.root.style.removeProperty(cssName.npcsInteractRadius);
       }
+    },
+    setTrack() {
+      // Fix types during migration
     },
     startAnimation(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {
