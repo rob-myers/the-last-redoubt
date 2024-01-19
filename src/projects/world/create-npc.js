@@ -23,6 +23,9 @@ export default function createNpc(
     epochMs: Date.now(),
     def,
 
+    // Fix types during migration
+    frame: 0,
+
     el: {
       root: /** @type {HTMLDivElement} */ ({}),
       body: /** @type {HTMLDivElement} */ ({}),
@@ -359,7 +362,7 @@ export default function createNpc(
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
       return Math.atan2(matrix.m12, matrix.m11);
     },
-    getFrame() {
+    updateFrame() {
       return 0; // Fix types during migration
     },
     getInteractRadius() {

@@ -35,6 +35,9 @@ declare namespace NPC {
     /** Definition of NPC */
     def: NPCDef;
 
+    // 🚧 move into top-level
+    frame: number;
+
     el: {// 🚧 old
       root: HTMLDivElement;
       body: HTMLDivElement;
@@ -116,7 +119,7 @@ declare namespace NPC {
     ): Promise<void>;
     /** Radians in `[-π, +π]` */
     getAngle(): number;
-    getFrame(): number;
+    updateFrame(): number; // Unused atm
     getWalkAnimDef(): NpcAnimDef;
     /**
      * - Used to scale up how long it takes to move along navpath.

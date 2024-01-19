@@ -15,23 +15,27 @@
 - more tables in 301
 - more tables in 101
 
+- 🚧 redo walk -> idle (again)
+  - ✅ spine walk has event `feet-cross`
+  - ✅ spine-meta.json computes "4 parts of walk":
+    - [cross-frame, step-frame, cross-frame, step-frame]
+  - ✅ avoid recomputing frame
+  - 🚧 move anim props to top-level
+    - including those which will be inside track
+  - 🚧 can specify "track"
+  - cross -> step frame should reverse to cross
+  - step -> cross frame should continue to cross
+
 - 🚧 improve npc
   - ✅ drop shadow
   - ✅ better transition walk -> idle
-  - 🚧 redo walk -> idle (again)
-    - ✅ spine walk has event `feet-cross`
-    - ✅ spine-meta.json computes "4 parts of walk":
-      - cross-frame, step-frame, cross-frame, step-frame
-    - can "override" frame sequence (to permit reversal),
-      where rootMotion stopped AND bodyRects overridden
-    - cross -> step frame should reverse to cross
-    - step -> cross frame should continue to cross
   - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
   - understand HMR bugs?
     - `api ticker.count` should be `1`
 
+- ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
 - BUG TypeError:
   - Cannot destructure property 'gmId' of 'wayMetas[0]' as it is undefined.
     at Object.predictNpcNpcCollision (use-handle-events.js:429:1)
