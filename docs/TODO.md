@@ -25,8 +25,8 @@
   - 🚧 can specify "track"
     - ✅ specify type
     - ✅ replace `shared` and `durations` with track
+    - 🚧 use frame{,Ptr,Map,Finish}
     - BUG on HMR whilst `lie` then spawn away
-    - 🚧 migrate to tracks
     - walk -> idle creates tracks
   - cross -> step frame should reverse to cross
   - step -> cross frame should continue to cross

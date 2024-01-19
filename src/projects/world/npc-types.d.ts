@@ -37,7 +37,12 @@ declare namespace NPC {
 
     // 🚧
     //#region top-level anim
+    /** Track */
     tr: Track;
+    
+    framePtr: number;
+    frameMap: number[];
+    frameFinish?(): void;
 
     animName: SpineAnimName;
     /**
@@ -351,20 +356,6 @@ declare namespace NPC {
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
-  }
-
-  // 🚧 remove
-  /** Shared amongst possibly many npcs */
-  interface SharedAnimData {
-    animName: SpineAnimName;
-    frameCount: number;
-    bodyRects: Geom.RectJson[];
-    headFrames: (Geom.RectJson & { angle: number; })[];
-    neckPositions: Geom.VectJson[];
-    rootDeltas: number[];
-    /** From `spineAnimToSetup` */
-    headOrientKey: NPC.SpineHeadOrientKey;
-    stationaryFps: number;
   }
   
   interface Track {

@@ -34,10 +34,13 @@ export default function createNpc(def, api) {
     classKey: def.classKey,
     epochMs: Date.now(),
     def,
+
     tr: setTrack('idle', def.classKey, def.walkSpeed),
     animName: 'idle',
     distance: 0,
     frame: 0,
+    frameMap: [0],
+    framePtr: 0,
     neckAngle: 0,
     rootMotion: false,
     time: 0,
@@ -640,8 +643,10 @@ export default function createNpc(def, api) {
       // 🚧 currently unsupported
     },
     setTrack(animName, opts) {
-      // 🚧 support opts.{src,dst}
       this.tr = setTrack(animName, def.classKey, this.walkSpeed, opts);
+      // 🚧 opts.{src,dst} should alter frameMap and (initially) frame
+      this.framePtr = 0;
+      this.frameMap = this.tr.bodys.map((_, i) => i);
     },
     showBounds(shouldShow) {
       const { bounds } = this.s;
@@ -785,6 +790,7 @@ export default function createNpc(def, api) {
       }
       const deltaSecs = deltaRatio * (1 / 60);
       let shouldUpdate = false;
+      // 🚧 compute dur on-the-fly based on walkSpeed?
 
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
@@ -794,7 +800,13 @@ export default function createNpc(def, api) {
         lag -= durs[this.frame];
         this.time++;
         this.distance += this.tr.deltas?.[this.frame] ?? 0;
-        this.frame = this.frame === this.tr.length - 1 ? 0 : this.frame + 1;
+        // fr = { index, map, curr }: index points into map yielding curr
+        if (++this.framePtr === this.frameMap.length) {
+          this.frameFinish?.();
+          this.framePtr = 0;
+        }
+        // this.frame = this.frame === this.tr.length - 1 ? 0 : this.frame + 1;
+        this.frame = this.frameMap[this.framePtr];
         shouldUpdate = true;
       }
       this.time = Math.floor(this.time) + lag / durs[this.frame];
@@ -918,6 +930,7 @@ export function hotModuleReloadNpc(npc, api) {
  * @param {NPC.NpcClassKey} classKey
  * @param {number} walkSpeed World units per second
  * @param {NPC.SubTrackOpts} [opts]
+ * @returns {NPC.Track}
  */
 function setTrack(animName, classKey, walkSpeed, opts) {
   const { frameCount, headFrames, neckPositions, packedRects, rootDeltas } = spineMeta.anim[animName];
@@ -945,9 +958,3 @@ const emptyTween = Object.assign(new TWEEN.Tween({}), {
 });
 
 const emptyFn = () => {};
-
-const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
-  {}
-);
-
-const tempVec = new Vect;

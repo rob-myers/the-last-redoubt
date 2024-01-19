@@ -29,6 +29,8 @@ export default function createNpc(
     walkSpeed: 1,
     distance: 0,
     frame: 0,
+    frameMap: [0],
+    framePtr: 0,
     neckAngle: 0,
     rootMotion: false,
     time: 0,
