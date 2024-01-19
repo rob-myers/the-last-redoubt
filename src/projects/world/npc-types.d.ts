@@ -306,7 +306,7 @@ declare namespace NPC {
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }
-  // 🚧 new
+
   interface AnimData {
     paused: boolean;
     /** Path for walking along */
@@ -352,6 +352,7 @@ declare namespace NPC {
     wayTimeoutId: number;
   }
 
+  // 🚧 remove
   /** Shared amongst possibly many npcs */
   interface SharedAnimData {
     animName: SpineAnimName;
@@ -364,6 +365,26 @@ declare namespace NPC {
     headOrientKey: NPC.SpineHeadOrientKey;
     stationaryFps: number;
   }
+  
+  interface Track {
+    name: string;
+    animName: string;
+    /** Length @see length */
+    bodys: Geom.RectJson[];
+    /** Root motion deltas, length @see length */
+    deltas: null | number[];
+    /** Frame durations (secs), length @see length */
+    durs: number[];
+    /** Undefined iff should loop */
+    end?(): void;
+    /** Length @see length */
+    heads: (Geom.RectJson & { angle: number; })[];
+    /** Number of frames */
+    length: number;
+    /** Length @see length */
+    necks: Geom.VectJson[];
+  }
+
 
   /**
    * - `none`: do not try to open doors
