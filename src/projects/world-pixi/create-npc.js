@@ -3,7 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { pause, precision, testNever } from "../service/generic";
+import { precision, testNever } from "../service/generic";
 import { warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
 import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius } from "./const";
@@ -26,8 +26,15 @@ export default function createNpc(def, api) {
     epochMs: Date.now(),
     def,
 
-    // 🚧 collapse `a` here
-    frame: 0, // derived from normalizedTime
+    animName: 'idle',
+    distance: 0,
+    durations: getAnimDurations(sharedAnimData, def.walkSpeed),
+    frame: 0,
+    neckAngle: 0,
+    rootMotion: false,
+    shared: sharedAnimData, // 🚧 move into track
+    time: 0,
+    walkSpeed: def.walkSpeed,
 
     el: /** @type {*} */ ({}), // Fix types during migration
     s: {
@@ -38,12 +45,7 @@ export default function createNpc(def, api) {
 
     anim: /** @type {*} */ ({}), // Fix types during migration
     a: {
-      animName: 'idle',
       paused: false,
-      walkSpeed: def.walkSpeed,
-      rootMotion: false,
-
-      shared: sharedAnimData,
 
       path: [],
       aux: {
@@ -64,11 +66,6 @@ export default function createNpc(def, api) {
       rotate: emptyTween,
       deferred: { resolve: emptyFn, reject: emptyFn },
 
-      durations: getAnimDurations(sharedAnimData, def.walkSpeed),
-      normalizedTime: 0,
-      distance: 0,
-
-      neckAngle: 0,
       headSkinName: npcClassToSpineHeadSkin[def.classKey],
       initHeadWidth: 0,
       
@@ -133,7 +130,7 @@ export default function createNpc(def, api) {
       this.a.rotate.stop();
       this.a.deferred.reject('cancelled');
 
-      if (this.a.animName === 'walk') {
+      if (this.animName === 'walk') {
         this.nextWalk = null;
         this.clearWayMetas(); // Cancel pending actions
         this.startAnimation('idle'); // Must change to stop walking?
@@ -142,8 +139,8 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
     canLook() {
-      return (this.a.animName === 'idle' ||
-        this.a.animName === 'idle-breathe') && !this.doMeta;
+      return (this.animName === 'idle' ||
+        this.animName === 'idle-breathe') && !this.doMeta;
     },
     changeClass(npcClassKey) {
       this.classKey = npcClassKey;
@@ -239,7 +236,7 @@ export default function createNpc(def, api) {
     extendNextWalk(...points) {// 👈 often a single point
       const currentNavPath = this.navPath;
       if (!this.isWalking() || !currentNavPath || currentNavPath.path.length === 0) {
-        return warn(`extendNextWalk: ${this.a.animName}: must be walking`);
+        return warn(`extendNextWalk: ${this.animName}: must be walking`);
       }
       if (points.length === 0) {
         return;
@@ -295,7 +292,7 @@ export default function createNpc(def, api) {
       this.a.gmRoomIds = gmRoomIds;
       this.a.doorStrategy = doorStrategy ?? 'none';
       // reset to default speed?
-      this.a.walkSpeed = this.def.walkSpeed;
+      this.walkSpeed = this.def.walkSpeed;
 
       this.clearWayMetas();
       this.computeAnimAux();
@@ -328,7 +325,7 @@ export default function createNpc(def, api) {
         console.log(`followNavPath: ${this.key} cancelled walk`);
         throw Error('cancelled');
       } finally {// Reset speed to default?
-        this.a.walkSpeed = this.def.walkSpeed;
+        this.walkSpeed = this.def.walkSpeed;
       }
     },
     getAnimScaleFactor() {
@@ -371,14 +368,14 @@ export default function createNpc(def, api) {
       return npcRadius;
     },
     getSpeed() {
-      return this.a.walkSpeed;
+      return this.walkSpeed;
     },
     getStaticBounds() {
       return this.a.staticBounds;
     },
     getTarget() {
       if (this.isWalking()) {
-        const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.a.distance);
+        const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.distance);
         // Expect -1 iff at final point
         return nextIndex === -1 ? null : this.a.path[nextIndex].clone();
       } else {
@@ -387,7 +384,7 @@ export default function createNpc(def, api) {
     },
     getTargets() {
       if (this.isWalking()) {
-        const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.a.distance);
+        const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.distance);
         return nextIndex === -1 ? [] : this.a.path.slice(nextIndex).map(p => p.clone());
       } else {
         return [];
@@ -428,7 +425,7 @@ export default function createNpc(def, api) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
     },
     isIdle() {
-      return ['idle', 'idle-breathe'].includes(this.a.animName);
+      return ['idle', 'idle-breathe'].includes(this.animName);
     },
     isPaused() {
       return this.a.paused;
@@ -457,7 +454,7 @@ export default function createNpc(def, api) {
       }
     },
     isWalking() {
-      return this.a.animName === 'walk';
+      return this.animName === 'walk';
     },
     async lookAt(point) {
       if (!Vect.isVectJson(point)) {
@@ -483,7 +480,7 @@ export default function createNpc(def, api) {
     },
     nextWayTimeout() {
       if (this.a.wayMetas[0]) {
-        const msToWait = (this.a.wayMetas[0].length - this.a.distance) * this.getAnimScaleFactor();
+        const msToWait = (this.a.wayMetas[0].length - this.distance) * this.getAnimScaleFactor();
         this.a.wayTimeoutId = window.setTimeout(this.wayTimeout.bind(this), msToWait);
       }
     },
@@ -581,7 +578,7 @@ export default function createNpc(def, api) {
       this.a.rotate.pause();
       this.a.paused = true;
 
-      if (this.a.animName === 'walk') {
+      if (this.animName === 'walk') {
         window.clearTimeout(this.a.wayTimeoutId);
       }
 
@@ -598,7 +595,7 @@ export default function createNpc(def, api) {
       this.forcePaused = false;
       this.a.paused = false;
 
-      if (this.a.animName === 'walk') {
+      if (this.animName === 'walk') {
         this.nextWayTimeout();
       }
 
@@ -606,19 +603,19 @@ export default function createNpc(def, api) {
     },
     setupAnim(animName) {
       const { a, s } = this;
-      a.animName = animName;
-      a.normalizedTime = 0;
+      this.animName = animName;
+      this.time = 0;
       this.frame = 0;
-      a.distance = 0;
+      this.distance = 0;
       
       const { headOrientKey } = spineAnimSetup[animName]
       const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
       
-      a.shared = getSharedAnimData(animName);
-      a.durations = getAnimDurations(a.shared, this.getSpeed());
+      this.shared = getSharedAnimData(animName);
+      this.durations = getAnimDurations(this.shared, this.getSpeed());
 
       // Changing frame width/height later deforms image
-      const bodyRect = a.shared.bodyRects[a.normalizedTime];
+      const bodyRect = this.shared.bodyRects[this.time];
       const headRect = spineMeta.head[a.headSkinName].packedHead[headOrientKey];
       s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
       s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
@@ -675,11 +672,11 @@ export default function createNpc(def, api) {
     // 🚧 fix "final walk frame jerk" elsewhere
     startAnimation(animName) {
       this.a.rotate.stop();
-      this.a.animName = animName;
+      this.animName = animName;
       
       switch (animName) {
         case 'walk': {
-          this.a.rootMotion = true;
+          this.rootMotion = true;
           this.setupAnim(animName);
           // 🚧 chained rotation tweens
           // - can use `aux.sofars[i] / aux.total`
@@ -693,7 +690,7 @@ export default function createNpc(def, api) {
         case 'idle-breathe':
         case 'lie':
         case 'sit':
-          this.a.rootMotion = false;
+          this.rootMotion = false;
           this.clearWayMetas();
           this.updateStaticBounds();
           if (animName === 'sit') {// Ensure feet are below surfaces
@@ -725,27 +722,27 @@ export default function createNpc(def, api) {
     },
     setWalkSpeed(walkSpeed, temporary = true) {
       // By default, speed changes whilst walking are temporary
-      if (!(this.a.animName === 'walk' && temporary)) {
+      if (!(this.animName === 'walk' && temporary)) {
         this.def.walkSpeed = walkSpeed;
       }
-      if (this.a.walkSpeed === walkSpeed) {
+      if (this.walkSpeed === walkSpeed) {
         return; // Avoid infinite loop?
       }
-      if (this.a.animName === 'walk') {
-        this.a.durations = getAnimDurations(this.a.shared, walkSpeed);
+      if (this.animName === 'walk') {
+        this.durations = getAnimDurations(this.shared, walkSpeed);
         // 🚧 chained rotate tween
-        const totalMs = (this.a.aux.total - this.a.distance) * this.getAnimScaleFactor();
+        const totalMs = (this.a.aux.total - this.distance) * this.getAnimScaleFactor();
         this.a.rotate.stop().to({}, totalMs).start();
       }
-      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.a.walkSpeed, speed: walkSpeed });
-      this.a.walkSpeed = walkSpeed;
+      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.walkSpeed, speed: walkSpeed });
+      this.walkSpeed = walkSpeed;
     },
     updateFrame() {
-      return this.frame = Math.floor(this.a.normalizedTime) % this.a.shared.frameCount;
+      return this.frame = Math.floor(this.time) % this.shared.frameCount;
     },
     updateHead() {
       const { body, head } = this.s;
-      const { headFrames, neckPositions } = this.a.shared;
+      const { headFrames, neckPositions } = this.shared;
 
       // const currFrame = this.getFrame();
       const currFrame = this.frame;
@@ -753,7 +750,7 @@ export default function createNpc(def, api) {
       const neckPos = neckPositions[currFrame];
       const radians = body.rotation;
 
-      head.angle = angle + body.angle + this.a.neckAngle;
+      head.angle = angle + body.angle + this.neckAngle;
       head.scale.set(width / this.a.initHeadWidth);
       head.position.set(
         body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y,
@@ -764,7 +761,7 @@ export default function createNpc(def, api) {
       // Fix types during migration
     },
     updateSprites() {
-      const { bodyRects, rootDeltas } = this.a.shared;
+      const { bodyRects, rootDeltas } = this.shared;
       const { body } = this.s;
 
       // 🚧 permitting reverse is complex
@@ -773,7 +770,7 @@ export default function createNpc(def, api) {
 
       body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[this.frame]), baseTexture, 0);
       const radians = body.rotation;
-      if (this.a.rootMotion === true) {
+      if (this.rootMotion === true) {
         const rootDelta = rootDeltas[this.frame];
         body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
         body.y -= rootDelta * Math.cos(radians);
@@ -788,7 +785,7 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
-      if (this.a.paused === true || this.a.shared.frameCount === 1) {
+      if (this.a.paused === true || this.shared.frameCount === 1) {
         return;
       }
       const deltaSecs = deltaRatio * (1 / 60);
@@ -796,16 +793,16 @@ export default function createNpc(def, api) {
 
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-      let lag = ((this.a.normalizedTime % 1) * this.a.durations[this.frame]) + deltaSecs;
+      let lag = ((this.time % 1) * this.durations[this.frame]) + deltaSecs;
 
-      while (lag >= this.a.durations[this.frame]) {
-        lag -= this.a.durations[this.frame];
-        this.a.normalizedTime++;
-        this.a.distance += this.a.rootMotion === true ? this.a.shared.rootDeltas[this.frame] : 0;
-        this.frame = this.frame === this.a.shared.frameCount - 1 ? 0 : this.frame + 1;
+      while (lag >= this.durations[this.frame]) {
+        lag -= this.durations[this.frame];
+        this.time++;
+        this.distance += this.rootMotion === true ? this.shared.rootDeltas[this.frame] : 0;
+        this.frame = this.frame === this.shared.frameCount - 1 ? 0 : this.frame + 1;
         shouldUpdate = true;
       }
-      this.a.normalizedTime = Math.floor(this.a.normalizedTime) + lag / this.a.durations[this.frame];
+      this.time = Math.floor(this.time) + lag / this.durations[this.frame];
 
       if (shouldUpdate === true) {
         this.updateSprites();
@@ -864,7 +861,7 @@ export default function createNpc(def, api) {
     },
     async walkToIdle() {
       const fr = this.frame;
-      const fc = this.a.shared.frameCount;
+      const fc = this.shared.frameCount;
       this.a.paused = true;
       if (
         (fr > fc * (1/8) && fr < fc * (3/8))
@@ -882,14 +879,14 @@ export default function createNpc(def, api) {
 
       if (metaLength === undefined) {
         return console.warn('wayTimeout: empty wayMetas');
-      } else if (this.a.animName !== 'walk') {
-        return console.warn(`wayTimeout: not walking: ${this.a.animName}`);
+      } else if (this.animName !== 'walk') {
+        return console.warn(`wayTimeout: not walking: ${this.animName}`);
       } else if (this.a.paused) {
         return; // This handles World pause
       }
 
       /** @type {NPC.NpcWayMeta} */ let wayMeta;
-      if (this.a.distance >= metaLength - 1) {
+      if (this.distance >= metaLength - 1) {
         // Reached wayMeta's `length`, so remove/trigger respective event (+adjacents)
         while (this.a.wayMetas[0]?.length <= metaLength) {
           // console.warn('wayMeta shift', this.anim.wayMetas[0])

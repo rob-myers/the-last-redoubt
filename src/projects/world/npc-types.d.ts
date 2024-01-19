@@ -35,8 +35,32 @@ declare namespace NPC {
     /** Definition of NPC */
     def: NPCDef;
 
-    // 🚧 move into top-level
+    // 🚧
+    //#region top-level anim
+    animName: SpineAnimName;
+    /** The duration of each frame in seconds. Depends on walk speed. */
+    durations: number[];
+    /**
+     * SpriteSheet-normalized time.
+     * - starts from `0` when walk begins
+     * - non-negative integers correspond to frames
+     * - actual time between increments follows from `durations`
+     */
+    time: number;
     frame: number;
+    /** Total distance travelled since animation began (world units). */
+    distance: number;
+    /** Degrees */
+    neckAngle: number;
+    /**
+     * - Only `walk` contributes root motion (changes `npc.s.body.position`).
+     * - Moreover, sometimes we want to "walk-in-place" by setting this `false`.
+     */
+    rootMotion: boolean;
+    shared: SharedAnimData;
+    /** Initially `npc.def.walkSpeed` */
+    walkSpeed: number;
+    //#endregion
 
     el: {// 🚧 old
       root: HTMLDivElement;
@@ -284,23 +308,13 @@ declare namespace NPC {
   }
   // 🚧 new
   interface AnimData {
-    animName: SpineAnimName;
     paused: boolean;
-    /** Initially `npc.def.walkSpeed` */
-    walkSpeed: number;
-    /**
-     * - Only `walk` contributes root motion (changes `npc.s.body.position`).
-     * - Moreover, sometimes we want to "walk-in-place" by setting this `false`.
-     */
-    rootMotion: boolean;
-
-    shared: SharedAnimData;
-
     /** Path for walking along */
     path: Geom.Vect[];
     /**
-     * Data derived entirely from `anim.path`, although
-     * `outsetBounds` and `outsetSegBounds` depend on npc radius.
+     * Data derived from `anim.path`.
+     * However, `outsetWalkBounds` and `outsetSegBounds`
+     * depend on npc radius.
      */
     aux: {
       /** Radians */
@@ -326,20 +340,6 @@ declare namespace NPC {
     rotate: TweenExt;
     deferred: { resolve(value?: any): void; reject(reason: any): void };
 
-    /** The duration of each frame in seconds. Depends on walk speed. */
-    durations: number[];
-    /**
-     * SpriteSheet-normalized time.
-     * - starts from `0` when walk begins
-     * - non-negative integers correspond to frames
-     * - actual time between increments follows from `durations`
-     */
-    normalizedTime: number;
-    /** Total distance travelled since animation began (world units). */
-    distance: number;
-
-    /** Degrees */
-    neckAngle: number;
     headSkinName: SpineHeadSkinName;
     /** Depends on head skin */
     initHeadWidth: number;

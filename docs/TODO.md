@@ -20,9 +20,10 @@
   - ✅ spine-meta.json computes "4 parts of walk":
     - [cross-frame, step-frame, cross-frame, step-frame]
   - ✅ avoid recomputing frame
-  - 🚧 move anim props to top-level
+  - ✅ move anim props to top-level
     - including those which will be inside track
   - 🚧 can specify "track"
+    - specify type
   - cross -> step frame should reverse to cross
   - step -> cross frame should continue to cross
 
