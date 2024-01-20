@@ -65,6 +65,8 @@ npc events | filter '({ key, decor }) =>
 - ✅ pause "npc" process pauses npc
 - ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
+- mistakenly setting e.g. `window.bar = 2` breaks `npc foo bar`
+  because `bar` gets evaluated as `2`
 - useQueries to improve GeomorphEdit?
 - ✅ sh generates named generators
 - npc cfg debug/debugPlayer show npc(s) bounds
