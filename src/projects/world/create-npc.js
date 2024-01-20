@@ -372,12 +372,12 @@ export default function createNpc(
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
       return Math.atan2(matrix.m12, matrix.m11);
     },
-    updateFrame() {
-      return 0; // Fix types during migration
-    },
     getInteractRadius() {
       // can inherit from <NPCs> root
       return parseFloat(getComputedStyle(this.el.root).getPropertyValue(cssName.npcsInteractRadius));
+    },
+    getHeadSkinRect() {
+      return { x: 0, y: 0, width: 0, height: 0 }; // Fix types during migration
     },
     getLineSeg() {
       const dst = this.getTarget();
@@ -775,9 +775,6 @@ export default function createNpc(
         this.el.root.style.removeProperty(cssName.npcsInteractRadius);
       }
     },
-    setTrack() {
-      // Fix types during migration
-    },
     startAnimation(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {
         this.el.root.classList.remove(this.anim.spriteSheet);
@@ -911,6 +908,9 @@ export default function createNpc(
       if (this.isPlayer()) {
         this.el.root.style.setProperty(cssName.npcsDebugPlayerDisplay, shouldShow ? 'initial' : 'none');
       }
+    },
+    updateFrame() {
+      return 0; // Fix types during migration
     },
     updateHead() {
       // Fix types during migration

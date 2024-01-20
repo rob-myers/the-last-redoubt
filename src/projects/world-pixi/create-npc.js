@@ -6,7 +6,7 @@ import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from "../service/generic";
 import { warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
-import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius } from "./const";
+import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius, spineAnimNames } from "./const";
 import { obscuredNpcOpacity, spawnFadeMs } from "../world/const";
 
 import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
@@ -43,7 +43,7 @@ export default function createNpc(def, api) {
     framePtr: 0,
     neckAngle: 0,
     time: 0,
-    tr: setTrack('idle', def.classKey),
+    tr: tracks['idle'],
     walkOnSpot: false,
     walkSpeed: def.walkSpeed,
 
@@ -341,6 +341,13 @@ export default function createNpc(def, api) {
     getAngle() {
       return this.s.body.rotation;
     },
+    getHeadSkinRect() {
+      return spineMeta.head[
+        npcClassToSpineHeadSkin[this.def.classKey]
+      ].packedHead[
+        spineAnimSetup[this.animName].headOrientKey
+      ];
+    },
     getInteractRadius() {
       return defaultNpcInteractRadius;
     },
@@ -609,29 +616,30 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
     setupAnim(animName) {
+      this.tr = tracks[animName];
       this.animName = animName;
       this.time = 0;
       this.frame = 0;
+      this.framePtr = 0;
+      this.frameMap = this.tr.bodys.map((_, i) => i);
       this.distance = 0;
       
-      this.setTrack(animName);
-      const { a, s, tr } = this;
       const { stationaryFps } = spineAnimSetup[animName];
-      this.frameDurs = tr.deltas?.map(x => x / this.walkSpeed) ?? tr.bodys.map(_ => 1 / stationaryFps);
+      this.frameDurs = this.tr.deltas?.map(x => x / this.walkSpeed) ?? this.tr.bodys.map(_ => 1 / stationaryFps);
       
       // 🔔 currently every body frame has same width/height
-      const bodyRect = tr.bodys[this.frame];
-      s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
-      const headRect = tr.headSkinRect;
-      s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
+      const bodyRect = this.tr.bodys[this.frame];
+      this.s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
+      const headRect = this.getHeadSkinRect();
+      this.s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
       // 🔔 currently every body frame has same width/height
       // body anchor is (0, 0) in spine world coords
       const localBodyBounds = spineMeta.anim[animName].animBounds;
       body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
 
-      s.body.rotation = this.getAngle();
-      a.initHeadWidth = headRect.width;
+      this.s.body.rotation = this.getAngle();
+      this.a.initHeadWidth = headRect.width;
 
       this.updateSprites();
     },
@@ -646,12 +654,6 @@ export default function createNpc(def, api) {
     },
     setInteractRadius(radius) {
       // 🚧 currently unsupported
-    },
-    setTrack(animName, opts) {
-      this.tr = setTrack(animName, def.classKey, opts);
-      // 🚧 opts.{src,dst} should alter frameMap and (initially) frame
-      this.framePtr = 0;
-      this.frameMap = this.tr.bodys.map((_, i) => i);
     },
     showBounds(shouldShow) {
       const { bounds } = this.s;
@@ -916,29 +918,19 @@ export function hotModuleReloadNpc(npc, api) {
   return Object.assign(npc, createNpc(def, api), { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk, tr, frame, distance, time, animName });
 }
 
-/**
- * @param {NPC.SpineAnimName} animName 
- * @param {NPC.NpcClassKey} classKey
- * @param {NPC.SubTrackOpts} [opts]
- * @returns {NPC.Track}
- */
-function setTrack(animName, classKey, opts) {
+const tracks = spineAnimNames.reduce((agg, animName) => {
   const { frameCount, headFrames, neckPositions, packedRects, rootDeltas } = spineMeta.anim[animName];
-  return {
-    animName,
-    headSkinRect: spineMeta.head[
-      npcClassToSpineHeadSkin[classKey]
-    ].packedHead[
-      spineAnimSetup[animName].headOrientKey
-    ],
-    bodys: packedRects,
-    deltas: rootDeltas.length ? rootDeltas : null,
-    end: opts?.end,
-    heads: headFrames,
-    length: frameCount,
-    necks: neckPositions,
+  return { ...agg,
+    [animName]: {
+      animName,
+      bodys: packedRects,
+      deltas: rootDeltas.length ? rootDeltas : null,
+      heads: headFrames,
+      length: frameCount,
+      necks: neckPositions,
+    },
   };
-}
+}, /** @type {Record<NPC.SpineAnimName, NPC.Track>} */ ({}));
 
 /** @type {NPC.TweenExt} */
 const emptyTween = Object.assign(new TWEEN.Tween({}), {

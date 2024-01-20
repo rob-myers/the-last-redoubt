@@ -157,6 +157,7 @@ declare namespace NPC {
      * - Converts world units to ms elapsed.
      */
     getAnimScaleFactor(): number;
+    getHeadSkinRect(): Geom.RectJson;
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
     getNextDoorId(): number | undefined;
@@ -217,7 +218,6 @@ declare namespace NPC {
     
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
-    setTrack(animName: SpineAnimName, opts?: SubTrackOpts);
     showBounds(shouldShow: boolean): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     setupAnim(animName: SpineAnimName): void;
@@ -362,15 +362,10 @@ declare namespace NPC {
   
   interface Track {
     animName: string;
-    headSkinRect: Geom.RectJson;
     /** Body rects in SpriteSheet, length @see length */
     bodys: Geom.RectJson[];
     /** Root motion deltas, length @see length */
     deltas: null | number[];
-    /** Frame durations (secs), length @see length */
-    // durs: number[];
-    /** Undefined iff should loop */
-    end?(): void;
     /** Implicit head rects on body rects in SpriteSheet, length @see length */
     heads: (Geom.RectJson & { angle: number; })[];
     /** Number of frames */
@@ -378,13 +373,6 @@ declare namespace NPC {
     /** Neck positions, length @see length */
     necks: Geom.VectJson[];
   }
-
-  interface SubTrackOpts {
-    src?: number;
-    dst?: number;
-    end?(): void;
-  }
-
 
   /**
    * - `none`: do not try to open doors
