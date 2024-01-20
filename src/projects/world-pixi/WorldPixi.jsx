@@ -168,7 +168,7 @@ export default function WorldPixi(props) {
             );
           }}
           onUnmount={() => {
-            state.tweenGroup.removeAll();
+            state.setTicker(false);
             state.renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
           }}
           width={bounds.width || undefined}
