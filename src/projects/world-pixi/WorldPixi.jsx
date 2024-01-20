@@ -138,6 +138,7 @@ export default function WorldPixi(props) {
   }, []);
 
   const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
+  React.useEffect(() => state.panZoom.resize?.(), [bounds]);
   
   const update = useUpdate();
 

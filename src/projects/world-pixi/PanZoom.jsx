@@ -125,6 +125,10 @@ export default function PanZoom(props) {
     onZoom() {
       // console.log(state.viewport.scale.x);
     },
+    resize() {
+      const rect = api.canvas.getBoundingClientRect();
+      state.viewport.resize(rect.width, rect.height);
+    },
     viewportRef(vp) {
       if (vp && !(state.viewport instanceof PixiViewport)) {
         state.viewport = vp;
@@ -141,6 +145,7 @@ export default function PanZoom(props) {
     vp.addEventListener('moved-end', onPanEnd);
     vp.addEventListener('zoomed-end', onZoomEnd);
     vp.addEventListener('zoomed', onZoom);
+    state.resize();
     props.onLoad(state);
     return () => {
       // vp.plugins.remove('animate');
@@ -198,6 +203,7 @@ export default function PanZoom(props) {
  * @property {() => void} onPanEnd
  * @property {() => void} onZoomEnd
  * @property {() => void} onZoom
+ * @property {() => void} resize
  * @property {(vp: null | import("pixi-viewport").Viewport) => void} viewportRef
  */
 

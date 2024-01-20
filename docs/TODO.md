@@ -22,8 +22,8 @@
   - ✅ avoid recomputing frame
   - ✅ move anim props to top-level
     - including those which will be inside track
-  - 🚧 can specify "track"
-    - ✅ specify type
+  - 🚧 can specify subframes e.g. reverse
+    - ✅ specify track type
     - ✅ replace `shared` and `durations` with track
     - ✅ use frame{,Ptr,Map,Finish}
     - ✅ avoid re-creating tracks
@@ -40,6 +40,18 @@
   - darker npc
   - understand HMR bugs?
     - `api ticker.count` should be `1`
+
+- 🚧 migrate `track`
+- ✅ get pixi-viewport follow working manually
+```sh
+npc rob s.body | api panZoom.viewport.follow - '{ speed: 0.5, radius: 0, acceleration: 0.01 }'
+api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
+api panZoom.viewport.plugins.remove follow
+
+# manually fix pixi-viewport size
+api canvas.getBoundingClientRect >rect
+api panZoom.viewport.resize $(rect/width), $(rect/height)
+```
 
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
 - BUG TypeError:
