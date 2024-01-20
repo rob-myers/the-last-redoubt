@@ -619,24 +619,26 @@ export default function createNpc(def, api) {
       const { stationaryFps } = spineAnimSetup[animName];
       this.frameDurs = this.tr.deltas?.map(x => x / this.walkSpeed) ?? this.tr.bodys.map(_ => 1 / stationaryFps);
       
+      const { body, head } = this.s;
       // 🔔 currently every body frame has same width/height
       const bodyRect = this.tr.bodys[this.frame];
-      this.s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
+      body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
       const headRect = this.getHeadSkinRect();
-      this.s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
+      head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
       // 🔔 currently every body frame has same width/height
       // body anchor is (0, 0) in spine coords
       const localBodyBounds = spineMeta.anim[animName].animBounds;
-      this.s.body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
+      body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
 
       // Head anchor via neck position in spine coords
-      this.s.head.anchor.set(// 🚧 precompute
+      head.anchor.set(// 🚧 precompute
         (spineMeta.anim[animName].neckPositions[0].x - spineMeta.anim[animName].headFrames[0].x) / spineMeta.anim[animName].headFrames[0].width,
         (spineMeta.anim[animName].neckPositions[0].y - spineMeta.anim[animName].headFrames[0].y) / spineMeta.anim[animName].headFrames[0].height,
       );
 
-      this.s.body.rotation = this.getAngle();
+      body.scale.set(spineMeta.npcScaleFactor);
+      body.rotation = this.getAngle();
       this.a.initHeadWidth = headRect.width;
 
       this.updateSprites();
