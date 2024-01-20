@@ -18,17 +18,6 @@ import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
  */
 export default function createNpc(def, api) {
   const { baseTexture } = api.npcs.tex;
-
-  const body = new Sprite(new Texture(baseTexture));
-  const head = new Sprite(new Texture(baseTexture));
-
-  body.scale.set(spineMeta.npcScaleFactor);
-  // Head anchor is neck position when idle
-  head.anchor.set(// 🚧 precompute
-    (spineMeta.anim.idle.neckPositions[0].x - spineMeta.anim.idle.headFrames[0].x) / spineMeta.anim.idle.headFrames[0].width,
-    (spineMeta.anim.idle.neckPositions[0].y - spineMeta.anim.idle.headFrames[0].y) / spineMeta.anim.idle.headFrames[0].height,
-  );
-
   return {
     key: def.key,
     classKey: def.classKey,
@@ -48,7 +37,10 @@ export default function createNpc(def, api) {
     walkSpeed: def.walkSpeed,
 
     el: /** @type {*} */ ({}), // Fix types during migration
-    s: { body, head },
+    s: {
+      body: new Sprite(new Texture(baseTexture)),
+      head: new Sprite(new Texture(baseTexture)),
+    },
 
     anim: /** @type {*} */ ({}), // Fix types during migration
     a: {
@@ -634,9 +626,15 @@ export default function createNpc(def, api) {
       this.s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
       // 🔔 currently every body frame has same width/height
-      // body anchor is (0, 0) in spine world coords
+      // body anchor is (0, 0) in spine coords
       const localBodyBounds = spineMeta.anim[animName].animBounds;
-      body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
+      this.s.body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
+
+      // Head anchor via neck position in spine coords
+      this.s.head.anchor.set(// 🚧 precompute
+        (spineMeta.anim[animName].neckPositions[0].x - spineMeta.anim[animName].headFrames[0].x) / spineMeta.anim[animName].headFrames[0].width,
+        (spineMeta.anim[animName].neckPositions[0].y - spineMeta.anim[animName].headFrames[0].y) / spineMeta.anim[animName].headFrames[0].height,
+      );
 
       this.s.body.rotation = this.getAngle();
       this.a.initHeadWidth = headRect.width;

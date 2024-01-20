@@ -27,8 +27,8 @@
     - ✅ replace `shared` and `durations` with track
     - ✅ use frame{,Ptr,Map,Finish}
     - ✅ avoid re-creating tracks
-    - 🚧 BUG on HMR whilst `lie` then spawn away
-    - walk -> idle creates tracks
+    - ✅ BUG on HMR whilst `lie` then spawn away
+    - 🚧 walk -> idle sets frameMap, frameFinish
   - cross -> step frame should reverse to cross
   - step -> cross frame should continue to cross
 
