@@ -499,7 +499,7 @@ click | world npcs.canSee $fixed -
 
 # spawner
 multiSpawn() {
-  echo Enter name then click, e.g. "rob" or "rob --zhodani"
+  echo name⏎ click, e.g. "rob --zhodani"
   local npcKey
   while true; do
     npcKey=$( take 1 )
