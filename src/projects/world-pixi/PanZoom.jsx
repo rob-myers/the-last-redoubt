@@ -15,6 +15,7 @@ import Viewport from "./Viewport";
  * @param {React.PropsWithChildren<Props>} props 
  */
 export default function PanZoom(props) {
+  const { api } = props;
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
     events: new Subject,
@@ -53,7 +54,7 @@ export default function PanZoom(props) {
       }
     },
     getDomBounds() {
-      return /** @type {HTMLDivElement} */ (props.api.canvas.parentElement).getBoundingClientRect();
+      return /** @type {HTMLDivElement} */ (api.canvas.parentElement).getBoundingClientRect();
     },
     getWorld(e) {
       return Vect.from(state.transform.localTransform.applyInverse(e.global)).precision(2);
@@ -72,7 +73,7 @@ export default function PanZoom(props) {
       const point = opts.point ?? state.viewport.position.clone();
       const { width, height } = state.getDomBounds();
 
-      state.tween = props.api.tween(state.viewport).to({
+      state.tween = api.tween(state.viewport).to({
         scale: { x: scale, y: scale },
         x: -point.x * scale + width/2,
         y: -point.y * scale + height/2,
@@ -92,7 +93,7 @@ export default function PanZoom(props) {
       };
     },
     pointermove(e) {
-      if (e.nativeEvent.target === props.api.canvas) {
+      if (e.nativeEvent.target === api.canvas) {
         state.events.next({ key: 'pointermove', point: state.getWorld(e), meta: {} });
       } // ignore pointermove outside viewport
     },
