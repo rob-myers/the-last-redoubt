@@ -24,16 +24,17 @@ export default function createNpc(
     def,
 
     // Fix types during migration
-    tr: /** @type {*} */ ({}),
     animName: 'idle',
-    walkSpeed: 1,
     distance: 0,
     frame: 0,
+    frameDurs: [],
     frameMap: [0],
     framePtr: 0,
     neckAngle: 0,
-    rootMotion: false,
     time: 0,
+    tr: /** @type {*} */ ({}),
+    walkOnSpot: false,
+    walkSpeed: 1,
 
     el: {
       root: /** @type {HTMLDivElement} */ ({}),

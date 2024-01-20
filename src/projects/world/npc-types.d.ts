@@ -35,33 +35,35 @@ declare namespace NPC {
     /** Definition of NPC */
     def: NPCDef;
 
-    // 🚧
     //#region top-level anim
-    /** Track */
+
+    /** Track - there is one for each animation e.g. `walk` */
     tr: Track;
     
+    /** Frame durations (secs), aligned to @see tr length */
+    frameDurs: number[];
+    /** Frame pointer: index of @see frameMap */
     framePtr: number;
+    /** Track frames i.e. 0-based frames less than @see tr length */
     frameMap: number[];
+    /** Optional callback to invoke when reach beyond @see frameMap end */
     frameFinish?(): void;
 
     animName: SpineAnimName;
     /**
      * SpriteSheet-normalized time.
-     * - starts from `0` when walk begins
+     * - starts from `0` when animation begins
      * - non-negative integers correspond to frames
-     * - actual time between increments follows from `durations`
+     * - actual time between increments follows from @see frameDurs
      */
     time: number;
+    /** Induced by @see time @see framePtr @see frameMap */
     frame: number;
     /** Total distance travelled since animation began (world units). */
     distance: number;
     /** Degrees */
     neckAngle: number;
-    /**
-     * - Only `walk` contributes root motion (changes `npc.s.body.position`).
-     * - Moreover, sometimes we want to "walk-in-place" by setting this `false`.
-     */
-    rootMotion: boolean;
+    walkOnSpot: boolean;
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
     //#endregion
@@ -366,7 +368,7 @@ declare namespace NPC {
     /** Root motion deltas, length @see length */
     deltas: null | number[];
     /** Frame durations (secs), length @see length */
-    durs: number[];
+    // durs: number[];
     /** Undefined iff should loop */
     end?(): void;
     /** Implicit head rects on body rects in SpriteSheet, length @see length */

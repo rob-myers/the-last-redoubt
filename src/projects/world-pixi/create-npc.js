@@ -35,15 +35,16 @@ export default function createNpc(def, api) {
     epochMs: Date.now(),
     def,
 
-    tr: setTrack('idle', def.classKey, def.walkSpeed),
     animName: 'idle',
     distance: 0,
     frame: 0,
+    frameDurs: [Infinity],
     frameMap: [0],
     framePtr: 0,
     neckAngle: 0,
-    rootMotion: false,
     time: 0,
+    tr: setTrack('idle', def.classKey),
+    walkOnSpot: false,
     walkSpeed: def.walkSpeed,
 
     el: /** @type {*} */ ({}), // Fix types during migration
@@ -608,11 +609,15 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
     setupAnim(animName) {
-      const { a, s, tr } = this;
       this.animName = animName;
       this.time = 0;
       this.frame = 0;
       this.distance = 0;
+      
+      this.setTrack(animName);
+      const { a, s, tr } = this;
+      const { stationaryFps } = spineAnimSetup[animName];
+      this.frameDurs = tr.deltas?.map(x => x / this.walkSpeed) ?? tr.bodys.map(_ => 1 / stationaryFps);
       
       // 🔔 currently every body frame has same width/height
       const bodyRect = tr.bodys[this.frame];
@@ -643,7 +648,7 @@ export default function createNpc(def, api) {
       // 🚧 currently unsupported
     },
     setTrack(animName, opts) {
-      this.tr = setTrack(animName, def.classKey, this.walkSpeed, opts);
+      this.tr = setTrack(animName, def.classKey, opts);
       // 🚧 opts.{src,dst} should alter frameMap and (initially) frame
       this.framePtr = 0;
       this.frameMap = this.tr.bodys.map((_, i) => i);
@@ -670,37 +675,30 @@ export default function createNpc(def, api) {
         api.npcs.pc.addChild(sprite);
       }
     },
-    // ℹ️ currently NPC.SpriteSheetKey equals NPC.SpineAnimName
-    // 🚧 fix "final walk frame jerk" elsewhere
     startAnimation(animName) {
       this.a.rotate.stop();
       this.animName = animName;
       
       switch (animName) {
         case 'walk': {
-          this.rootMotion = true;
-          this.setTrack(animName);
           this.setupAnim(animName);
           // 🚧 chained rotation tweens
           // - can use `aux.sofars[i] / aux.total`
           // - tween remade if speed changes
           const totalMs = this.a.aux.total * this.getAnimScaleFactor();
           this.a.rotate = api.tween(this.s.body).to({}, totalMs).start();
-          
           break;
         }
         case 'idle':
         case 'idle-breathe':
         case 'lie':
         case 'sit':
-          this.rootMotion = false;
           this.clearWayMetas();
           this.updateStaticBounds();
           if (animName === 'sit') {// Ensure feet are below surfaces
             this.obscureBySurfaces();
           }
           this.a.rotate = emptyTween;
-          this.setTrack(animName);
           this.setupAnim(animName);
           break;
         default:
@@ -784,34 +782,27 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
-      const { length, durs } = this.tr;
-      if (this.a.paused === true || length === 1) {
+      const { frame: prevFrame, frameDurs: durs, frameMap } = this;
+      if (this.a.paused === true || frameMap.length === 1) {
         return;
       }
-      const deltaSecs = deltaRatio * (1 / 60);
-      let shouldUpdate = false;
-      // 🚧 compute dur on-the-fly based on walkSpeed?
-
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-      let lag = ((this.time % 1) * durs[this.frame]) + deltaSecs;
+      let lag = ((this.time % 1) * durs[this.frame]) + (deltaRatio * (1 / 60));
 
       while (lag >= durs[this.frame]) {
         lag -= durs[this.frame];
         this.time++;
         this.distance += this.tr.deltas?.[this.frame] ?? 0;
-        // fr = { index, map, curr }: index points into map yielding curr
-        if (++this.framePtr === this.frameMap.length) {
+        if (++this.framePtr === frameMap.length) {
           this.frameFinish?.();
           this.framePtr = 0;
         }
-        // this.frame = this.frame === this.tr.length - 1 ? 0 : this.frame + 1;
-        this.frame = this.frameMap[this.framePtr];
-        shouldUpdate = true;
+        this.frame = frameMap[this.framePtr];
       }
-      this.time = Math.floor(this.time) + lag / durs[this.frame];
+      this.time = Math.floor(this.time) + (lag / durs[this.frame]);
 
-      if (shouldUpdate === true) {
+      if (prevFrame !== this.frame) {
         this.updateSprites();
       }
     },
@@ -928,13 +919,11 @@ export function hotModuleReloadNpc(npc, api) {
 /**
  * @param {NPC.SpineAnimName} animName 
  * @param {NPC.NpcClassKey} classKey
- * @param {number} walkSpeed World units per second
  * @param {NPC.SubTrackOpts} [opts]
  * @returns {NPC.Track}
  */
-function setTrack(animName, classKey, walkSpeed, opts) {
+function setTrack(animName, classKey, opts) {
   const { frameCount, headFrames, neckPositions, packedRects, rootDeltas } = spineMeta.anim[animName];
-  const { stationaryFps } = spineAnimSetup[animName];
   return {
     animName,
     headSkinRect: spineMeta.head[
@@ -944,7 +933,6 @@ function setTrack(animName, classKey, walkSpeed, opts) {
     ],
     bodys: packedRects,
     deltas: rootDeltas.length ? rootDeltas : null,
-    durs: rootDeltas.length ? rootDeltas.map(x => x / walkSpeed) : packedRects.map(_ => 1 / stationaryFps),
     end: opts?.end,
     heads: headFrames,
     length: frameCount,
