@@ -59,6 +59,9 @@ export default function PanZoom(props) {
           throw testNever(type, { suffix: 'animationAction' });
       }
     },
+    follow(target, opts = { speed: 1 }) {
+      this.viewport.follow(/** @type {*} */ (target), opts);
+    },
     getDomBounds() {
       return /** @type {HTMLDivElement} */ (api.canvas.parentElement).getBoundingClientRect();
     },
@@ -203,6 +206,7 @@ export default function PanZoom(props) {
  * @property {NPC.TweenExt} tween For pan-zoom
  * 
  * @property {(type: 'cancelPanZoom' | 'cancelFollow' | 'pauseFollow' | 'resumeFollow' | 'pause' | 'play') => Promise<void>} animationAction
+ * @property {(target: Geom.VectJson, opts?: import("pixi-viewport").IFollowOptions) => void} follow
  * @property {() => DOMRect} getDomBounds
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => Geom.VectJson} getWorld
  * @property {() => boolean} isFollowing

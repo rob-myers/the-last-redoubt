@@ -767,96 +767,6 @@ export default function NPCs(props) {
         }})
       );
     },
-    // 🚧 use pixi viewport, possibly complete rewrite?
-    trackNpc(npcKey, processApi) {
-
-      const npc = state.getNpc(npcKey);
-      
-      /** @typedef {'no-track' | 'follow-walk' | 'panzoom-to'} TrackStatus */ 
-      let status = /** @type {TrackStatus} */ ('no-track');
-      /** @param {TrackStatus} next */
-      function changeStatus(next) { status = next; console.warn(`@ ${status}`); }
-      
-      async function panZoomTo() {
-        changeStatus('panzoom-to');
-        // 🚧 use pixi viewport
-        // await api.panZoom.animationAction('cancelFollow');
-        // await api.panZoom.panZoomTo({
-        //   durationMs: 2000,
-        //   scale: npc.everWalked() ? undefined : baseTrackingZoom,
-        //   worldPoint: npc.getPosition(),
-        // }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
-        changeStatus('no-track');
-      }
-
-      const subscription = merge(
-        of({ key: /** @type {const} */ ('init-track') }),
-        state.events,
-        // 🚧 use pixi viewport
-        // api.panZoom.events,
-      ).pipe(
-        tap(x => {
-          if (x.key === 'npc-internal' && x.npcKey === npcKey) {
-            // 🚧 use pixi viewport
-            // 🤔 should cancelFollow too?
-            // x.event === 'cancelled' && api.panZoom.animationAction('cancelPanZoom')
-            // || x.event === 'paused' && api.panZoom.animationAction('pause')
-            // || x.event === 'resumed' && api.panZoom.animationAction('play');
-          }
-          if (x.key === 'removed-npc' && x.npcKey === npcKey) {
-            subscription.unsubscribe();
-          }
-        }),
-        filter(x => (
-          processApi.isRunning() &&
-          !npc.isPaused() && (
-            x.key === 'init-track'
-            // 🚧 use pixi viewport
-            // || x.key === 'ui-idle'
-            // || x.key === 'resized-bounds'
-            // || x.key === 'cancelled-panzoom-to'
-            // || x.key === 'completed-panzoom-to'
-            || (x.key === 'started-walking' && x.npcKey === npcKey)
-            || (x.key === 'stopped-walking' && x.npcKey === npcKey)
-            || (x.key === 'spawned-npc' && x.npcKey === npcKey)
-            || (x.key === 'changed-speed' && x.npcKey === npcKey)
-            || (x.key === 'resumed-track' && x.npcKey === npcKey)
-          )
-        )),
-      ).subscribe({
-        async next(msg) {
-          // console.log('msg', msg);
-          if (msg.key === 'stopped-walking') {
-            await panZoomTo();
-          } else if (
-            msg.key === 'started-walking'
-            || msg.key === 'changed-speed'
-            || msg.key === 'resumed-track'
-          ) {
-            changeStatus('follow-walk');
-            const path = npc.getTargets();
-            // 🚧 use pixi viewport
-            // await api.panZoom.followPath(path, {
-            //   animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
-            // }).catch(e => // ignore Error('cancelled')
-            //   void (state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`))
-            // );
-        // 🚧 use pixi viewport
-        //   } else if (!api.panZoom.isIdle()) {
-        //     // User is manually pan/zooming
-        //     changeStatus('no-track');
-        //   } else if (
-        //     npc.anim.spriteSheet !== 'walk'
-        //     && api.panZoom.panzoomAnim === null
-        //     && api.panZoom.distanceTo(npc.getPosition()) > 60
-        //   ) {// npc not moving and camera not close
-        //     await panZoomTo();
-          }
-        },
-      });
-
-      return subscription;
-    },
   }), { deps: [api] });
   
   useQueryOnce('spritesheet',
@@ -946,7 +856,6 @@ export default function NPCs(props) {
  * @property {(npcKey: string) => void} removeNpc
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
- * @property {(npcKey: string, processApi: ProcessApi) => import('rxjs').Subscription} trackNpc
  */
 
 /**

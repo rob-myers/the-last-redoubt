@@ -452,6 +452,33 @@
         w.npcs.disconnectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
       }
     },
+
+    track2: async function* ({ api, args: [npcKey], home }) {
+      const w = api.getCached(home.WORLD_KEY_ALT)
+      const npc = w.npcs.getNpc(npcKey);
+      w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
+      w.panZoom.follow(npc.s.body);
+      
+      try {
+        await /** @type {Promise<void>} */ (new Promise(resolve => {
+          const subscription = w.npcs.events.subscribe((e) => {
+            if (e.key === "npc-internal" && e.npcKey === npcKey) {
+              e.event === "paused" && w.panZoom.animationAction("pause")
+              || e.event === "resumed" && w.panZoom.animationAction("play");
+            }
+            if (e.key === "removed-npc" && e.npcKey === npcKey) {
+              subscription.unsubscribe();
+            }
+          });
+
+          subscription.add(() => w.panZoom.animationAction("cancelFollow"));
+          subscription.add(resolve);
+          api.addCleanup(() => subscription.unsubscribe());
+        }));
+      } finally {
+        w.npcs.disconnectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
+      }
+    },
   
     /**
      * - view {seconds} [{point}] [{zoom}]

@@ -46,12 +46,13 @@ npc rob s.body | api panZoom.viewport.follow - '{ speed: 1, radius: 0, accelerat
 api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
 api panZoom.viewport.plugins.remove follow
 ```
-- 🚧 migrate `track`
+- 🚧 migrate `track` to `track2`
   - ✅ fix blurry follow by syncing viewport
   - ℹ️ follow speed too fast causes jerk
   - ℹ️ follow acceleration causes jerk
   - ✅ resume follow on `ui-idle`
-  - consider varying speed/acceleration
+  - ✅ implement "inlined" `track2`
+  - 🚧 clean
 
 # manually fix pixi-viewport size
 api canvas.getBoundingClientRect >rect
@@ -82,6 +83,7 @@ npc events | filter '({ key, decor }) =>
 - ✅ pause "npc" process pauses npc
 - ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
+- try vary panZoom follow speed/acceleration
 - mistakenly setting e.g. `window.bar = 2` breaks `npc foo bar`
   because `bar` gets evaluated as `2`
 - useQueries to improve GeomorphEdit?

@@ -110,9 +110,7 @@ export default function useHandleEvents(api, disabled) {
         case 'disabled':
           api.disabled = true;
           api.fov.mapAct('pause');
-          // api.panZoom.animationAction('pause');
-          api.panZoom.viewport.plugins.pause('animate'); // 🚧
-          api.panZoom.viewport.plugins.pause('follow');
+          api.panZoom.animationAction('pause');
           api.setTicker(false);
           break;
         case 'enabled':
@@ -120,8 +118,7 @@ export default function useHandleEvents(api, disabled) {
           api.fov.mapAct('resume');
           if (!api.npcs.isPanZoomControlled()) {
             // only resume when not controlled by e.g. `view` or `track`
-            api.panZoom.viewport.plugins.resume('animate'); // 🚧
-            api.panZoom.viewport.plugins.resume('follow');
+            api.panZoom.animationAction('play');
           }
           api.setTicker(true);
           break;
