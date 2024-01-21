@@ -31,6 +31,7 @@ export default function PanZoom(props) {
     viewport: /** @type {*} */ ({}),
     input: /** @type {*} */ ({}),
     transform: /** @type {*} */ ({}),
+    plugins: /** @type {*} */ ({}),
     tween: emptyTween,
 
     async animationAction(type) {
@@ -39,15 +40,20 @@ export default function PanZoom(props) {
           state.tween.stop();
           break;
         case 'cancelFollow':
-          // 🚧 cancel follow
+          state.plugins.remove('follow');
+          break;
+        case 'pauseFollow':
+          state.plugins.pause('follow');
           break;
         case 'pause':
           state.tween.pause();
-          // 🚧 pause follow
+          break;
+        case 'resumeFollow':
+          state.plugins.resume('follow');
           break;
         case 'play':
           state.tween.resume();
-          // 🚧 resume follow
+          state.plugins.resume('follow');
           break;
         default:
           throw testNever(type, { suffix: 'animationAction' });
@@ -81,8 +87,9 @@ export default function PanZoom(props) {
       return state.tween.promise();
     },
     pointerdown(e) {
-      // !state.isFollowing() && state.animate.complete(); // cancel?
+      state.animationAction('pauseFollow');
       state.tween.stop();
+
       const origin = state.getWorld(e);
       state.start = {
         origin,
@@ -98,6 +105,7 @@ export default function PanZoom(props) {
       } // ignore pointermove outside viewport
     },
     pointerup(e) {
+      state.animationAction('resumeFollow');
       if (!state.start.clientOrigin) {
         return;
       }
@@ -116,14 +124,15 @@ export default function PanZoom(props) {
         clickId: state.clickIds.pop(),
       });
     },
-    onPanEnd() {
+    onPanEnd: debounce(() => {
       state.isIdle() && state.events.next({ key: 'ui-idle' });
-    },
+    }, 100),
     onZoomEnd: debounce(() => {
       state.isIdle() && state.events.next({ key: 'ui-idle' });
     }, 100),
     onZoom() {
-      // console.log(state.viewport.scale.x);
+      // 🤔 onZoomStart preferable
+      state.animationAction('pauseFollow');
     },
     resize() {
       const rect = api.canvas.getBoundingClientRect();
@@ -134,6 +143,7 @@ export default function PanZoom(props) {
         state.viewport = vp;
         state.input = vp.input;
         state.transform = vp.transform;
+        state.plugins = vp.plugins;
         state.viewport.scale.set(props.initScale ?? 1);
       }
     },
@@ -189,9 +199,10 @@ export default function PanZoom(props) {
  * @property {import("pixi-viewport").Viewport} viewport
  * @property {import("pixi-viewport").Viewport['input']} input
  * @property {import("pixi-viewport").Viewport['transform']} transform
+ * @property {import("pixi-viewport").Viewport['plugins']} plugins
  * @property {NPC.TweenExt} tween For pan-zoom
  * 
- * @property {(type: 'cancelPanZoom' | 'cancelFollow' | 'pause' | 'play') => Promise<void>} animationAction
+ * @property {(type: 'cancelPanZoom' | 'cancelFollow' | 'pauseFollow' | 'resumeFollow' | 'pause' | 'play') => Promise<void>} animationAction
  * @property {() => DOMRect} getDomBounds
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => Geom.VectJson} getWorld
  * @property {() => boolean} isFollowing

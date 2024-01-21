@@ -232,6 +232,9 @@ export default function useHandleEvents(api, disabled) {
           // meta && console.log('pointermove', meta);
           break;
         }
+        case 'ui-idle':
+          api.panZoom.animationAction('resumeFollow');
+          break;
       }
     },
 

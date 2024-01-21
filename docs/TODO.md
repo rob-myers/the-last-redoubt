@@ -42,13 +42,16 @@
 
 - ✅ get pixi-viewport `follow` working manually
 ```sh
-npc rob s.body | api panZoom.viewport.follow - '{ speed: 0.5, radius: 0, acceleration: 0.01 }'
+npc rob s.body | api panZoom.viewport.follow - '{ speed: 1, radius: 0, acceleration: 0. }
 api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
 api panZoom.viewport.plugins.remove follow
 ```
 - 🚧 migrate `track`
   - ✅ fix blurry follow by syncing viewport
-  - maybe only follow when on `ui-idle`
+  - ℹ️ follow speed too fast causes jerk
+  - ℹ️ follow acceleration causes jerk
+  - ✅ resume follow on `ui-idle`
+  - consider varying speed/acceleration
 
 # manually fix pixi-viewport size
 api canvas.getBoundingClientRect >rect
