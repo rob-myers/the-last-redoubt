@@ -540,10 +540,10 @@ export default function useHandleEvents(api, disabled) {
   React.useMemo(() => {
     if (worldReady) {
       api.npcs.events.next({ key: disabled ? 'disabled' : 'enabled' });
-    } else {// Start ticker early for loading tweens
+    } else if (api.panZoom.ready) {// Start ticker early for loading tweens
       api.setTicker(true);
     }
-  }, [worldReady, disabled]);
+  }, [worldReady, api.panZoom.ready, disabled]);
   //#endregion
 
   /** @param {...string} npcKeys */

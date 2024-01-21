@@ -84,6 +84,7 @@ export default function WorldPixi(props) {
       for (const npcKey in state.npcs.npc) {
         state.npcs.npc[npcKey].updateTime(deltaRatio);
       }
+      state.panZoom.viewport.update(state.ticker.elapsedMS);
     },
     renderInto(displayObj, tex, clear = true) {
       state.renderer.render(displayObj, { renderTexture: tex, clear });

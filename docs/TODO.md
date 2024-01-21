@@ -38,15 +38,17 @@
   - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
-  - understand HMR bugs?
-    - `api ticker.count` should be `1`
+  - finish obscureBySurfaces
 
-- 🚧 migrate `track`
-- ✅ get pixi-viewport follow working manually
+- ✅ get pixi-viewport `follow` working manually
 ```sh
 npc rob s.body | api panZoom.viewport.follow - '{ speed: 0.5, radius: 0, acceleration: 0.01 }'
 api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
 api panZoom.viewport.plugins.remove follow
+```
+- 🚧 migrate `track`
+  - ✅ fix blurry follow by syncing viewport
+  - maybe only follow when on `ui-idle`
 
 # manually fix pixi-viewport size
 api canvas.getBoundingClientRect >rect
