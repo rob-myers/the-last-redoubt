@@ -435,6 +435,7 @@
     track: async function* ({ api, args: [npcKey], home }) {
       const w = api.getCached(home.WORLD_KEY)
       w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
+
       api.addResume(() => {
         w.npcs.events.next({ key: "resumed-track", npcKey });
         return true;
@@ -443,7 +444,7 @@
       try {
         await /** @type {Promise<void>} */ (new Promise(resolve => {
           const subscription = w.npcs.trackNpc(npcKey, api);
-          subscription.add(resolve); // resolve on unsubscribe or invoke cleanups
+          subscription.add(resolve);
           api.addCleanup(() => subscription.unsubscribe());
           api.addCleanup(resolve);
         }))
