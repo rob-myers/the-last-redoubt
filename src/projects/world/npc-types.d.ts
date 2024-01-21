@@ -345,6 +345,8 @@ declare namespace NPC {
 
     opacity: TweenExt;
     rotate: TweenExt;
+    wait: TweenExt;
+    /** 🚧 rename because for walk completion */
     deferred: { resolve(value?: any): void; reject(reason: any): void };
 
     /** Depends on head skin */

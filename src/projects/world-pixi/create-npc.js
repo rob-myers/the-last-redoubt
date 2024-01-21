@@ -3,7 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { precision, testNever } from "../service/generic";
+import { pause, precision, testNever } from "../service/generic";
 import { warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
 import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius, spineAnimNames } from "./const";
@@ -63,6 +63,7 @@ export default function createNpc(def, api) {
       
       opacity: emptyTween,
       rotate: emptyTween,
+      wait: emptyTween,
       deferred: { resolve: emptyFn, reject: emptyFn },
 
       initHeadWidth: 0,
@@ -124,8 +125,10 @@ export default function createNpc(def, api) {
       console.log(`cancel: cancelling ${this.def.key}`);
 
       this.a.paused = false;
+      this.walkOnSpot = false;
       this.a.opacity.stop();
       this.a.rotate.stop();
+      this.a.wait.stop();
       this.a.deferred.reject('cancelled');
 
       if (this.animName === 'walk') {
@@ -281,9 +284,7 @@ export default function createNpc(def, api) {
     },
     async followNavPath(navPath, doorStrategy) {
       const { path, navMetas: globalNavMetas, gmRoomIds } = navPath;
-      // warn('START followNavPath')
-      // can jump: path needn't start from npc position
-      this.navPath = navPath;
+      this.navPath = navPath; // can jump: path needn't start from npc position
       this.a.path = path.map(Vect.from);
       // for decor collisions
       this.a.gmRoomIds = gmRoomIds;
@@ -607,12 +608,23 @@ export default function createNpc(def, api) {
     },
     setupAnim(animName) {
       this.tr = tracks[animName];
-      this.animName = animName;
-      this.time = 0;
-      this.frame = 0;
-      this.framePtr = 0;
+      if (animName === 'walk') {
+        if (this.animName === animName) {
+          // preserve walk
+        } else {// 🚧 remove hard-coding
+          this.time = 0;
+          this.frame = Math.random() > 0.5 ? 0 : 16;
+        }
+      } else {
+        this.time = 0;
+        this.frame = 0;
+      }
+      this.framePtr = this.frame;
       this.frameMap = this.tr.bodys.map((_, i) => i);
       this.distance = 0;
+      this.walkOnSpot = false;
+      this.frameFinish = undefined;
+      this.animName = animName;
       
       const { stationaryFps } = spineAnimSetup[animName];
       this.frameDurs = this.tr.deltas?.map(x => x / this.walkSpeed) ?? this.tr.bodys.map(_ => 1 / stationaryFps);
@@ -677,7 +689,6 @@ export default function createNpc(def, api) {
     },
     startAnimation(animName) {
       this.a.rotate.stop();
-      this.animName = animName;
       
       switch (animName) {
         case 'walk': {
@@ -761,10 +772,10 @@ export default function createNpc(def, api) {
     updateSprites() {
       const { bodys, deltas } = this.tr;
       const { body } = this.s;
-
       body.texture._uvs.set(/** @type {Rectangle} */ (bodys[this.frame]), baseTexture, 0);
-      const radians = body.rotation;
-      if (deltas) {
+
+      if (deltas !== null && this.walkOnSpot === false) {
+        const radians = body.rotation;
         const rootDelta = deltas[this.frame];
         body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
         body.y -= rootDelta * Math.cos(radians);
@@ -833,18 +844,12 @@ export default function createNpc(def, api) {
         if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
           throw new Error('cancelled');
         }
-
         // Walk along navpath, possibly throwing 'cancelled' on collide
         await this.followNavPath(navPath, opts.doorStrategy);
+        
+        // Continue to next walk or transition to idle
+        await (this.nextWalk ? this.walk(this.nextWalk.navPath, opts) : this.walkToIdle());
 
-        if (this.nextWalk) {
-          await this.walk(this.nextWalk.navPath, opts);
-        } else {
-          await this.walkToIdle();
-        }
-
-        // this.startAnimation('idle');
-        this.startAnimation('idle-breathe');
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           return warn(`walk cancelled: ${this.key}`);
@@ -852,21 +857,33 @@ export default function createNpc(def, api) {
         throw err;
       } finally {
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
+        // this.startAnimation('idle');
+        this.startAnimation('idle-breathe');
       }
     },
     async walkToIdle() {
-      // 🚧
-      const fr = this.frame;
-      const fc = this.tr.length;
+      // 🚧 clean
       this.a.paused = true;
-      if (
-        (fr > fc * (1/8) && fr < fc * (3/8))
-        || (fr > fc * (5/8) && fr < fc * (7/8))
-      ) {// Front foot "far forwards"
-        await this.animateOpacity(0.5, 200, true);
-        this.animateOpacity(1, 100, true).catch(_ => {});
-      }
+      await (this.a.wait = api.tween({}).to({}, 150)).promise();
       this.a.paused = false;
+
+      // Assume `[first-cross, first-step, second-cross, second-step]`; first-cross is `0`
+      const frames = /** @type {number[]} */ (spineMeta.anim[this.animName].extremeFrames);
+      const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
+      const index = frames.findIndex(x => x > this.frame);
+
+      switch (index) {
+        case  1: this.frameMap = base.slice(0, this.frame + 1).reverse(); break;
+        case  2: this.frameMap = base.slice(this.frame, frames[2]); break;
+        case  3: this.frameMap = base.slice(frames[2], this.frame + 1).reverse(); break;
+        case -1: this.frameMap = base.slice(this.frame); break;
+      }
+
+      this.framePtr = 0;
+      this.walkOnSpot = true;
+      if (this.frameMap.length > 1) {
+        await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
+      }
     },
     // 🚧 avoid many short timeouts?
     wayTimeout() {
