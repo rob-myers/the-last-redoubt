@@ -618,14 +618,14 @@ export default function createNpc(def, api) {
       this.frameDurs = this.tr.deltas?.map(x => x / this.walkSpeed) ?? this.tr.bodys.map(_ => 1 / stationaryFps);
       
       const { body, head } = this.s;
-      // 🔔 currently every body frame has same width/height
+      // every body frame has same width/height
       const bodyRect = this.tr.bodys[this.frame];
       body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
       const headRect = this.getHeadSkinRect();
       head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
-      // 🔔 currently every body frame has same width/height
       // body anchor is (0, 0) in spine coords
+      // every body frame has same width/height
       const localBodyBounds = spineMeta.anim[animName].animBounds;
       body.anchor.set(Math.abs(localBodyBounds.x) / localBodyBounds.width, Math.abs(localBodyBounds.y) / localBodyBounds.height);
 
@@ -737,9 +737,6 @@ export default function createNpc(def, api) {
       }
       api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.walkSpeed, speed: walkSpeed });
       this.walkSpeed = walkSpeed;
-    },
-    updateFrame() {
-      return this.frame = Math.floor(this.time) % this.tr.length;
     },
     updateHead() {
       const { body, head } = this.s;

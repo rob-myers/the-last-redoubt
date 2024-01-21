@@ -150,7 +150,6 @@ declare namespace NPC {
     ): Promise<void>;
     /** Radians in `[-π, +π]` */
     getAngle(): number;
-    updateFrame(): number; // Unused atm
     getWalkAnimDef(): NpcAnimDef;
     /**
      * - Used to scale up how long it takes to move along navpath.

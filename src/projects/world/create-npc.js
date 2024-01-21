@@ -909,9 +909,6 @@ export default function createNpc(
         this.el.root.style.setProperty(cssName.npcsDebugPlayerDisplay, shouldShow ? 'initial' : 'none');
       }
     },
-    updateFrame() {
-      return 0; // Fix types during migration
-    },
     updateHead() {
       // Fix types during migration
     },
