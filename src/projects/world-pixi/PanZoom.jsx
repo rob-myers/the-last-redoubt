@@ -90,7 +90,7 @@ export default function PanZoom(props) {
       return state.tween.promise();
     },
     pointerdown(e) {
-      state.animationAction('pauseFollow');
+      // state.animationAction('pauseFollow');
       state.tween.stop();
 
       const origin = state.getWorld(e);
@@ -108,7 +108,7 @@ export default function PanZoom(props) {
       } // ignore pointermove outside viewport
     },
     pointerup(e) {
-      state.animationAction('resumeFollow');
+      // state.animationAction('resumeFollow');
       if (!state.start.clientOrigin) {
         return;
       }

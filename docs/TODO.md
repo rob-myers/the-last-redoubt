@@ -42,22 +42,24 @@
 
 - ✅ get pixi-viewport `follow` working manually
 ```sh
-npc rob s.body | api panZoom.viewport.follow - '{ speed: 1, radius: 0, acceleration: 0. }
+npc rob s.body | api panZoom.viewport.follow - '{ speed: 1, radius: 0, acceleration: 0. }'
 api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
 api panZoom.viewport.plugins.remove follow
+
+# manually fix pixi-viewport size
+api canvas.getBoundingClientRect >rect
+api panZoom.viewport.resize $(rect/width), $(rect/height)
 ```
+
 - 🚧 migrate `track` to `track2`
   - ✅ fix blurry follow by syncing viewport
   - ℹ️ follow speed too fast causes jerk
   - ℹ️ follow acceleration causes jerk
   - ✅ resume follow on `ui-idle`
   - ✅ implement "inlined" `track2`
+  - ✅ click while walk should not pause follow
   - 🚧 clean
 
-# manually fix pixi-viewport size
-api canvas.getBoundingClientRect >rect
-api panZoom.viewport.resize $(rect/width), $(rect/height)
-```
 
 - ✅ BUG respawn as different class not working 1st time
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
