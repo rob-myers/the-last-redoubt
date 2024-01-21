@@ -64,7 +64,6 @@ export function computeCliques(items, related) {
   }, /** @type {T[][]} */ ([[]]));
 }
 
-
 /**
  * 
  * @param {any} obj 
