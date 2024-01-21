@@ -59,6 +59,7 @@ api canvas.getBoundingClientRect >rect
 api panZoom.viewport.resize $(rect/width), $(rect/height)
 ```
 
+- ✅ BUG respawn as different class not working 1st time
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
 - BUG TypeError:
   - Cannot destructure property 'gmId' of 'wayMetas[0]' as it is undefined.

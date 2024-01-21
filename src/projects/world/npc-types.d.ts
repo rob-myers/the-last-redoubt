@@ -348,7 +348,6 @@ declare namespace NPC {
     rotate: TweenExt;
     deferred: { resolve(value?: any): void; reject(reason: any): void };
 
-    headSkinName: SpineHeadSkinName;
     /** Depends on head skin */
     initHeadWidth: number;
 

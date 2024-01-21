@@ -710,6 +710,7 @@ export default function NPCs(props) {
       if (spawned) {// Respawn
         await spawned.cancel(true);
         spawned.epochMs = Date.now();
+        e.npcClassKey && spawned.changeClass(e.npcClassKey);
         spawned.def = {
           key: e.npcKey,
           angle,
@@ -717,9 +718,6 @@ export default function NPCs(props) {
           position,
           walkSpeed: defaultNpcSpeed,
         };
-        if (e.npcClassKey) {
-          spawned.changeClass(e.npcClassKey);
-        }
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;

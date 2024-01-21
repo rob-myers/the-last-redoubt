@@ -65,7 +65,6 @@ export default function createNpc(def, api) {
       rotate: emptyTween,
       deferred: { resolve: emptyFn, reject: emptyFn },
 
-      headSkinName: npcClassToSpineHeadSkin[def.classKey],
       initHeadWidth: 0,
       
       doorStrategy: 'none',
@@ -143,7 +142,6 @@ export default function createNpc(def, api) {
     },
     changeClass(npcClassKey) {
       this.classKey = npcClassKey;
-      this.a.headSkinName = npcClassToSpineHeadSkin[npcClassKey];
     },
     clearWayMetas() {
       this.a.wayMetas.length = 0;
@@ -860,6 +858,7 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
+      // 🚧
       const fr = this.frame;
       const fc = this.tr.length;
       this.a.paused = true;

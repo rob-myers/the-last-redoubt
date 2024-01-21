@@ -453,6 +453,7 @@
       }
     },
 
+    // pixi version
     track2: async function* ({ api, args: [npcKey], home }) {
       const w = api.getCached(home.WORLD_KEY_ALT)
       const npc = w.npcs.getNpc(npcKey);
