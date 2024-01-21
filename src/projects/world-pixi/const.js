@@ -58,8 +58,7 @@ export const defaultNpcInteractRadius = 70;
 /** World units per second */
 export const defaultNpcSpeed = 1 * worldUnitsPerMeter;
 
-// 🚧 import into spine-{meta,render} scripts
-export const npcRadius = 13;
+export const npcRadius = 14;
 
 //#endregion
 

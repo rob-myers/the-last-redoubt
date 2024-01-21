@@ -259,7 +259,7 @@ const packedPadding = 2;
   //#endregion
 
   //#region extras
-  const radius = 13 / npcScaleFactor;
+  const radius = npcRadius / npcScaleFactor;
   addRectToPack(2 * (radius + 2), 2 * (radius + 2), 'circular-bounds');
   //#endregion
 
