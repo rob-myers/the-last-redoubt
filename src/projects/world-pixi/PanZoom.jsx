@@ -143,6 +143,10 @@ export default function PanZoom(props) {
       const rect = api.canvas.getBoundingClientRect();
       state.viewport.resize(rect.width, rect.height);
     },
+    setFollowSpeed(speed) {
+      const follow = state.plugins.get("follow");
+      follow && (follow.options.speed = speed);
+    },
     viewportRef(vp) {
       if (vp && !(state.viewport instanceof PixiViewport)) {
         state.viewport = vp;
@@ -221,6 +225,7 @@ export default function PanZoom(props) {
  * @property {() => void} onZoomEnd
  * @property {() => void} onZoom
  * @property {() => void} resize
+ * @property {(speed: number) => void} setFollowSpeed
  * @property {(vp: null | import("pixi-viewport").Viewport) => void} viewportRef
  */
 

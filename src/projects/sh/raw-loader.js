@@ -462,7 +462,8 @@
 
       try {
         w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
-        w.panZoom.follow(w.npcs.getNpc(npcKey).s.body);
+        const npc = w.npcs.getNpc(npcKey)
+        w.panZoom.follow(npc.s.body, { speed: npc.isWalking() ? 0 : 1 });
 
         api.addSuspend(() => {w.panZoom.animationAction("pauseFollow"); return true;});
         api.addResume(() => {w.panZoom.animationAction("resumeFollow"); return true;});
@@ -475,6 +476,12 @@
             }
             if (e.key === "removed-npc" && e.npcKey === npcKey) {
               subscription.unsubscribe();
+            }
+            if (e.key === "started-walking") {
+              w.panZoom.setFollowSpeed(0);
+            }
+            if (e.key === "stopped-walking") {
+              w.panZoom.setFollowSpeed(1);
             }
           });
           subscription.add(() => w.panZoom.animationAction("cancelFollow"));

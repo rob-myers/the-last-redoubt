@@ -61,6 +61,7 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
   - ✅ click while walk should not pause follow
   - ✅ pause `track2` should pause it
   - ✅ suppress pan whilst following
+  - ✅ only follow tightly whilst walking
   - 🚧 clean
 
 
