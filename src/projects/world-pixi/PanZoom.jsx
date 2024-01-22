@@ -79,7 +79,7 @@ export default function PanZoom(props) {
       state.tween.stop();
 
       const scale = opts.scale ?? state.viewport.scale.x;
-      const point = opts.point ?? state.viewport.position.clone();
+      const point = opts.point ?? state.viewport.center.clone();
       const { width, height } = state.getDomBounds();
 
       state.tween = api.tween(state.viewport).to({
@@ -87,7 +87,8 @@ export default function PanZoom(props) {
         x: -point.x * scale + width/2,
         y: -point.y * scale + height/2,
       }, opts.ms ?? 0).easing(TWEEN.Easing.Quadratic.Out);
-      return state.tween.promise();
+
+      await state.tween.promise();
     },
     pointerdown(e) {
       // state.animationAction('pauseFollow');
