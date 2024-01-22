@@ -15,7 +15,7 @@
 - more tables in 301
 - more tables in 101
 
-- 🚧 redo walk -> idle (again)
+- ✅ redo walk -> idle (again)
   - ✅ spine walk has event `feet-cross`
   - ✅ spine-meta.json computes "4 parts of walk":
     - [cross-frame, step-frame, cross-frame, step-frame]
@@ -31,7 +31,7 @@
     - ✅ walk -> idle sets frameMap, frameFinish
   - ✅ cross -> step frame should reverse to cross
   - ✅ step -> cross frame should continue to cross
-  - 🚧 on collision do transition too
+  - ✅ on collision do transition too
 
 - 🚧 improve npc
   - ✅ drop shadow

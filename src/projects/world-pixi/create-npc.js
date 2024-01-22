@@ -4,7 +4,7 @@ import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
 import { pause, precision, testNever } from "../service/generic";
-import { warn } from "../service/log";
+import { info, warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
 import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius, spineAnimNames } from "./const";
 import { obscuredNpcOpacity, spawnFadeMs } from "../world/const";
@@ -121,8 +121,14 @@ export default function createNpc(def, api) {
       if (this.forcePaused && !overridePaused) {
         throw Error('paused: cannot cancel');
       }
+      info(`cancel: cancelling ${this.def.key}`);
 
-      console.log(`cancel: cancelling ${this.def.key}`);
+      if (this.animName === 'walk') {
+        this.nextWalk = null;
+        this.clearWayMetas();
+        !this.a.paused && await this.walkToIdle();
+        this.startAnimation('idle');
+      }
 
       this.a.paused = false;
       this.walkOnSpot = false;
@@ -131,12 +137,6 @@ export default function createNpc(def, api) {
       this.a.wait.stop();
       this.a.deferred.reject('cancelled');
 
-      if (this.animName === 'walk') {
-        this.nextWalk = null;
-        this.clearWayMetas(); // Cancel pending actions
-        this.startAnimation('idle'); // Must change to stop walking?
-      }
-      
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
     canLook() {
@@ -864,7 +864,7 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
-      // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` and first-cross `0`
+      // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` where first-cross `0`
       const frames = /** @type {number[]} */ (spineMeta.anim[this.animName].extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
       const nextId = frames.findIndex(x => x > this.frame);
@@ -875,16 +875,16 @@ export default function createNpc(def, api) {
         case  3: this.frameMap = base.slice(frames[2], this.frame + 1).reverse(); break;
         case -1: this.frameMap = base.slice(this.frame); break;
       }
+      
+      this.framePtr = 0;
+      this.walkOnSpot = true;
+      this.frameDurs = this.frameDurs.map(x => x/2);
 
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
         this.a.paused = true;
         await this.waitFor(150);
         this.a.paused = false;
       }
-
-      this.framePtr = 0;
-      this.walkOnSpot = true;
-      this.frameDurs = this.frameDurs.map(x => x/2);
       if (this.frameMap.length > 1) {
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
       }
