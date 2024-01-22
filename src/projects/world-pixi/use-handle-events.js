@@ -230,7 +230,6 @@ export default function useHandleEvents(api, disabled) {
           break;
         }
         case 'ui-idle':
-          api.panZoom.animationAction('resumeFollow');
           break;
       }
     },

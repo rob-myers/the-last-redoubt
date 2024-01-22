@@ -135,8 +135,7 @@ export default function PanZoom(props) {
       state.isIdle() && state.events.next({ key: 'ui-idle' });
     }, 100),
     onZoom() {
-      // 🤔 onZoomStart preferable
-      state.animationAction('pauseFollow');
+      // NOOP
     },
     resize() {
       const rect = api.canvas.getBoundingClientRect();
