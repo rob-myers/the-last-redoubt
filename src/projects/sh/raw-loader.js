@@ -457,7 +457,7 @@
     track2: async function* ({ api, args: [npcKey], home }) {
       const w = api.getCached(home.WORLD_KEY_ALT);
       if (w.panZoom.isFollowing()) {
-        throw Error(`${npcKey}: already following`);
+        throw Error(`${npcKey}: already following someone`);
       }
 
       try {
