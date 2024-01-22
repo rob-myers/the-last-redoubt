@@ -581,6 +581,7 @@ export default function createNpc(def, api) {
       console.log(`pause: pausing ${this.def.key}`);
       this.a.opacity.pause();
       this.a.rotate.pause();
+      this.a.wait.pause();
       this.a.paused = true;
 
       if (this.animName === 'walk') {
@@ -597,6 +598,7 @@ export default function createNpc(def, api) {
 
       this.a.opacity.resume();
       this.a.rotate.resume();
+      this.a.wait.resume();
       this.forcePaused = false;
       this.a.paused = false;
 
@@ -862,28 +864,33 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
-      // 🚧 clean
-      this.a.paused = true;
-      await (this.a.wait = api.tween({}).to({}, 150)).promise();
-      this.a.paused = false;
-
-      // Assume `[first-cross, first-step, second-cross, second-step]`; first-cross is `0`
+      // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` and first-cross `0`
       const frames = /** @type {number[]} */ (spineMeta.anim[this.animName].extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
-      const index = frames.findIndex(x => x > this.frame);
+      const nextId = frames.findIndex(x => x > this.frame);
 
-      switch (index) {
+      switch (nextId) {
         case  1: this.frameMap = base.slice(0, this.frame + 1).reverse(); break;
         case  2: this.frameMap = base.slice(this.frame, frames[2]); break;
         case  3: this.frameMap = base.slice(frames[2], this.frame + 1).reverse(); break;
         case -1: this.frameMap = base.slice(this.frame); break;
       }
 
+      if (nextId === 1 || nextId === 3) {// Pause before moving feet back
+        this.a.paused = true;
+        await this.waitFor(150);
+        this.a.paused = false;
+      }
+
       this.framePtr = 0;
       this.walkOnSpot = true;
+      this.frameDurs = this.frameDurs.map(x => x/2);
       if (this.frameMap.length > 1) {
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
       }
+    },
+    async waitFor(ms) {
+      await (this.a.wait = api.tween({}).to({}, ms)).promise();
     },
     // 🚧 avoid many short timeouts?
     wayTimeout() {

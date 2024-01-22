@@ -237,6 +237,7 @@ declare namespace NPC {
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateTime(deltaRatio: number): void;
     updateWalkSegBounds(index: number): void;
+    waitFor(ms: number): Promise<void>;
     walk(navPath: NPC.GlobalNavPath | Geom.VectJson, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     /** Transition animation from walking to idle */
     walkToIdle(): Promise<void>;
@@ -345,6 +346,7 @@ declare namespace NPC {
 
     opacity: TweenExt;
     rotate: TweenExt;
+    /** Waiting needn't pause */
     wait: TweenExt;
     /** 🚧 rename because for walk completion */
     deferred: { resolve(value?: any): void; reject(reason: any): void };
