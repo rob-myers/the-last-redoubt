@@ -22,20 +22,21 @@
   - ✅ avoid recomputing frame
   - ✅ move anim props to top-level
     - including those which will be inside track
-  - 🚧 can specify subframes e.g. reverse
+  - ✅ can specify subframes e.g. reverse
     - ✅ specify track type
     - ✅ replace `shared` and `durations` with track
     - ✅ use frame{,Ptr,Map,Finish}
     - ✅ avoid re-creating tracks
     - ✅ BUG on HMR whilst `lie` then spawn away
-    - 🚧 walk -> idle sets frameMap, frameFinish
-  - cross -> step frame should reverse to cross
-  - step -> cross frame should continue to cross
+    - ✅ walk -> idle sets frameMap, frameFinish
+  - ✅ cross -> step frame should reverse to cross
+  - ✅ step -> cross frame should continue to cross
+  - 🚧 on collision do transition too
 
 - 🚧 improve npc
   - ✅ drop shadow
   - ✅ better transition walk -> idle
-  - chained rotate tween instead of sharp rotate
+  - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
   - finish obscureBySurfaces
@@ -58,6 +59,8 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
   - ✅ resume follow on `ui-idle`
   - ✅ implement "inlined" `track2`
   - ✅ click while walk should not pause follow
+  - ✅ pause `track2` should pause it
+  - ✅ suppress pan whilst following
   - 🚧 clean
 
 

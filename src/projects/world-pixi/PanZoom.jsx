@@ -41,15 +41,18 @@ export default function PanZoom(props) {
           break;
         case 'cancelFollow':
           state.plugins.remove('follow');
+          this.plugins.resume('drag');
           break;
         case 'pauseFollow':
           state.plugins.pause('follow');
+          this.plugins.resume('drag');
           break;
         case 'pause':
           state.tween.pause();
           break;
         case 'resumeFollow':
           state.plugins.resume('follow');
+          this.plugins.pause('drag');
           break;
         case 'play':
           state.tween.resume();
@@ -59,8 +62,9 @@ export default function PanZoom(props) {
           throw testNever(type, { suffix: 'animationAction' });
       }
     },
-    follow(target, opts = { speed: 1 }) {
+    follow(target, opts = { speed: 0 }) {
       this.viewport.follow(/** @type {*} */ (target), opts);
+      this.plugins.pause('drag');
     },
     getDomBounds() {
       return /** @type {HTMLDivElement} */ (api.canvas.parentElement).getBoundingClientRect();
@@ -91,7 +95,6 @@ export default function PanZoom(props) {
       await state.tween.promise();
     },
     pointerdown(e) {
-      // state.animationAction('pauseFollow');
       state.tween.stop();
 
       const origin = state.getWorld(e);
@@ -109,7 +112,6 @@ export default function PanZoom(props) {
       } // ignore pointermove outside viewport
     },
     pointerup(e) {
-      // state.animationAction('resumeFollow');
       if (!state.start.clientOrigin) {
         return;
       }

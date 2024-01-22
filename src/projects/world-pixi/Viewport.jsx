@@ -17,12 +17,14 @@ export const Viewport = forwardRef(
           noTicker: true, // We manually update
         }).drag({
           wheel: false,
+          // factor: 1,
           // wheelScroll: 0.1,
         }).wheel({
           wheelZoom: true,
-          // percent: 0.01,
+          smooth: 10,
         }).pinch({
           // percent: 0.1,
+          // factor: 0.1,
         }).clampZoom({
           maxScale: 4,
           minScale: 0.1,
