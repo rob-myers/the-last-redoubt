@@ -3,7 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { pause, precision, testNever } from "../service/generic";
+import { precision, testNever } from "../service/generic";
 import { info, warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
 import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius, spineAnimNames } from "./const";
@@ -126,7 +126,7 @@ export default function createNpc(def, api) {
       if (this.animName === 'walk') {
         this.nextWalk = null;
         this.clearWayMetas();
-        !this.a.paused && await this.walkToIdle();
+        !this.a.paused && await this.walkToIdle().catch(_ => {});
         this.startAnimation('idle');
       }
 
