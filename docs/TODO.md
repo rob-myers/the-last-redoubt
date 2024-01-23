@@ -28,24 +28,6 @@ npc events | filter '({ key, decor }) =>
 }'
 ```
 
-- ✅ redo walk -> idle (again)
-  - ✅ spine walk has event `feet-cross`
-  - ✅ spine-meta.json computes "4 parts of walk":
-    - [cross-frame, step-frame, cross-frame, step-frame]
-  - ✅ avoid recomputing frame
-  - ✅ move anim props to top-level
-    - including those which will be inside track
-  - ✅ can specify subframes e.g. reverse
-    - ✅ specify track type
-    - ✅ replace `shared` and `durations` with track
-    - ✅ use frame{,Ptr,Map,Finish}
-    - ✅ avoid re-creating tracks
-    - ✅ BUG on HMR whilst `lie` then spawn away
-    - ✅ walk -> idle sets frameMap, frameFinish
-  - ✅ cross -> step frame should reverse to cross
-  - ✅ step -> cross frame should continue to cross
-  - ✅ on collision do transition too
-
 - 🚧 improve npc
   - ✅ drop shadow
   - ✅ better transition walk -> idle
@@ -64,23 +46,6 @@ api panZoom.viewport.plugins.remove follow
 api canvas.getBoundingClientRect >rect
 api panZoom.viewport.resize $(rect/width), $(rect/height)
 ```
-
-- ✅ migrate `track` to `track2`
-  - ✅ fix blurry follow by syncing viewport
-  - ℹ️ follow speed too fast causes jerk
-  - ℹ️ follow acceleration causes jerk
-  - ✅ resume follow on `ui-idle`
-  - ✅ implement "inlined" `track2`
-  - ✅ click while walk should not pause follow
-  - ✅ pause `track2` should pause it
-  - ✅ suppress pan whilst following
-  - ✅ only follow tightly whilst walking
-  - ✅ fix `api.npcs.panZoomTo` when following and walking
-  - ✅ handle initially far away (or after panZoom)
-    - ✅ create pixi-viewport plugin `custom-follow` (copy of `follow`)
-    - ✅ faster when further away
-  - ✅ follow zoom should be centred on subject
-  - ✅ clean
 
 - ✅ BUG respawn as different class not working 1st time
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
@@ -778,6 +743,42 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ migrate `track` to `track2`
+  - ✅ fix blurry follow by syncing viewport
+  - ℹ️ follow speed too fast causes jerk
+  - ℹ️ follow acceleration causes jerk
+  - ✅ resume follow on `ui-idle`
+  - ✅ implement "inlined" `track2`
+  - ✅ click while walk should not pause follow
+  - ✅ pause `track2` should pause it
+  - ✅ suppress pan whilst following
+  - ✅ only follow tightly whilst walking
+  - ✅ fix `api.npcs.panZoomTo` when following and walking
+  - ✅ handle initially far away (or after panZoom)
+    - ✅ create pixi-viewport plugin `custom-follow` (copy of `follow`)
+    - ✅ faster when further away
+  - ✅ follow zoom should be centred on subject
+  - ✅ clean
+
+
+- ✅ redo walk -> idle (again)
+  - ✅ spine walk has event `feet-cross`
+  - ✅ spine-meta.json computes "4 parts of walk":
+    - [cross-frame, step-frame, cross-frame, step-frame]
+  - ✅ avoid recomputing frame
+  - ✅ move anim props to top-level
+    - including those which will be inside track
+  - ✅ can specify subframes e.g. reverse
+    - ✅ specify track type
+    - ✅ replace `shared` and `durations` with track
+    - ✅ use frame{,Ptr,Map,Finish}
+    - ✅ avoid re-creating tracks
+    - ✅ BUG on HMR whilst `lie` then spawn away
+    - ✅ walk -> idle sets frameMap, frameFinish
+  - ✅ cross -> step frame should reverse to cross
+  - ✅ step -> cross frame should continue to cross
+  - ✅ on collision do transition too
 
 - ✅ `{gmKey}.webp` -> `{gmKey}.unlit.webp`
   - fix CSS version too
