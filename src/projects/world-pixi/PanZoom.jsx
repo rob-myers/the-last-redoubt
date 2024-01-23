@@ -148,10 +148,6 @@ export default function PanZoom(props) {
       const rect = api.canvas.getBoundingClientRect();
       state.viewport.resize(rect.width, rect.height);
     },
-    setFollowSpeed(speed) {
-      const follow = state.plugins.get("follow");
-      follow && (follow.options.speed = speed);
-    },
     setZoomCenter(target) {
       const center = /** @type {import('@pixi/math').Point} */ (target);
       const plugin = /** @type {import('pixi-viewport').Wheel} */ (this.plugins.get('wheel'));
@@ -235,7 +231,6 @@ export default function PanZoom(props) {
  * @property {() => void} onZoomEnd
  * @property {() => void} onZoom
  * @property {() => void} resize
- * @property {(speed: number) => void} setFollowSpeed
  * @property {(target: Geom.VectJson | null) => void} setZoomCenter
  * @property {(vp: null | import("pixi-viewport").Viewport) => void} viewportRef
  */

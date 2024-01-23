@@ -65,7 +65,7 @@ api canvas.getBoundingClientRect >rect
 api panZoom.viewport.resize $(rect/width), $(rect/height)
 ```
 
-- 🚧 migrate `track` to `track2`
+- ✅ migrate `track` to `track2`
   - ✅ fix blurry follow by syncing viewport
   - ℹ️ follow speed too fast causes jerk
   - ℹ️ follow acceleration causes jerk
@@ -80,7 +80,7 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
     - ✅ create pixi-viewport plugin `custom-follow` (copy of `follow`)
     - ✅ faster when further away
   - ✅ follow zoom should be centred on subject
-  - 🚧 clean
+  - ✅ clean
 
 - ✅ BUG respawn as different class not working 1st time
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
