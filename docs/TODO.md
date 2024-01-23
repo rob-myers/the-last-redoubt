@@ -16,8 +16,8 @@
 - more tables in 101
 
 - TTY BUG link interference: `ps` and an info link
-  - maybe tty window too thin?
 - TTY BUG links not pan-zooming
+  - maybe tty window too thin?
 - TTY BUG tty history with multiple lines loses row(s), e.g.
 ```sh
 npc events | filter '({ key, decor }) =>
@@ -77,8 +77,9 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
   - ✅ only follow tightly whilst walking
   - ✅ fix `api.npcs.panZoomTo` when following and walking
   - ✅ handle initially far away (or after panZoom)
-    - ✅ create pixi-viewport plugin follow2 (copy of follow)
+    - ✅ create pixi-viewport plugin `custom-follow` (copy of `follow`)
     - ✅ faster when further away
+  - ✅ follow zoom should be centred on subject
   - 🚧 clean
 
 - ✅ BUG respawn as different class not working 1st time

@@ -43,10 +43,12 @@ export default function PanZoom(props) {
         case 'cancelFollow':
           state.plugins.remove('custom-follow');
           this.plugins.resume('drag');
+          state.setZoomCenter(null);
           break;
         case 'pauseFollow':
           state.plugins.pause('custom-follow');
           this.plugins.resume('drag');
+          state.setZoomCenter(null);
           break;
         case 'pause':
           state.tween.pause();
@@ -67,6 +69,7 @@ export default function PanZoom(props) {
       // this.viewport.follow(/** @type {*} */ (target), opts);
       this.viewport.plugins.add('custom-follow', new Follow(this.viewport, /** @type {*} */ (target), opts));
       this.plugins.pause('drag');
+      state.setZoomCenter(target);
     },
     getDomBounds() {
       return /** @type {HTMLDivElement} */ (api.canvas.parentElement).getBoundingClientRect();
@@ -149,6 +152,11 @@ export default function PanZoom(props) {
       const follow = state.plugins.get("follow");
       follow && (follow.options.speed = speed);
     },
+    setZoomCenter(target) {
+      const center = /** @type {import('@pixi/math').Point} */ (target);
+      const plugin = /** @type {import('pixi-viewport').Wheel} */ (this.plugins.get('wheel'));
+      plugin.options.center = center;
+    },
     viewportRef(vp) {
       if (vp && !(state.viewport instanceof PixiViewport)) {
         state.viewport = vp;
@@ -228,6 +236,7 @@ export default function PanZoom(props) {
  * @property {() => void} onZoom
  * @property {() => void} resize
  * @property {(speed: number) => void} setFollowSpeed
+ * @property {(target: Geom.VectJson | null) => void} setZoomCenter
  * @property {(vp: null | import("pixi-viewport").Viewport) => void} viewportRef
  */
 
