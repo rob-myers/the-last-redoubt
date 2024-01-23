@@ -7,6 +7,7 @@ import debounce from "debounce";
 import { Vect } from "../geom";
 import { longClickMs } from "../service/const";
 import { testNever } from "../service/generic";
+import { Follow } from './follow-plugin';
 import useStateRef from "../hooks/use-state-ref";
 import Viewport from "./Viewport";
 
@@ -40,30 +41,31 @@ export default function PanZoom(props) {
           state.tween.stop();
           break;
         case 'cancelFollow':
-          state.plugins.remove('follow');
+          state.plugins.remove('custom-follow');
           this.plugins.resume('drag');
           break;
         case 'pauseFollow':
-          state.plugins.pause('follow');
+          state.plugins.pause('custom-follow');
           this.plugins.resume('drag');
           break;
         case 'pause':
           state.tween.pause();
           break;
         case 'resumeFollow':
-          state.plugins.resume('follow');
+          state.plugins.resume('custom-follow');
           this.plugins.pause('drag');
           break;
         case 'play':
           state.tween.resume();
-          state.plugins.resume('follow');
+          state.plugins.resume('custom-follow');
           break;
         default:
           throw testNever(type, { suffix: 'animationAction' });
       }
     },
     follow(target, opts = { speed: 0 }) {
-      this.viewport.follow(/** @type {*} */ (target), opts);
+      // this.viewport.follow(/** @type {*} */ (target), opts);
+      this.viewport.plugins.add('custom-follow', new Follow(this.viewport, /** @type {*} */ (target), opts));
       this.plugins.pause('drag');
     },
     getDomBounds() {
@@ -73,7 +75,7 @@ export default function PanZoom(props) {
       return Vect.from(state.transform.localTransform.applyInverse(e.global)).precision(2);
     },
     isFollowing() {
-      return !!state.viewport.plugins.get('follow');
+      return !!state.viewport.plugins.get('custom-follow');
     },
     isIdle() {
       const { touches, isMouseDown } = state.input;

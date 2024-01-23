@@ -76,7 +76,9 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
   - ✅ suppress pan whilst following
   - ✅ only follow tightly whilst walking
   - ✅ fix `api.npcs.panZoomTo` when following and walking
-  - 🚧 handle case where initially far away (or after pause)
+  - ✅ handle initially far away (or after panZoom)
+    - ✅ create pixi-viewport plugin follow2 (copy of follow)
+    - ✅ faster when further away
   - 🚧 clean
 
 - ✅ BUG respawn as different class not working 1st time
