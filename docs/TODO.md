@@ -15,6 +15,19 @@
 - more tables in 301
 - more tables in 101
 
+- TTY BUG link interference: `ps` and an info link
+  - maybe tty window too thin?
+- TTY BUG links not pan-zooming
+- TTY BUG tty history with multiple lines loses row(s), e.g.
+```sh
+npc events | filter '({ key, decor }) =>
+  key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {
+  const { npcs } = api.getCached(home.WORLD_KEY);
+  const player = npcs.getPlayer();
+  return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
+}'
+```
+
 - ✅ redo walk -> idle (again)
   - ✅ spine walk has event `feet-cross`
   - ✅ spine-meta.json computes "4 parts of walk":
@@ -62,8 +75,9 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
   - ✅ pause `track2` should pause it
   - ✅ suppress pan whilst following
   - ✅ only follow tightly whilst walking
+  - ✅ fix `api.npcs.panZoomTo` when following and walking
+  - 🚧 handle case where initially far away (or after pause)
   - 🚧 clean
-
 
 - ✅ BUG respawn as different class not working 1st time
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
@@ -81,15 +95,7 @@ nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk
 - BUG saw doors not opening when other npc is `walk --open`
   - compare to CSS version
 - BUG pointerdown not detected after resized to full screen
-- BUG tty history with multiple lines loses row(s), e.g.
-```sh
-npc events | filter '({ key, decor }) =>
-  key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {
-  const { npcs } = api.getCached(home.WORLD_KEY);
-  const player = npcs.getPlayer();
-  return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
-}'
-```
+
 
 - 🚧 pause "npc" process darkens npc
 - ✅ pause "npc" process pauses npc
