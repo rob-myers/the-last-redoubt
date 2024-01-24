@@ -591,23 +591,20 @@ function mockHandleDecorClick({ decor }, api) {
 
   if (decor.type === 'point' && decor.meta.label) {
     const label = `${decor.meta.label}`;
-    const gmId = /** @type {number} */ (decor.meta.gmId);
-    const roomId = /** @type {number} */ (decor.meta.roomId);
+    const { gmId, roomId} = decor.meta;
     const gm = api.gmGraph.gms[gmId];
     const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
-    // Square brackets induces a link via `linkProviderDef`
+    // square brackets induces link via `linkProviderDef`
     const line = `ℹ️  [ ${ansi.Blue}${label}${ansi.Reset} ] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
     
-    worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
+    worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{
       lineText: stripAnsi(line),
       linkText: stripAnsi(label),
       // linkStartIndex: visibleUnicodeLength('ℹ️  ['),
       linkStartIndex: ('ℹ️  [').length,
-      async callback() {
-        // ℹ️ could have side effect e.g. panzoom
+      async callback() {// can have side effect e.g. panzoom
         const point = gm.matrix.transformPoint(gm.rooms[roomId].center);
         await api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
-        // ℹ️ return value is important
       },
     }] }));
   }

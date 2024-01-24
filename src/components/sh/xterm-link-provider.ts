@@ -173,7 +173,7 @@ const translateBufferLineToStringWithWrap = (
     if (!line) {
       break;
     }
-    lineString += line.translateToString(true).substring(0, terminal.cols);
+    lineString += line.translateToString(true);
     lineIndex++;
   } while (lineWrapsToNext);
 
