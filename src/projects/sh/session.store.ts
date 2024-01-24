@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 import { ansi } from '../service/const';
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
+import { warn } from '../service/log';
 import { computeNormalizedParts, formatMessage, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
@@ -317,7 +318,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
         && x.linkText === opts.linkText
       )?.callback(opts.lineNumber);
 
-      try {// HACK: permit toggle link (e.g. on/off) without leaving link first
+      try {// 🔔 HACK: permit toggle link (e.g. on/off) without leaving link first
         const { xterm } = api.getSession(opts.sessionKey).ttyShell.xterm;
         const linkifier = (xterm as any)._core.linkifier2;
         // console.log(linkifier);
@@ -326,7 +327,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
           position && linkifier._askForLink(position, false);
         });
       } catch (e) {
-        console.warn('HACK: permit toggle link: failed', e);
+        warn('HACK: permit toggle link: failed', e);
       }
     },
 

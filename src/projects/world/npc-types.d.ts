@@ -572,7 +572,6 @@ declare namespace NPC {
     | { key: 'fov-changed'; gmRoomIds: Geomorph.GmRoomId[]; added: Geomorph.GmRoomId[]; removed: Geomorph.GmRoomId[] }
     | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
     | { key: 'npc-internal'; npcKey: string; event: 'cancelled' | 'paused' | 'resumed' }
-    | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }
     | { key: 'removed-npc'; npcKey: string; }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; }

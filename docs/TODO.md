@@ -20,8 +20,7 @@
  - issue disappeared when removed emoji
  - one-line-fix of xterm-link-provider from:
    > https://github.com/LabhanshAgrawal/xterm-link-provider/pull/35
-
-- start using `on-tty-link`?
+- ✅ remove `on-tty-link`
 - TTY BUG link interference: `ps` and an info link
 - TTY BUG tty history with multiple lines loses row(s), e.g.
 ```sh

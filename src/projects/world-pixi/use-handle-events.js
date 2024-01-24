@@ -126,9 +126,6 @@ export default function useHandleEvents(api, disabled) {
           // console.log(e);
           api.debug.updateDebugRoom();
           break;
-        case 'on-tty-link':
-          mockOnTtyLink(e, api);
-          break;
         case 'started-walking':
           // Also overwrites extended path
           api.debug.addNavPath(api.lib.getNavPathName(e.npcKey), e.navPath);
@@ -609,18 +606,4 @@ function mockHandleDecorClick({ decor }, api) {
     }] }));
   }
 
-}
-
-/**
- * 🚧 mock
- * @param {NPC.NPCsEvent & { key: 'on-tty-link' }} event
- * @param  {Pick<import('./WorldPixi').State, 'gmGraph' | 'npcs'>} api
- */
-function mockOnTtyLink(event, api) {
-  const ttyCtxt = event.ttyCtxt;
-  if (ttyCtxt.key === 'room') {
-    const gm = api.gmGraph.gms[ttyCtxt.gmId];
-    const point = gm.matrix.transformPoint(gm.rooms[ttyCtxt.roomId].center);
-    api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
-  }
 }
