@@ -87,31 +87,9 @@ export class ttyXtermClass {
   initialise() {
     const xtermDisposable = this.xterm.onData(this.handleXtermInput.bind(this));
     const unregisterWriters = this.session.io.handleWriters(this.onMessage.bind(this));
-    // We need to preserve input on resize terminal width smaller than input
-    const resizeDisposable = this.xterm.onResize(() => {
-      if (!this.promptReady) {
-        return;
-      }
-      const input = this.input;
-      if (this.xterm.buffer.active.cursorX === 0) {
-        // Special case: input exactly one line with cursor just onto next line
-        this.xterm.write('\x1b[A');
-      }
-      this.clearInput();
-      this.setInput(input);
-      /**
-       * Avoid xterm.js moving cursor onto next line for small widths.
-       * - unfortunately we lose the cursor position
-       * - see also min-width in <XTerm>
-       * - see also clearInput numLines computation
-       */
-      this.setCursor(0);
-      this.input = input;
-    });
     this.cleanups.push(
       () => xtermDisposable.dispose(),
       unregisterWriters,
-      () => resizeDisposable.dispose(),
     );
   }
 
@@ -134,17 +112,15 @@ export class ttyXtermClass {
    * Returns the cursor to the start of the input.
    */
   clearInput() {
-    // Return to start of input
     this.setCursor(0);
+
     // Compute number of lines to clear, starting at current
-    // const numLines = Math.min(this.numLines(), (this.xterm.rows + 1) - this.cursorRow);
     const numLines = Math.max(
-      // Clear current input
       this.numLines(),
       /**
-       * Needed to cover case where terminal width is resized small,
+       * Cover case where terminal width resized narrow,
        * causing pending input to wrap over many lines.
-       * Don't understand why `this.numLines()` is insufficient. Maybe out of sync?
+       * Why is `this.numLines()` insufficient? Maybe out of sync?
        */
       this.xterm.rows - this.xterm.buffer.active.cursorY - 1,
     );
@@ -154,9 +130,9 @@ export class ttyXtermClass {
     // ESC[F means Cursor Backward (upwards) -- but why not ESC[A? 
     // ESC[2K means Erase In Line (2 means Erase entire line)
     if (numLines > 1) {
-      this.xterm.write('\x1b[2K\x1b[E'.repeat(numLines));
+      this.xterm.write('\x1b[2K\x1b[E'.repeat(numLines - 1));
       this.xterm.write('\x1b[2K'); // Ensure final line deleted too
-      this.xterm.write('\x1b[F'.repeat(numLines));// Return to start
+      this.xterm.write('\x1b[F'.repeat(numLines - 1));// Return to start
     } else {
       // Seems to solve issue at final line of viewport,
       // i.e. `\x1b[E` did nothing, and `\x1b[F` moved cursor up.
@@ -500,14 +476,16 @@ export class ttyXtermClass {
     let row = 0, col = 0;
     for (let i = 0; i < cursor; ++i) {
       const chr = input.charAt(i);
-      if (chr === '\n') {
+      if (col === 0 && (chr === '\r' || chr === '\n')) {
+        // NOOP
+      } else if (chr === '\n') {
         col = 0;
-        row += 1;
+        row++;
       } else {
-        col += 1;
+        col++;
         if (col >= cols) {
           col = 0;
-          row += 1;
+          row++;
         }
       }
     }
@@ -551,7 +529,7 @@ export class ttyXtermClass {
         this.readyForInput = true;
         return;
       }
-      case 'send-history-line': {
+      case 'send-history-line':
         if (msg.line) {
           const line = msg.line.split(/\r?\n/).join('\r\n');
           if (this.historyIndex === -1) {
@@ -568,7 +546,6 @@ export class ttyXtermClass {
           this.preHistory = '';
         }
         return;
-      }
       case 'error': {
         this.queueCommands([{
           key: 'line',
@@ -607,10 +584,10 @@ export class ttyXtermClass {
   }
 
   /**
-   * Count the number of lines in the current input.
+   * Count the number of lines in the current input, including prompt.
    */
   private numLines() {
-    return 1 + this.offsetToColRow(this.input, this.input.length + 2).row;
+    return 1 + this.offsetToColRow(this.actualLine(this.input), this.input.length + 2).row;
   }
 
   async pasteLines(lines: string[], fromProfile = false) {
@@ -630,8 +607,11 @@ export class ttyXtermClass {
 
   prepareForCleanMsg() {
     if (this.readyForInput && this.input.length > 0) {
-      const linesLeftOfInput = this.numLines() - (1 + this.offsetToColRow(this.input, this.cursor + 2).row);
-      this.queueCommands([...Array(1 + linesLeftOfInput)].map(_ => ({ key: 'line', line: '' })));
+      const { cursorX, cursorY } = this.xterm.buffer.active;
+      if (cursorX > 0) {
+        // Separate pending input from the message we will write
+        this.queueCommands([{ key: 'line', line: '' }]);
+      }
       this.cursor = 0;
     } else if (this.input.length === 0) {
       this.clearInput();
@@ -814,11 +794,7 @@ export class ttyXtermClass {
    * Move the terminal's cursor and update `this.cursor`.
    */
   private setCursor(newCursor: number) {
-    if (newCursor < 0) {
-      newCursor = 0;
-    } else if (newCursor > this.input.length) {
-      newCursor = this.input.length;
-    }
+    newCursor = Math.min(this.input.length, Math.max(0, newCursor));
 
     // Compute actual input with prompt(s)
     const inputWithPrompt = this.actualLine(this.input);
@@ -829,7 +805,7 @@ export class ttyXtermClass {
     const newPromptOffset = this.actualCursor(this.input, newCursor);
     const { col: nextCol, row: nextRow } = this.offsetToColRow(inputWithPrompt, newPromptOffset);
     
-    // console.log({ input: this.input, inputWithPrompt, prevPromptOffset, newPromptOffset, prevCol, prevRow, nextCol, nextRow });
+    // console.log({ input: this.input, newCursor, inputWithPrompt, prevPromptOffset, newPromptOffset, prevCol, prevRow, nextCol, nextRow });
 
     // Adjust vertically
     if (nextRow > prevRow) {// Cursor Down

@@ -21,8 +21,13 @@
  - one-line-fix of xterm-link-provider from:
    > https://github.com/LabhanshAgrawal/xterm-link-provider/pull/35
 - ✅ remove `on-tty-link`
-- TTY BUG link interference: `ps` and an info link
-- TTY BUG tty history with multiple lines loses row(s), e.g.
+- ✅ TTY BUG link interference: `ps` and an info link
+  - fixed by earlier fix?
+
+- ✅ TTY BUG tty history with multiple lines loses row(s)
+  - ℹ️ wide TTY near bottom: long multiline + prior short => latter on earlier line
+  - ℹ️ narrow TTY: similar but needn't be near bottom
+  - ℹ️ also happens on press backspace while multiline visible
 ```sh
 npc events | filter '({ key, decor }) =>
   key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {
