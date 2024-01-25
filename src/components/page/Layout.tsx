@@ -114,6 +114,10 @@ function useRegisterTabs(props: Props, model: Model) {
       disabled: !props.initEnabled,
       pagePathname: location.pathname,
 
+
+      focusRoot() {
+        document.getElementById(props.id)?.parentElement?.focus();
+      },
       getTabNodes() {
         const output = [] as TabNode[];
         model.visitNodes(x => x instanceof TabNode && output.push(x));

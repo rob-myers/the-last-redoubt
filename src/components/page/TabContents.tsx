@@ -30,7 +30,11 @@ export default function TabContents({
         onKey={(e) => {
           if (e.key === 'Escape') {
             const tabs = useSiteStore.getState().tabs[tabsKey];
-            if (!tabs.disabled) tabs.toggleEnabled();
+            if (!tabs.disabled) {
+              tabs.toggleEnabled();
+              // Prevent subsequent 'Enter' from propagating to TTY
+              tabs.focusRoot();
+            }
           }
           if (e.key === 'Enter') {
             const tabs = useSiteStore.getState().tabs[tabsKey];

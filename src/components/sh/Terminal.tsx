@@ -32,6 +32,7 @@ export default function Terminal(props: Props) {
     hasEverDisabled: false,
     pausedPids: {} as Record<number, true>,
     session: null as null | Session,
+    wasFocused: false,
     xtermReady: false,
   }));
 
@@ -50,6 +51,7 @@ export default function Terminal(props: Props) {
     if (props.disabled && state.xtermReady) {
       state.hasEverDisabled = true;
       useSession.api.writeMsgCleanly(props.sessionKey, formatMessage(`${ansi.White}paused session`, 'info'), { prompt: false });
+      state.wasFocused = document.activeElement === state.session?.ttyShell.xterm.xterm.textarea;
 
       // Pause running processes
       Object.values((state.session?.process)??{}).filter(
@@ -63,6 +65,10 @@ export default function Terminal(props: Props) {
 
     if (!props.disabled && state.hasEverDisabled && state.xtermReady) {
       useSession.api.writeMsgCleanly(props.sessionKey, formatMessage(`${ansi.White}resumed session`, 'info'));
+
+      if (state.wasFocused) {
+        state.session?.ttyShell.xterm.xterm.focus();
+      }
 
       // Resume processes we suspended
       const processes = Object.values((state.session?.process)??{});
