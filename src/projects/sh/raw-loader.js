@@ -167,11 +167,11 @@
     /** Ping per second until query {WORLD_KEY} found */
     awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
       while (!api.getCached(WORLD_KEY)?.isReady()) {
-        api.info(`polling for world ${api.ansi.White}${WORLD_KEY}`)
+        api.info(`polling for ${api.ansi.White}${WORLD_KEY}`)
         yield* api.sleep(1)
       }
       api.getCached(WORLD_KEY).npcs.connectSession(api.meta.sessionKey)
-      api.info(`found world ${api.ansi.White}${WORLD_KEY}`)
+      api.info(`found ${api.ansi.White}${WORLD_KEY}`)
     },
     
     /**
