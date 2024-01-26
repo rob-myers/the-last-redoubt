@@ -202,6 +202,10 @@ export class ttyXtermClass {
     return this.cursor;
   }
 
+  getInput() {
+    return this.input;
+  }
+
   /**
    * Get non-empty lines as lookup `{ [lineText]: true }`.
    * ANSI codes are stripped (important for equality testing).
@@ -476,18 +480,12 @@ export class ttyXtermClass {
     return this.promptReady;
   }
 
-  nextInteractivePrompt(immediate = false) {
+  nextInteractivePrompt() {
     if (this.promptReady && this.input.length > 0) {
       if (this.input.at(-1) !== '\\') {
         this.input = `${this.input}\\`;
       }
-      if (immediate) {
-        this.sendLine();
-      } else {
-        this.setCursor(this.input.length - 1);
-        this.xterm.write('\r\n');
-        this.sendLine();
-      }
+      this.sendLine();
     }
   }
 
@@ -848,7 +846,7 @@ export class ttyXtermClass {
    * Writes the input which may span over multiple lines.
    * Updates {this.input}. Finishes with cursor at end of input.
    */
-  private setInput(newInput: string) {
+  setInput(newInput: string) {
     this.setCursor(0); // Return to start of input.
     const realNewInput = this.actualLine(newInput);
     this.xterm.write(realNewInput);

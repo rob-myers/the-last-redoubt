@@ -25,35 +25,45 @@ export default function Terminal(props: Props) {
   const [rootRef, bounds] = useMeasure({ debounce: 0, scroll: false });
 
   const state = useStateRef(() => ({
+    bounds,
+    beforeResize: undefined as { cursor: number; input: string; } | undefined,
     changedWidth: false,
-    cleanups: [] as (() => void)[],
+    cleanup: () => {},
     container: {} as HTMLDivElement,
     cursorBeforePause: undefined as number | undefined,
     fitAddon: new FitAddon,
     focusedBeforePause: false,
     hasEverDisabled: false,
     isTouchDevice: canTouchDevice(),
-    pausedPids: {} as Record<number, true>,
-    bounds,
-    resize() {
-      try {
-        if (state.changedWidth) {
-          // Otherwise can lose pending input at smaller widths
-          state.session?.ttyShell.xterm.nextInteractivePrompt(false);
-        }
-        state.fitAddon.fit();
-      } catch {} // Saw error: This API only accepts integers
+    onFocus() {
+      if (state.beforeResize) {
+        state.ttyXterm.clearInput();
+        state.ttyXterm.setInput(state.beforeResize.input);
+        state.ttyXterm.setCursor(state.beforeResize.cursor);
+        state.beforeResize = undefined;
+      }
     },
-    session: null as null | Session,
-    xterm: null as null | XTermTerminal,
+    pausedPids: {} as Record<number, true>,
+    ready: false,
+    resize() {
+      if (state.changedWidth && state.ttyXterm.getInput()) {
+        state.beforeResize = { input: state.ttyXterm.getInput(), cursor: state.ttyXterm.getCursor() };
+        state.ttyXterm.clearInput();
+        state.ttyXterm.xterm.write(`${ansi.BrightGreenBg}...${ansi.Reset}`);
+      }
+      // Saw error: This API only accepts integers
+      try { state.fitAddon.fit(); } catch {}
+    },
+    session: {} as Session,
+    ttyXterm: {} as ttyXtermClass,
   }));
 
   React.useEffect(() => {// Create session
-    if (!props.disabled && state.session === null) {
+    if (!props.disabled && !state.ready) {
 
-      const session = state.session = useSession.api.createSession(props.sessionKey, props.env);
+      state.session = useSession.api.createSession(props.sessionKey, props.env);
 
-      const xterm = state.xterm = new XTermTerminal({
+      const xterm = new XTermTerminal({
         allowProposedApi: true, // Needed for WebLinksAddon
         fontSize: 16,
         cursorBlink: true,
@@ -68,7 +78,6 @@ export default function Terminal(props: Props) {
         scrollback: scrollback,
         rows: 50,
       });
-
       xterm.registerLinkProvider(new LinkProvider(
         xterm,
         /(\[ [^\]]+ \])/gi,
@@ -91,32 +100,34 @@ export default function Terminal(props: Props) {
         },
       ));
 
-      const ttyXterm = new ttyXtermClass(xterm, {
-        key: session.key,
-        io: session.ttyIo,
-        rememberLastValue(msg) { session.var._ = msg },
+      state.ttyXterm = new ttyXtermClass(xterm, {
+        key: state.session.key,
+        io: state.session.ttyIo,
+        rememberLastValue(msg) { state.session.var._ = msg },
       });
-      ttyXterm.initialise();
-      session.ttyShell.initialise(ttyXterm);
-      const onKeyDisposable = xterm.onKey(e => props.onKey?.(e.domEvent));
+      state.ttyXterm.initialise();
+      state.session.ttyShell.initialise(state.ttyXterm);
 
+      const onKeyDisposable = xterm.onKey(e => props.onKey?.(e.domEvent));
       xterm.loadAddon(state.fitAddon);
       window.addEventListener('resize', state.resize);
       xterm.open(state.container);
       state.resize();
+      xterm.textarea?.addEventListener('focus', state.onFocus);
 
-      state.cleanups = [
-        () => window.removeEventListener('resize', state.resize),
-        () => onKeyDisposable.dispose(),
-        () => xterm.dispose(),
-      ];
+      state.cleanup = () => {
+        window.removeEventListener('resize', state.resize);
+        onKeyDisposable.dispose();
+        xterm.dispose();
+      };
 
+      state.ready = true;
       update();
     }
   }, [props.disabled]);
 
   React.useEffect(() => {// Handle session pause/resume
-    if (!state.session) {
+    if (!state.ready) {
       return;
     }
     const ttyXterm = state.session.ttyShell.xterm;
@@ -139,7 +150,7 @@ export default function Terminal(props: Props) {
       );
 
       // Pause running processes
-      Object.values((state.session?.process)??{}).filter(
+      Object.values((state.session.process)??{}).filter(
         p => p.status === ProcessStatus.Running,
       ).forEach(p => {
         p.onSuspends = p.onSuspends.filter(onSuspend => onSuspend());
@@ -149,12 +160,12 @@ export default function Terminal(props: Props) {
     }
 
     if (!props.disabled && state.hasEverDisabled) {
-      state.focusedBeforePause && state.session?.ttyShell.xterm.xterm.focus();
+      state.focusedBeforePause && state.session.ttyShell.xterm.xterm.focus();
       
       // if pending input will overwrite "paused/resumed session",
       // split it via an interactive prompt
       if (ttyXterm.numLines() > 1 && (ttyXterm.xterm.buffer.active.cursorY + 1) + ttyXterm.numLines() + 2 >= ttyXterm.xterm.rows) {
-        state.session.ttyShell.xterm.nextInteractivePrompt(true);
+        state.session.ttyShell.xterm.nextInteractivePrompt();
       }
 
       useSession.api.writeMsgCleanly(
@@ -179,15 +190,15 @@ export default function Terminal(props: Props) {
 
   React.useEffect(() => () => {// Destroy session
     useSession.api.removeSession(props.sessionKey);
-    state.session = state.xterm = null;
-    state.cleanups.forEach(cleanup => cleanup());
-    state.cleanups.length = 0;
+    state.session = state.ttyXterm = {} as any;
+    state.ready = false;
+    state.cleanup();
   }, []);
 
   React.useEffect(() => {
     state.changedWidth = state.bounds.width !== bounds.width;
     state.bounds = bounds;
-    state.resize();
+    state.ready && state.resize();
   }, [bounds]);
 
   return (
@@ -201,7 +212,7 @@ export default function Terminal(props: Props) {
         onKeyDown={stopKeysPropagating}
       />
     
-      {state.session &&
+      {state.ready &&
         <TouchHelperUi
           session={state.session}
           disabled={props.disabled}

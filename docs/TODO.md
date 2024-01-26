@@ -37,6 +37,8 @@ npc events | filter '({ key, decor }) =>
 }'
 ```
 
+- ✅ TTY: hide pending input whilst resizing, show it on focus
+
 - ✅ improve "tty overwrite scenarios"
   - ✅ on resize TTY change pending input via `\⏎`
   - ✅ on pause TTY change pending input via `\⏎`
