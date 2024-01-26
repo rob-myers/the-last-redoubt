@@ -55,6 +55,7 @@ export type State = {
     setVarDeep: (meta: BaseMeta, varPath: string, varValue: any) => void;
     writeMsg: (sessionKey: string, msg: string, level: 'info' | 'error') => void;
     writeMsgCleanly: (sessionKey: string, msg: string, opts?: {
+      cursor?: number;
       level?: 'info' | 'error';
       prompt?: boolean;
       ttyLinkCtxts?: TtyLinkCtxt[];
@@ -461,14 +462,17 @@ const useStore = create<State>()(devtools((set, get): State => ({
 
     async writeMsgCleanly(sessionKey, msg, opts = {}) {
       const { xterm } = api.getSession(sessionKey).ttyShell;
+
       xterm.prepareForCleanMsg();
       await new Promise<void>(resolve => xterm.queueCommands([
         { key: 'line', line: opts.level ? formatMessage(msg, opts.level) : `${msg}${ansi.Reset}` },
         { key: 'resolve', resolve },
       ]));
+
       opts.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, stripAnsi(msg), opts.ttyLinkCtxts);
       (opts.prompt ?? true) && setTimeout(() => {
-        xterm.showPendingInput();
+        xterm.showPendingInputImmediately();
+        opts.cursor !== undefined && xterm.setCursor(opts.cursor);
         opts.scrollToBottom && xterm.xterm.scrollToBottom();
       });
     },

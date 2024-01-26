@@ -6,6 +6,7 @@ import { Terminal, ITerminalOptions } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { ExtraHandlerContext, LinkProvider } from './xterm-link-provider';
 import useStateRef from 'projects/hooks/use-state-ref';
+import type { ttyXtermClass } from 'projects/sh/tty.xterm';
 
 export default withSize({ monitorHeight: true, monitorWidth: true })(
   function XTermComponent(props: Props) {
@@ -13,17 +14,12 @@ export default withSize({ monitorHeight: true, monitorWidth: true })(
     const state = useStateRef(() => ({
       container: {} as HTMLDivElement,
       fitAddon: new FitAddon,
-      resize() {
-        try { state.fitAddon.fit(); }
-        catch { /** Saw error: This API only accepts integers */ }
-      },
+      resize() {},
       xterm: {} as Terminal,
     }));
 
     React.useEffect(() => {
       const xterm = state.xterm = new Terminal(props.options);
-      xterm.loadAddon(state.fitAddon);
-      window.addEventListener('resize', state.resize);
 
       props.linkProviderDef &&
         xterm.registerLinkProvider(new LinkProvider(
@@ -31,11 +27,20 @@ export default withSize({ monitorHeight: true, monitorWidth: true })(
           props.linkProviderDef.regex,
           props.linkProviderDef.callback,
         ));
-      
-      xterm.open(state.container);
+
+      const { ttyXterm, cleanups } = props.onMount(xterm);
+
+      state.resize = () => {
+        try {
+          ttyXterm.nextInteractivePrompt(false);
+          state.fitAddon.fit();
+        } catch { /** Saw error: This API only accepts integers */ }
+      };
+      xterm.loadAddon(state.fitAddon);
+      window.addEventListener('resize', state.resize);
       state.resize();
-      const cleanups = props.onMount(xterm);
-      // xterm.focus();
+
+      xterm.open(state.container);
 
       return () => {
         window.removeEventListener('resize', state.resize);
@@ -65,8 +70,10 @@ interface Props {
     callback(event: MouseEvent, text: string, extraCtxt: ExtraHandlerContext): void;
   };
   options?: ITerminalOptions;
-  /** Returns cleanups */
-  onMount: (xterm: Terminal) => (() => void)[];
+  onMount: (xterm: Terminal) => {
+    cleanups: (() => void)[];
+    ttyXterm: ttyXtermClass;
+  };
   /** @see withSize */
   size: {
     width?: number;

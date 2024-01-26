@@ -198,6 +198,10 @@ export class ttyXtermClass {
     this.xterm.resize(this.xterm.cols - 1, this.xterm.rows);
   }
 
+  getCursor() {
+    return this.cursor;
+  }
+
   /**
    * Get non-empty lines as lookup `{ [lineText]: true }`.
    * ANSI codes are stripped (important for equality testing).
@@ -467,6 +471,24 @@ export class ttyXtermClass {
     return col === 0;
   }
 
+  /** Has the tty prompted for input and we haven't sent yet? */
+  isPromptReady() {
+    return this.promptReady;
+  }
+
+  nextInteractivePrompt(immediate = false) {
+    if (this.promptReady && this.input.length > 0) {
+      if (this.input.at(-1) !== '\\') {
+        this.input += "\\";
+      }
+      if (immediate) {
+        this.sendLine();
+      } else {
+        this.queueCommands([{ key: 'newline' }]);
+      }
+    }
+  }
+
   /**
    * Convert 0-based `cursor` in `input` to
    * a relative 0-based row/col location.
@@ -546,20 +568,18 @@ export class ttyXtermClass {
           this.preHistory = '';
         }
         return;
-      case 'error': {
+      case 'error':
         this.queueCommands([{
           key: 'line',
           line: formatMessage(msg.msg, 'error'),
         }]);
         break;
-      }
-      case 'info': {
+      case 'info':
         this.queueCommands([{
           key: 'line',
           line: formatMessage(msg.msg, 'info'),
         }]);
         break;
-      }
       default: {
         if (isDataChunk(msg)) {
           /**
@@ -586,7 +606,7 @@ export class ttyXtermClass {
   /**
    * Count the number of lines in the current input, including prompt.
    */
-  private numLines() {
+  numLines() {
     return 1 + this.offsetToColRow(this.actualLine(this.input), this.input.length + 2).row;
   }
 
@@ -607,8 +627,7 @@ export class ttyXtermClass {
 
   prepareForCleanMsg() {
     if (this.readyForInput && this.input.length > 0) {
-      const { cursorX, cursorY } = this.xterm.buffer.active;
-      if (cursorX > 0) {
+      if (this.xterm.buffer.active.cursorX > 0) {
         // Separate pending input from the message we will write
         this.queueCommands([{ key: 'line', line: '' }]);
       }
@@ -793,7 +812,7 @@ export class ttyXtermClass {
   /**
    * Move the terminal's cursor and update `this.cursor`.
    */
-  private setCursor(newCursor: number) {
+  setCursor(newCursor: number) {
     newCursor = Math.min(this.input.length, Math.max(0, newCursor));
 
     // Compute actual input with prompt(s)
@@ -856,13 +875,17 @@ export class ttyXtermClass {
     }
   }
 
-  showPendingInput = debounce(() => {
+  showPendingInputImmediately() {
     if (this.readyForInput) {
       const input = this.input;
       this.clearInput(); // Clear to avoid double prompt
       this.setInput(input);
     }
-  }, 5) // Prefer small lag on show cursor
+  }
+
+  // 🔔 breaks `ps` if we remove delay
+  // 🔔 comes before "resumed session" if remove delay
+  showPendingInput = debounce(() => this.showPendingInputImmediately(), 30)
 
   /**
    * Splice `input` into `this.input`.
