@@ -22,7 +22,10 @@ export default function Terminal(props: Props) {
 
   const update = useUpdate();
 
+  const [rootRef, bounds] = useMeasure({ debounce: 0, scroll: false });
+
   const state = useStateRef(() => ({
+    changedWidth: false,
     cleanups: [] as (() => void)[],
     container: {} as HTMLDivElement,
     cursorBeforePause: undefined as number | undefined,
@@ -31,13 +34,15 @@ export default function Terminal(props: Props) {
     hasEverDisabled: false,
     isTouchDevice: canTouchDevice(),
     pausedPids: {} as Record<number, true>,
+    bounds,
     resize() {
       try {
-        state.session?.ttyShell.xterm.nextInteractivePrompt(false);
+        if (state.changedWidth) {
+          // Otherwise can lose pending input at smaller widths
+          state.session?.ttyShell.xterm.nextInteractivePrompt(false);
+        }
         state.fitAddon.fit();
-      } catch {
-        // Saw error: This API only accepts integers
-      }
+      } catch {} // Saw error: This API only accepts integers
     },
     session: null as null | Session,
     xterm: null as null | XTermTerminal,
@@ -179,9 +184,11 @@ export default function Terminal(props: Props) {
     state.cleanups.length = 0;
   }, []);
 
-  const [rootRef, bounds] = useMeasure({ debounce: 0, scroll: false });
-
-  React.useEffect(() => void state.resize(), [bounds]);
+  React.useEffect(() => {
+    state.changedWidth = state.bounds.width !== bounds.width;
+    state.bounds = bounds;
+    state.resize();
+  }, [bounds]);
 
   return (
     <div
