@@ -1,6 +1,6 @@
 import React from 'react';
-import { css, cx } from '@emotion/css';
-import { ITerminalOptions, Terminal as XTermTerminal } from 'xterm';
+import { css } from '@emotion/css';
+import { Terminal as XTermTerminal } from 'xterm';
 import loadable from '@loadable/component';
 import useMeasure from 'react-use-measure';
 import { FitAddon } from 'xterm-addon-fit';
@@ -13,7 +13,6 @@ import { formatMessage, stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
 import { scrollback } from 'projects/sh/io';
 
-import useOnResize from 'projects/hooks/use-on-resize';
 import useStateRef from 'projects/hooks/use-state-ref';
 import type ActualTouchHelperUi from './TouchHelperUi';
 import useUpdate from 'projects/hooks/use-update';
@@ -44,14 +43,26 @@ export default function Terminal(props: Props) {
     xterm: null as null | XTermTerminal,
   }));
 
-  useOnResize(() => state.isTouchDevice = canTouchDevice());
-
   React.useEffect(() => {// Create session
     if (!props.disabled && state.session === null) {
 
       const session = state.session = useSession.api.createSession(props.sessionKey, props.env);
 
-      const xterm = state.xterm = new XTermTerminal(options);
+      const xterm = state.xterm = new XTermTerminal({
+        allowProposedApi: true, // Needed for WebLinksAddon
+        fontSize: 16,
+        cursorBlink: true,
+        rendererType: 'canvas',
+        // mobile: can select single word via long press
+        rightClickSelectsWord: true,
+        theme: {
+          background: 'black',
+          foreground: '#41FF00',
+        },
+        convertEol: false,
+        scrollback: scrollback,
+        rows: 50,
+      });
 
       xterm.registerLinkProvider(new LinkProvider(
         xterm,
@@ -179,7 +190,7 @@ export default function Terminal(props: Props) {
     >
       <div
         ref={el => el && (state.container = el)}
-        className={cx("xterm-container", "scrollable", containerCss)}
+        className="xterm-container scrollable"
         onKeyDown={stopKeysPropagating}
       />
     
@@ -205,44 +216,28 @@ const rootCss = css`
   /* background: purple; */
   height: 100%;
   padding: 4px;
-`;
 
-const containerCss = css`
-  height: inherit;
-  /* background: yellow; // DEBUG */
-  background: black;
-
-  > div {
-    width: 100%;
-  }
-
-  /** Fix xterm-addon-fit when open keyboard on mobile */
-  .xterm-helper-textarea {
-    top: 0 !important;
-  }
-
-  /** This hack avoids <2 col width, where cursor row breaks */
-  min-width: 100px;
-  .xterm-screen {
+  .xterm-container {
+    height: inherit;
+    background: black;
+    /* background: yellow; */
+    
+    > div {
+      width: 100%;
+    }
+    
+    /** Fix xterm-addon-fit when open keyboard on mobile */
+    .xterm-helper-textarea {
+      top: 0 !important;
+    }
+    
+    /** This hack avoids <2 col width, where cursor row breaks */
     min-width: 100px;
+    .xterm-screen {
+      min-width: 100px;
+    }
   }
 `;
-
-const options: ITerminalOptions = {
-  allowProposedApi: true, // Needed for WebLinksAddon
-  fontSize: 16,
-  cursorBlink: true,
-  rendererType: 'canvas',
-  // mobile: can select single word via long press
-  rightClickSelectsWord: true,
-  theme: {
-    background: 'black',
-    foreground: '#41FF00',
-  },
-  convertEol: false,
-  scrollback: scrollback,
-  rows: 50,
-};
 
 const TouchHelperUi = loadable(
   () => import('./TouchHelperUi'),
