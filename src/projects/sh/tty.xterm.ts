@@ -479,12 +479,14 @@ export class ttyXtermClass {
   nextInteractivePrompt(immediate = false) {
     if (this.promptReady && this.input.length > 0) {
       if (this.input.at(-1) !== '\\') {
-        this.input += "\\";
+        this.input = `${this.input}\\`;
       }
       if (immediate) {
         this.sendLine();
       } else {
-        this.queueCommands([{ key: 'newline' }]);
+        this.setCursor(this.input.length - 1);
+        this.xterm.write('\r\n');
+        this.sendLine();
       }
     }
   }

@@ -41,7 +41,7 @@ npc events | filter '({ key, decor }) =>
   - ✅ on resize TTY change pending input via `\⏎`
   - ✅ on pause TTY change pending input via `\⏎`
 
-- clean Terminal e.g. merge XTerm into it?
+- ✅ clean Terminal: merge XTerm into it
 
 - BUG resuming npc `rob` with paused process `track2 rob &` resumes tracking
   - seen via `pausableNpcs &` 

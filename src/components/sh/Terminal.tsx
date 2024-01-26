@@ -1,12 +1,13 @@
 import React from 'react';
-import { css } from '@emotion/css';
-import type { ITerminalOptions } from 'xterm';
+import { css, cx } from '@emotion/css';
+import { ITerminalOptions, Terminal as XTermTerminal } from 'xterm';
 import loadable from '@loadable/component';
+import useMeasure from 'react-use-measure';
+import { FitAddon } from 'xterm-addon-fit';
 
 import { ttyXtermClass } from 'projects/sh/tty.xterm';
 import { ansi } from 'projects/service/const';
 import { canTouchDevice } from 'projects/service/dom';
-import { assertNonNull } from 'projects/service/generic';
 
 import { formatMessage, stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
@@ -14,40 +15,92 @@ import { scrollback } from 'projects/sh/io';
 
 import useOnResize from 'projects/hooks/use-on-resize';
 import useStateRef from 'projects/hooks/use-state-ref';
-import XTerm from './XTerm';
 import type ActualTouchHelperUi from './TouchHelperUi';
 import useUpdate from 'projects/hooks/use-update';
+import { LinkProvider } from './xterm-link-provider';
 
 export default function Terminal(props: Props) {
 
   const update = useUpdate();
 
   const state = useStateRef(() => ({
+    cleanups: [] as (() => void)[],
+    container: {} as HTMLDivElement,
     cursorBeforePause: undefined as number | undefined,
+    fitAddon: new FitAddon,
     focusedBeforePause: false,
     hasEverDisabled: false,
     isTouchDevice: canTouchDevice(),
     pausedPids: {} as Record<number, true>,
+    resize() {
+      try {
+        state.session?.ttyShell.xterm.nextInteractivePrompt(false);
+        state.fitAddon.fit();
+      } catch {
+        // Saw error: This API only accepts integers
+      }
+    },
     session: null as null | Session,
-    /** `session` non-null and initialised */
-    xtermReady: false,
+    xterm: null as null | XTermTerminal,
   }));
 
   useOnResize(() => state.isTouchDevice = canTouchDevice());
 
-  React.useEffect(() => {// Create new session
-    if (!props.disabled && state.session === null && !state.xtermReady) {
-      update(); // Ensure <XTerm> unmount i.e. xterm.dispose(), during HMR
-      const id = setTimeout(() => {
-        state.session = useSession.api.createSession(props.sessionKey, props.env);
-        update();
+  React.useEffect(() => {// Create session
+    if (!props.disabled && state.session === null) {
+
+      const session = state.session = useSession.api.createSession(props.sessionKey, props.env);
+
+      const xterm = state.xterm = new XTermTerminal(options);
+
+      xterm.registerLinkProvider(new LinkProvider(
+        xterm,
+        /(\[ [^\]]+ \])/gi,
+        async function callback(_event, linkText, { lineText, linkStartIndex, lineNumber }) {
+          // console.log('clicked link', {
+          //   sessionKey: props.sessionKey,
+          //   linkText,
+          //   lineText,
+          //   linkStartIndex,
+          //   lineNumber,
+          // });
+          useSession.api.onTtyLink({
+            sessionKey: props.sessionKey,
+            lineText: stripAnsi(lineText),
+            // Omit square brackets and spacing:
+            linkText: stripAnsi(linkText).slice(2, -2),
+            linkStartIndex,
+            lineNumber,
+          });
+        },
+      ));
+
+      const ttyXterm = new ttyXtermClass(xterm, {
+        key: session.key,
+        io: session.ttyIo,
+        rememberLastValue(msg) { session.var._ = msg },
       });
-      return () => clearTimeout(id);
+      ttyXterm.initialise();
+      session.ttyShell.initialise(ttyXterm);
+      const onKeyDisposable = xterm.onKey(e => props.onKey?.(e.domEvent));
+
+      xterm.loadAddon(state.fitAddon);
+      window.addEventListener('resize', state.resize);
+      xterm.open(state.container);
+      state.resize();
+
+      state.cleanups = [
+        () => window.removeEventListener('resize', state.resize),
+        () => onKeyDisposable.dispose(),
+        () => xterm.dispose(),
+      ];
+
+      update();
     }
   }, [props.disabled]);
 
   React.useEffect(() => {// Handle session pause/resume
-    if (!state.xtermReady || !state.session) {
+    if (!state.session) {
       return;
     }
     const ttyXterm = state.session.ttyShell.xterm;
@@ -110,69 +163,34 @@ export default function Terminal(props: Props) {
 
   React.useEffect(() => () => {// Destroy session
     useSession.api.removeSession(props.sessionKey);
-    state.session = null;
-    state.xtermReady = false;
+    state.session = state.xterm = null;
+    state.cleanups.forEach(cleanup => cleanup());
+    state.cleanups.length = 0;
   }, []);
 
-  return state.session ? (
-    <div className={rootCss}>
+  const [rootRef, bounds] = useMeasure({ debounce: 0, scroll: false });
 
-      <XTerm
-        onMount={(xterm) => {// `xterm` is an xterm.js instance
-          const session = assertNonNull(state.session);
-          const ttyXterm = new ttyXtermClass(xterm, {
-            key: session.key,
-            io: session.ttyIo,
-            rememberLastValue(msg) { session.var._ = msg },
-          });
+  React.useEffect(() => void state.resize(), [bounds]);
 
-          ttyXterm.initialise();
-          session.ttyShell.initialise(ttyXterm);
-          state.xtermReady = true;
-          const disposable = xterm.onKey(e => props.onKey?.(e.domEvent));
-
-          update();
-
-          return { ttyXterm, cleanups: [() => disposable.dispose()] };
-        }}
-        options={options}
-        linkProviderDef={{
-          /**
-           * Links look like this:
-           * - [ foo bar ]
-           * - [ 1 ]
-           */
-          regex: /(\[ [^\]]+ \])/gi,
-          // regex: /(\[[^\]]+\])/gi,
-          async callback(_event, linkText, { lineText, linkStartIndex, lineNumber }) {
-            // console.log('clicked link', {
-            //   sessionKey: props.sessionKey,
-            //   linkText,
-            //   lineText,
-            //   linkStartIndex,
-            //   lineNumber,
-            // });
-            useSession.api.onTtyLink({
-              sessionKey: props.sessionKey,
-              lineText: stripAnsi(lineText),
-              // Omit square brackets and spacing:
-              linkText: stripAnsi(linkText).slice(2, -2),
-              linkStartIndex,
-              lineNumber,
-            });
-          },
-        }}
+  return (
+    <div
+      className={rootCss}
+      ref={rootRef}
+    >
+      <div
+        ref={el => el && (state.container = el)}
+        className={cx("xterm-container", "scrollable", containerCss)}
+        onKeyDown={stopKeysPropagating}
       />
-
-      {state.xtermReady &&
+    
+      {state.session &&
         <TouchHelperUi
           session={state.session}
           disabled={props.disabled}
         />
       }
-
     </div>
-  ) : null;
+  );
 };
 
 interface Props {
@@ -184,10 +202,30 @@ interface Props {
 }
 
 const rootCss = css`
-  /* // DEBUG xterm fit issue
-  background: purple; */
+  /* background: purple; */
   height: 100%;
   padding: 4px;
+`;
+
+const containerCss = css`
+  height: inherit;
+  /* background: yellow; // DEBUG */
+  background: black;
+
+  > div {
+    width: 100%;
+  }
+
+  /** Fix xterm-addon-fit when open keyboard on mobile */
+  .xterm-helper-textarea {
+    top: 0 !important;
+  }
+
+  /** This hack avoids <2 col width, where cursor row breaks */
+  min-width: 100px;
+  .xterm-screen {
+    min-width: 100px;
+  }
 `;
 
 const options: ITerminalOptions = {
@@ -210,3 +248,7 @@ const TouchHelperUi = loadable(
   () => import('./TouchHelperUi'),
   { ssr: false },
 ) as typeof ActualTouchHelperUi;
+
+function stopKeysPropagating(e: React.KeyboardEvent) {
+  e.stopPropagation();
+}
