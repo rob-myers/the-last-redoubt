@@ -299,23 +299,7 @@ export class ttyXtermClass {
    * Move cursor forwards/backwards (+1/-1).
    */
   private handleCursorMove(dir: -1 | 1) {
-    let delta = dir === 1
-      ? Math.min(dir, this.input.length - this.cursor)
-      : Math.max(dir, -this.cursor);
-    const nextChar = this.input.charAt(this.cursor + delta);
-
-    if (dir === 1) {
-      if (nextChar === '\r') {
-        delta += 2; // Skip over \r and \n
-      } else if (nextChar === '\n') {
-        delta += 1;
-      }
-    } else {
-      if (nextChar === '\n') {
-        delta -= 1; // Skip over \r
-      }
-    }
-    this.setCursor(this.cursor + delta);
+    this.setCursor(Math.min(this.input.length, Math.max(0, this.cursor + dir)));
   }
 
   private async handleXtermInput(data: string) {
@@ -816,6 +800,10 @@ export class ttyXtermClass {
   setCursor(newCursor: number) {
     newCursor = Math.min(this.input.length, Math.max(0, newCursor));
 
+    // const active = this.active;
+    // const pagePrevChars = active.cursorX + (active.cursorY * this.cols);
+    // newCursor = Math.max(newCursor, this.input.length - pagePrevChars + 1)
+
     // Compute actual input with prompt(s)
     const inputWithPrompt = this.actualLine(this.input);
     // Get previous cursor position
@@ -839,34 +827,6 @@ export class ttyXtermClass {
       for (let i = prevCol; i < nextCol; ++i) this.xterm.write('\x1b[C');
     } else {// Cursor Backward
       for (let i = nextCol; i < prevCol; ++i) this.xterm.write('\x1b[D');
-    }
-    this.cursor = newCursor;
-  }
-
-  async setCursorProm(newCursor: number) {
-    newCursor = Math.min(this.input.length, Math.max(0, newCursor));
-
-    // Compute actual input with prompt(s)
-    const inputWithPrompt = this.actualLine(this.input);
-    // Get previous cursor position
-    const prevPromptOffset = this.actualCursor(this.input, this.cursor);
-    const { col: prevCol, row: prevRow } = this.offsetToColRow(inputWithPrompt, prevPromptOffset);
-    // Get next cursor position
-    const newPromptOffset = this.actualCursor(this.input, newCursor);
-    const { col: nextCol, row: nextRow } = this.offsetToColRow(inputWithPrompt, newPromptOffset);
-    
-    // Adjust vertically
-    if (nextRow > prevRow) {// Cursor Down
-      await this.writePromise(`\x1b[${nextRow - prevRow}B`);
-    } else if (prevRow > nextRow) {// Cursor Up
-      await this.writePromise(`\x1b[${prevRow - nextRow}A`);
-    }
-
-    // Adjust horizontally
-    if (nextCol > prevCol) {// Cursor Forward
-      await this.writePromise(`\x1b[${nextCol - prevCol}C`);
-    } else if (prevCol > nextCol) {// Cursor Backward
-      await this.writePromise(`\x1b[${prevCol - nextCol}D`);
     }
     this.cursor = newCursor;
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/css';
-import { Terminal as XTermTerminal } from 'xterm';
+import { IDisposable, Terminal as XTermTerminal } from 'xterm';
 import loadable from '@loadable/component';
 import useMeasure from 'react-use-measure';
 import { FitAddon } from 'xterm-addon-fit';
@@ -23,7 +23,7 @@ export default function Terminal(props: Props) {
   const update = useUpdate();
 
   // 🔔 Saw cursor preservation fail at debounce 20
-  const [rootRef, bounds] = useMeasure({ debounce: 50, scroll: false });
+  const [rootRef, bounds] = useMeasure({ debounce: 0, scroll: false });
 
   const state = useStateRef(() => ({
     bounds,
@@ -33,33 +33,28 @@ export default function Terminal(props: Props) {
     fitAddon: new FitAddon,
     focusedBeforePause: false,
     hasEverDisabled: false,
+    inputOnFocus: undefined as undefined | { input: string; cursor: number },
     isTouchDevice: canTouchDevice(),
     onFocus() {
-      // NOOP
+      if (state.inputOnFocus) {
+        state.xterm.setInput(state.inputOnFocus.input);
+        state.xterm.setCursor(state.inputOnFocus.cursor);
+        state.inputOnFocus = undefined;
+      }
     },
     pausedPids: {} as Record<number, true>,
     ready: false,
     async resize() {
-      const input = state.xterm.getInput();
-      const cursor = state.xterm.getCursor();
-      if (input) {
-        await state.xterm.setCursorProm(input.length);
-        await state.xterm.writePromise('\r\n');
-      }
-
-      // Saw error: This API only accepts integers
-      try { state.fitAddon.fit() } catch {};
-
-      if (input) {
-        // go back to end of input via buffer
-        const active = state.xterm.active;
-        const prevLine = active.getLine(active.baseY + active.cursorY - 1)!.translateToString(true);
-        await state.xterm.writePromise(`\x1b[A\x1b[${prevLine.length}C`);
-        // @ts-expect-error
-        state.xterm.cursor = input.length;
-        // restore the cursor, unless not possible (page too small)
-        const pagePrevChars = active.cursorX + (active.cursorY * state.xterm.cols);
-        state.xterm.setCursor(Math.max(cursor, input.length - pagePrevChars));
+      if (state.isTouchDevice) {
+        state.fitAddon.fit();
+      } else {
+        const input = state.xterm.getInput();
+        const cursor = state.xterm.getCursor();
+        if (input) {
+          state.xterm.clearInput();
+          state.inputOnFocus = { input, cursor };
+        }
+        setTimeout(() => state.fitAddon.fit());
       }
     },
     session: {} as Session,
