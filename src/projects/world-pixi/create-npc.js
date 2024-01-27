@@ -44,8 +44,6 @@ export default function createNpc(def, api) {
 
     anim: /** @type {*} */ ({}), // Fix types during migration
     a: {
-      paused: false,
-
       path: [],
       aux: {
         angs: [],
@@ -83,6 +81,7 @@ export default function createNpc(def, api) {
     navOpts: { centroidsFallback: true, closedWeight: 10 * 1000 },
     navPath: null,
     nextWalk: null,
+    paused: false,
     unspawned: true, // old
 
     async animateOpacity(targetOpacity, durationMs, onlyBody = false) {
@@ -126,11 +125,11 @@ export default function createNpc(def, api) {
       if (this.animName === 'walk') {
         this.nextWalk = null;
         this.clearWayMetas();
-        !this.a.paused && await this.walkToIdle().catch(_ => {});
+        !this.paused && await this.walkToIdle().catch(_ => {});
         this.startAnimation('idle');
       }
 
-      this.a.paused = false;
+      this.paused = false;
       this.walkOnSpot = false;
       this.a.opacity.stop();
       this.a.rotate.stop();
@@ -433,7 +432,7 @@ export default function createNpc(def, api) {
       return ['idle', 'idle-breathe'].includes(this.animName);
     },
     isPaused() {
-      return this.a.paused;
+      return this.paused;
     },
     isPlayer() {
       return this.key === api.npcs.playerKey;
@@ -582,7 +581,7 @@ export default function createNpc(def, api) {
       this.a.opacity.pause();
       this.a.rotate.pause();
       this.a.wait.pause();
-      this.a.paused = true;
+      this.paused = true;
 
       if (this.animName === 'walk') {
         window.clearTimeout(this.a.wayTimeoutId);
@@ -600,7 +599,7 @@ export default function createNpc(def, api) {
       this.a.rotate.resume();
       this.a.wait.resume();
       this.forcePaused = false;
-      this.a.paused = false;
+      this.paused = false;
 
       if (this.animName === 'walk') {
         this.nextWayTimeout();
@@ -793,7 +792,7 @@ export default function createNpc(def, api) {
     },
     updateTime(deltaRatio) {
       const { frame: prevFrame, frameDurs: durs, frameMap } = this;
-      if (this.a.paused === true || frameMap.length === 1) {
+      if (this.paused === true || frameMap.length === 1) {
         return;
       }
       // Could skip multiple frames in single update via low fps
@@ -881,9 +880,9 @@ export default function createNpc(def, api) {
       this.frameDurs = this.frameDurs.map(x => x/2);
 
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
-        this.a.paused = true;
+        this.paused = true;
         await this.waitFor(150);
-        this.a.paused = false;
+        this.paused = false;
       }
       if (this.frameMap.length > 1) {
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
@@ -901,7 +900,7 @@ export default function createNpc(def, api) {
         return console.warn('wayTimeout: empty wayMetas');
       } else if (this.animName !== 'walk') {
         return console.warn(`wayTimeout: not walking: ${this.animName}`);
-      } else if (this.a.paused) {
+      } else if (this.paused) {
         return; // This handles World pause
       }
 

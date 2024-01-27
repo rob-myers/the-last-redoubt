@@ -113,6 +113,7 @@ declare namespace NPC {
       /** Future navigation path induced by `visits` */
       navPath: NPC.GlobalNavPath;
     };
+    paused: boolean;
     /**
      * Initially `false` until <NPC> sets it true.
      * May also set false for cached un-rendered.
@@ -316,7 +317,6 @@ declare namespace NPC {
   }
 
   interface AnimData {
-    paused: boolean;
     /** Path for walking along */
     path: Geom.Vect[];
     /**

@@ -90,6 +90,7 @@ export default function createNpc(
     },
     navPath: null,
     nextWalk: null,
+    paused: false,
     unspawned: true,
 
     async animateOpacity(targetOpacity, durationMs) {
