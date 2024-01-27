@@ -20,6 +20,7 @@
 - 🚧 improve npc
   - ✅ drop shadow
   - ✅ better transition walk -> idle
+  - ✅ initial rotate before walking
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc

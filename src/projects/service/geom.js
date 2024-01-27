@@ -71,6 +71,17 @@ class geomServiceClass {
   }
 
   /**
+   * @param {number} srcAng radians
+   * @param {number} dstAng radians
+   * @returns {number} between `0` and `1`, where `1` means equality
+   */
+  compareAngles(srcAng, dstAng) {
+    tmpVec1.set(Math.cos(srcAng), Math.sin(srcAng));
+    tmpVec2.set(Math.cos(dstAng), Math.sin(dstAng));
+    return Math.acos(tmpVec1.dot(tmpVec2)) / Math.PI;
+  }
+
+  /**
    * Return the two compass points with angle
    * nearest to direction.
    * @param {Vect} p 
@@ -964,3 +975,6 @@ export function sortByXThenY(point1, point2) {
   }
   return point1.x - point2.x;
 }
+
+const tmpVec1 = new Vect;
+const tmpVec2 = new Vect;

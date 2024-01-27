@@ -209,7 +209,7 @@ declare namespace NPC {
     isPlayer(): boolean;
     isWalking(requireMoving?: boolean): boolean;
     /** Returns destination angle in radians */
-    lookAt(point: Geom.VectJson): Promise<void>;
+    lookAt(point: Geom.VectJson, ms?: number): Promise<void>;
     pause(dueToProcessSuspend?: boolean): void;
     resume(dueToProcessResume?: boolean): void;
     nextWayTimeout(): void;

@@ -5,6 +5,7 @@ import TWEEN from '@tweenjs/tween.js';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from "../service/generic";
 import { info, warn } from "../service/log";
+import { geom } from "../service/geom";
 import { hasGmDoorId } from "../service/geomorph";
 import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius, spineAnimNames } from "./const";
 import { obscuredNpcOpacity, spawnFadeMs } from "../world/const";
@@ -298,8 +299,22 @@ export default function createNpc(def, api) {
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
+      
+      if (path.length > 1 && this.nextWalk === null) {// turn first
+        await this.lookAt(path[1], 500 * geom.compareAngles(
+          this.getAngle(),
+          this.a.aux.angs[0] + Math.PI/2,
+        ));
+      }
 
       this.startAnimation('walk');
+
+      // 🚧 chained rotation tweens
+      // const totalLen = this.a.aux.total;
+      // this.a.aux.sofars.reduce((agg, soFar) => {
+      //   return agg.chain({  });
+      // }, api.tween(this.s.body));
+
       api.npcs.events.next({
         key: 'started-walking',
         npcKey: this.key,
@@ -460,7 +475,7 @@ export default function createNpc(def, api) {
     isWalking() {
       return this.animName === 'walk';
     },
-    async lookAt(point) {
+    async lookAt(point, ms = 1000) {
       if (!Vect.isVectJson(point)) {
         throw Error(`invalid point: ${JSON.stringify(point)}`);
       }
@@ -480,7 +495,7 @@ export default function createNpc(def, api) {
         return; // Don't animate
       }
       const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
-      await this.animateRotate(targetRadians, 1 * 1000);
+      await this.animateRotate(targetRadians, ms);
     },
     nextWayTimeout() {
       if (this.a.wayMetas[0]) {
@@ -689,28 +704,22 @@ export default function createNpc(def, api) {
       }
     },
     startAnimation(animName) {
-      this.a.rotate.stop();
-      
       switch (animName) {
         case 'walk': {
           this.setupAnim(animName);
-          // 🚧 chained rotation tweens
-          // - can use `aux.sofars[i] / aux.total`
-          // - tween remade if speed changes
-          const totalMs = this.a.aux.total * this.getAnimScaleFactor();
-          this.a.rotate = api.tween(this.s.body).to({}, totalMs).start();
           break;
         }
         case 'idle':
         case 'idle-breathe':
         case 'lie':
         case 'sit':
+          this.a.rotate.stop();
+          this.a.rotate = emptyTween;
           this.clearWayMetas();
           this.updateStaticBounds();
           if (animName === 'sit') {// Ensure feet are below surfaces
             this.obscureBySurfaces();
           }
-          this.a.rotate = emptyTween;
           this.setupAnim(animName);
           break;
         default:
