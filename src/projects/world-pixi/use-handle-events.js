@@ -247,7 +247,7 @@ export default function useHandleEvents(api, disabled) {
             npc.setGmRoomId(npc.a.gmRoomIds[e.meta.index]);
           }
           if ((e.meta.index + 1) === npc.a.path.length) {
-            npc.a.deferred.resolve(); // npc at final vertex
+            npc.walkFinish(); // npc at final vertex
             break;
           }
 

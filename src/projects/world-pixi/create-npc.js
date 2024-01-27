@@ -33,6 +33,8 @@ export default function createNpc(def, api) {
     neckAngle: 0,
     time: 0,
     tr: tracks['idle'],
+    walkCancel: emptyFn,
+    walkFinish: emptyFn,
     walkOnSpot: false,
     walkSpeed: def.walkSpeed,
 
@@ -58,14 +60,12 @@ export default function createNpc(def, api) {
         total: 0,
       },
       staticBounds: new Rect,
+      initHeadWidth: 0,
       
       opacity: emptyTween,
       rotate: emptyTween,
       wait: emptyTween,
-      deferred: { resolve: emptyFn, reject: emptyFn },
 
-      initHeadWidth: 0,
-      
       doorStrategy: 'none',
       gmRoomIds: [],
       prevWayMetas: [],
@@ -134,7 +134,7 @@ export default function createNpc(def, api) {
       this.a.opacity.stop();
       this.a.rotate.stop();
       this.a.wait.stop();
-      this.a.deferred.reject('cancelled');
+      this.walkCancel(new Error('cancelled'));
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
@@ -312,10 +312,10 @@ export default function createNpc(def, api) {
 
       try {
         console.log(`followNavPath: ${this.key} started walk`);
-        await new Promise((resolve, reject) => {
-          this.a.deferred.resolve = resolve;
-          this.a.deferred.reject = reject;
-        });
+        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+          this.walkFinish = resolve;
+          this.walkCancel = reject;
+        }));
         console.log(`followNavPath: ${this.key} finished walk`);
         this.wayTimeout(); // immediate else startAnimation('idle') will clear
       } catch (e) {

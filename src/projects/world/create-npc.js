@@ -33,6 +33,8 @@ export default function createNpc(
     neckAngle: 0,
     time: 0,
     tr: /** @type {*} */ ({}),
+    walkCancel: emptyFn,
+    walkFinish: emptyFn,
     walkOnSpot: false,
     walkSpeed: 1,
 
@@ -1025,3 +1027,5 @@ export default function createNpc(
     },
   };
 }
+
+const emptyFn = () => {};

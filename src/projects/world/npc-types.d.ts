@@ -46,7 +46,7 @@ declare namespace NPC {
     framePtr: number;
     /** Track frames i.e. 0-based frames less than @see tr length */
     frameMap: number[];
-    /** Optional callback to invoke when reach beyond @see frameMap end */
+    /** Optional callback to invoke when finish @see frameMap */
     frameFinish?(): void;
 
     animName: SpineAnimName;
@@ -63,6 +63,10 @@ declare namespace NPC {
     distance: number;
     /** Degrees */
     neckAngle: number;
+    /** Invoked on walk cancel */
+    walkCancel: (err: Error) => void;
+    /** Invoked on walk finish */
+    walkFinish: () => void;
     walkOnSpot: boolean;
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
@@ -348,8 +352,6 @@ declare namespace NPC {
     rotate: TweenExt;
     /** Waiting needn't pause */
     wait: TweenExt;
-    /** 🚧 rename because for walk completion */
-    deferred: { resolve(value?: any): void; reject(reason: any): void };
 
     /** Depends on head skin */
     initHeadWidth: number;
