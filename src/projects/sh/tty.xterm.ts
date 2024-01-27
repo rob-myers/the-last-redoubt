@@ -56,6 +56,9 @@ export class ttyXtermClass {
   get active() {
     return this.xterm.buffer.active;
   }
+  get cols() {
+    return this.xterm.cols;
+  }
   get rows() {
     return this.xterm.rows;
   }

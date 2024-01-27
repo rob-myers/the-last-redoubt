@@ -57,7 +57,9 @@ export default function Terminal(props: Props) {
         await state.xterm.writePromise(`\x1b[A\x1b[${prevLine.length}C`);
         // @ts-expect-error
         state.xterm.cursor = input.length;
-        await state.xterm.setCursorProm(cursor);
+        // restore the cursor, unless not possible (page too small)
+        const pagePrevChars = active.cursorX + (active.cursorY * state.xterm.cols);
+        state.xterm.setCursor(Math.max(cursor, input.length - pagePrevChars));
       }
     },
     session: {} as Session,
@@ -148,7 +150,7 @@ export default function Terminal(props: Props) {
 
       useSession.api.writeMsgCleanly(
         props.sessionKey,
-        formatMessage(`${ansi.White}paused session`, 'info'),
+        formatMessage(`${ansi.White}paused`, 'info'),
         { prompt: false },
       );
 
@@ -167,7 +169,7 @@ export default function Terminal(props: Props) {
 
       // overwrite "paused" with "resumed"
       const extraNewlines = Math.max(1, state.xterm.numLines() + (state.xterm.active.cursorY + 1) - state.xterm.rows);
-      state.xterm.xterm.write(`\r\x1b[A${formatMessage(`${ansi.White}resumed session`, 'info')}${'\r\n'.repeat(extraNewlines)}`);
+      state.xterm.xterm.write(`\x1b[F\x1b[2K${formatMessage(`${ansi.White}resumed`, 'info')}\r${'\r\n'.repeat(extraNewlines)}`);
       state.xterm.showPendingInputImmediately();
         
       // Resume processes we suspended
