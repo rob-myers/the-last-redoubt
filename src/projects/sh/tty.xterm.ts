@@ -53,6 +53,13 @@ export class ttyXtermClass {
   /** Paste echo controlled via prefix `NOECHO=1 ` */
   shouldEcho = true;
 
+  get active() {
+    return this.xterm.buffer.active;
+  }
+  get rows() {
+    return this.xterm.rows;
+  }
+
   constructor(
     public xterm: Terminal,
     private session: {
@@ -480,15 +487,6 @@ export class ttyXtermClass {
     return this.promptReady;
   }
 
-  nextInteractivePrompt() {
-    if (this.promptReady && this.input.length > 0) {
-      if (this.input.at(-1) !== '\\') {
-        this.input = `${this.input}\\`;
-      }
-      this.sendLine();
-    }
-  }
-
   /**
    * Convert 0-based `cursor` in `input` to
    * a relative 0-based row/col location.
@@ -842,6 +840,34 @@ export class ttyXtermClass {
     this.cursor = newCursor;
   }
 
+  async setCursorProm(newCursor: number) {
+    newCursor = Math.min(this.input.length, Math.max(0, newCursor));
+
+    // Compute actual input with prompt(s)
+    const inputWithPrompt = this.actualLine(this.input);
+    // Get previous cursor position
+    const prevPromptOffset = this.actualCursor(this.input, this.cursor);
+    const { col: prevCol, row: prevRow } = this.offsetToColRow(inputWithPrompt, prevPromptOffset);
+    // Get next cursor position
+    const newPromptOffset = this.actualCursor(this.input, newCursor);
+    const { col: nextCol, row: nextRow } = this.offsetToColRow(inputWithPrompt, newPromptOffset);
+    
+    // Adjust vertically
+    if (nextRow > prevRow) {// Cursor Down
+      await this.writePromise(`\x1b[${nextRow - prevRow}B`);
+    } else if (prevRow > nextRow) {// Cursor Up
+      await this.writePromise(`\x1b[${prevRow - nextRow}A`);
+    }
+
+    // Adjust horizontally
+    if (nextCol > prevCol) {// Cursor Forward
+      await this.writePromise(`\x1b[${nextCol - prevCol}C`);
+    } else if (prevCol > nextCol) {// Cursor Backward
+      await this.writePromise(`\x1b[${prevCol - nextCol}D`);
+    }
+    this.cursor = newCursor;
+  }
+
   /**
    * Writes the input which may span over multiple lines.
    * Updates {this.input}. Finishes with cursor at end of input.
@@ -926,6 +952,10 @@ export class ttyXtermClass {
       words.push(leftSide ? match.index : match.index + match[0].length);
     }
     return words;
+  }
+
+  writePromise(text: string) {
+    return new Promise<void>(resolve => this.xterm.write(text, resolve));
   }
 }
 

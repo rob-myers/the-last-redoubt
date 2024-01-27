@@ -22,12 +22,11 @@ export default function Terminal(props: Props) {
 
   const update = useUpdate();
 
-  const [rootRef, bounds] = useMeasure({ debounce: 0, scroll: false });
+  // 🔔 Saw cursor preservation fail at debounce 20
+  const [rootRef, bounds] = useMeasure({ debounce: 50, scroll: false });
 
   const state = useStateRef(() => ({
     bounds,
-    beforeResize: undefined as { cursor: number; input: string; } | undefined,
-    changedWidth: false,
     cleanup: () => {},
     container: {} as HTMLDivElement,
     cursorBeforePause: undefined as number | undefined,
@@ -36,26 +35,33 @@ export default function Terminal(props: Props) {
     hasEverDisabled: false,
     isTouchDevice: canTouchDevice(),
     onFocus() {
-      if (state.beforeResize) {
-        state.ttyXterm.clearInput();
-        state.ttyXterm.setInput(state.beforeResize.input);
-        state.ttyXterm.setCursor(state.beforeResize.cursor);
-        state.beforeResize = undefined;
-      }
+      // NOOP
     },
     pausedPids: {} as Record<number, true>,
     ready: false,
-    resize() {
-      if (state.changedWidth && state.ttyXterm.getInput()) {
-        state.beforeResize = { input: state.ttyXterm.getInput(), cursor: state.ttyXterm.getCursor() };
-        state.ttyXterm.clearInput();
-        state.ttyXterm.xterm.write(`${ansi.BrightGreenBg}...${ansi.Reset}`);
+    async resize() {
+      const input = state.xterm.getInput();
+      const cursor = state.xterm.getCursor();
+      if (input) {
+        await state.xterm.setCursorProm(input.length);
+        await state.xterm.writePromise('\r\n');
       }
+
       // Saw error: This API only accepts integers
-      try { state.fitAddon.fit(); } catch {}
+      try { state.fitAddon.fit() } catch {};
+
+      if (input) {
+        // go back to end of input via buffer
+        const active = state.xterm.active;
+        const prevLine = active.getLine(active.baseY + active.cursorY - 1)!.translateToString(true);
+        await state.xterm.writePromise(`\x1b[A\x1b[${prevLine.length}C`);
+        // @ts-expect-error
+        state.xterm.cursor = input.length;
+        await state.xterm.setCursorProm(cursor);
+      }
     },
     session: {} as Session,
-    ttyXterm: {} as ttyXtermClass,
+    xterm: {} as ttyXtermClass,
   }));
 
   React.useEffect(() => {// Create session
@@ -100,23 +106,21 @@ export default function Terminal(props: Props) {
         },
       ));
 
-      state.ttyXterm = new ttyXtermClass(xterm, {
+      state.xterm = new ttyXtermClass(xterm, {
         key: state.session.key,
         io: state.session.ttyIo,
         rememberLastValue(msg) { state.session.var._ = msg },
       });
-      state.ttyXterm.initialise();
-      state.session.ttyShell.initialise(state.ttyXterm);
+      state.xterm.initialise();
+      state.session.ttyShell.initialise(state.xterm);
 
       const onKeyDisposable = xterm.onKey(e => props.onKey?.(e.domEvent));
       xterm.loadAddon(state.fitAddon);
-      window.addEventListener('resize', state.resize);
       xterm.open(state.container);
       state.resize();
       xterm.textarea?.addEventListener('focus', state.onFocus);
 
       state.cleanup = () => {
-        window.removeEventListener('resize', state.resize);
         onKeyDisposable.dispose();
         xterm.dispose();
       };
@@ -130,15 +134,14 @@ export default function Terminal(props: Props) {
     if (!state.ready) {
       return;
     }
-    const ttyXterm = state.session.ttyShell.xterm;
 
-    if (props.disabled) {
+    if (props.disabled) {// Pause
       state.hasEverDisabled = true;
-      state.focusedBeforePause = document.activeElement === ttyXterm.xterm.textarea;
+      state.focusedBeforePause = document.activeElement === state.xterm.xterm.textarea;
 
-      if (ttyXterm.isPromptReady()) {
-        state.cursorBeforePause = ttyXterm.getCursor();
-        ttyXterm.showPendingInputImmediately(); // Moves cursor to end
+      if (state.xterm.isPromptReady()) {
+        state.cursorBeforePause = state.xterm.getCursor();
+        state.xterm.showPendingInputImmediately(); // Moves cursor to end
       } else {
         state.cursorBeforePause = undefined;
       }
@@ -159,20 +162,13 @@ export default function Terminal(props: Props) {
       });
     }
 
-    if (!props.disabled && state.hasEverDisabled) {
-      state.focusedBeforePause && state.session.ttyShell.xterm.xterm.focus();
-      
-      // if pending input will overwrite "paused/resumed session",
-      // split it via an interactive prompt
-      if (ttyXterm.numLines() > 1 && (ttyXterm.xterm.buffer.active.cursorY + 1) + ttyXterm.numLines() + 2 >= ttyXterm.xterm.rows) {
-        state.session.ttyShell.xterm.nextInteractivePrompt();
-      }
+    if (!props.disabled && state.hasEverDisabled) {// Resume
+      state.focusedBeforePause && state.xterm.xterm.focus();
 
-      useSession.api.writeMsgCleanly(
-        props.sessionKey,
-        formatMessage(`${ansi.White}resumed session`, 'info'),
-        { cursor: state.cursorBeforePause },
-      );
+      // overwrite "paused" with "resumed"
+      const extraNewlines = Math.max(1, state.xterm.numLines() + (state.xterm.active.cursorY + 1) - state.xterm.rows);
+      state.xterm.xterm.write(`\r\x1b[A${formatMessage(`${ansi.White}resumed session`, 'info')}${'\r\n'.repeat(extraNewlines)}`);
+      state.xterm.showPendingInputImmediately();
         
       // Resume processes we suspended
       const processes = Object.values((state.session?.process)??{});
@@ -190,13 +186,12 @@ export default function Terminal(props: Props) {
 
   React.useEffect(() => () => {// Destroy session
     useSession.api.removeSession(props.sessionKey);
-    state.session = state.ttyXterm = {} as any;
+    state.session = state.xterm = {} as any;
     state.ready = false;
     state.cleanup();
   }, []);
 
   React.useEffect(() => {
-    state.changedWidth = state.bounds.width !== bounds.width;
     state.bounds = bounds;
     state.ready && state.resize();
   }, [bounds]);
