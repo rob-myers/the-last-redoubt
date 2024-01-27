@@ -33,7 +33,7 @@ export default function PanZoom(props) {
     input: /** @type {*} */ ({}),
     transform: /** @type {*} */ ({}),
     plugins: /** @type {*} */ ({}),
-    tween: emptyTween,
+    tween: /** @type {*} */ (emptyTween),
 
     async animationAction(type) {
       switch (type) {
@@ -92,7 +92,7 @@ export default function PanZoom(props) {
       const { width, height } = state.getDomBounds();
 
       state.tween = api.tween(state.viewport).to({
-        scale: { x: scale, y: scale },
+        scale: /** @type {import('pixi.js').ObservablePoint} */ ({ x: scale, y: scale }),
         x: -point.x * scale + width/2,
         y: -point.y * scale + height/2,
       }, opts.ms ?? 0).easing(TWEEN.Easing.Quadratic.Out);
@@ -215,7 +215,7 @@ export default function PanZoom(props) {
  * @property {import("pixi-viewport").Viewport['input']} input
  * @property {import("pixi-viewport").Viewport['transform']} transform
  * @property {import("pixi-viewport").Viewport['plugins']} plugins
- * @property {NPC.TweenExt} tween For pan-zoom
+ * @property {NPC.TweenExt<PixiViewport>} tween For pan-zoom
  * 
  * @property {(type: 'cancelPanZoom' | 'cancelFollow' | 'pauseFollow' | 'resumeFollow' | 'pause' | 'play') => Promise<void>} animationAction
  * @property {(target: Geom.VectJson, opts?: import("pixi-viewport").IFollowOptions) => void} follow
@@ -245,7 +245,6 @@ export default function PanZoom(props) {
 
 const tempVect = new Vect;
 
-/** @type {NPC.TweenExt} */
 const emptyTween = Object.assign(new TWEEN.Tween({}), {
   promise: () => Promise.resolve({}),
 });

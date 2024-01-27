@@ -951,7 +951,6 @@ const tracks = spineAnimNames.reduce((agg, animName) => {
   };
 }, /** @type {Record<NPC.SpineAnimName, NPC.Track>} */ ({}));
 
-/** @type {NPC.TweenExt} */
 const emptyTween = Object.assign(new TWEEN.Tween({}), {
   promise: () => Promise.resolve({}),
 });

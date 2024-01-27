@@ -264,7 +264,7 @@ export default function WorldPixi(props) {
  * @property {(cssCursorValue: string) => void} setCursor
  * @property {(enabled: boolean) => void} setTicker
  * @property {(visibleGms: boolean[]) => void} setVisibleGms
- * @property {(target: any) => NPC.TweenExt} tween
+ * @property {<T extends {}>(target: T) => NPC.TweenExt<T>} tween
  */
 
 /**

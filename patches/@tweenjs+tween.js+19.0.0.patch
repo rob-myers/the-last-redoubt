@@ -1,0 +1,13 @@
+diff --git a/node_modules/@tweenjs/tween.js/dist/tween.d.ts b/node_modules/@tweenjs/tween.js/dist/tween.d.ts
+index f2b3dae..dbe29b8 100644
+--- a/node_modules/@tweenjs/tween.js/dist/tween.d.ts
++++ b/node_modules/@tweenjs/tween.js/dist/tween.d.ts
+@@ -77,7 +77,7 @@ declare class Tween<T extends UnknownProps> {
+     getId(): number;
+     isPlaying(): boolean;
+     isPaused(): boolean;
+-    to(properties: UnknownProps, duration?: number): this;
++    to(properties: T | [T, T], duration?: number): this;
+     duration(d?: number): this;
+     start(time?: number, overrideStartingValues?: boolean): this;
+     startFromCurrentValues(time?: number): this;
