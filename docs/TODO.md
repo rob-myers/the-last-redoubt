@@ -15,38 +15,7 @@
 - more tables in 301
 - more tables in 101
 
-- ✅ TTY BUG links not pan-zooming when TTY not wide enough
- - bad `lineText` e.g. `ℹ️  [ corridor ] with 11 oors`
- - issue disappeared when removed emoji
- - one-line-fix of xterm-link-provider from:
-   > https://github.com/LabhanshAgrawal/xterm-link-provider/pull/35
-- ✅ remove `on-tty-link`
-- ✅ TTY BUG link interference: `ps` and an info link
-  - fixed by earlier fix?
-
-- ✅ TTY BUG tty history with multiple lines loses row(s)
-  - ℹ️ wide TTY near bottom: long multiline + prior short => latter on earlier line
-  - ℹ️ narrow TTY: similar but needn't be near bottom
-  - ℹ️ also happens on press backspace while multiline visible
-```sh
-npc events | filter '({ key, decor }) =>
-  key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {
-  const { npcs } = api.getCached(home.WORLD_KEY);
-  const player = npcs.getPlayer();
-  return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
-}'
-```
-
-- ✅ TTY: hide pending input whilst resizing, show it on focus
-
-- ✅ improve "tty overwrite scenarios"
-  - ✅ on resize TTY change pending input via `\⏎`
-  - ✅ on pause TTY change pending input via `\⏎`
-
-- ✅ clean Terminal: merge XTerm into it
-
-- BUG resuming npc `rob` with paused process `track2 rob &` resumes tracking
-  - seen via `pausableNpcs &` 
+- ✅ BUG resuming npc `rob` with paused process `track2 rob &` should not resume tracking
 
 - 🚧 improve npc
   - ✅ drop shadow
@@ -764,6 +733,35 @@ nav --nearNpc foo rob | walk --open foo
 
 ## Done
 
+- ✅ TTY BUG links not pan-zooming when TTY not wide enough
+ - bad `lineText` e.g. `ℹ️  [ corridor ] with 11 oors`
+ - issue disappeared when removed emoji
+ - one-line-fix of xterm-link-provider from:
+   > https://github.com/LabhanshAgrawal/xterm-link-provider/pull/35
+- ✅ remove `on-tty-link`
+- ✅ TTY BUG link interference: `ps` and an info link
+  - fixed by earlier fix?
+
+- ✅ TTY BUG tty history with multiple lines loses row(s)
+  - ℹ️ wide TTY near bottom: long multiline + prior short => latter on earlier line
+  - ℹ️ narrow TTY: similar but needn't be near bottom
+  - ℹ️ also happens on press backspace while multiline visible
+```sh
+npc events | filter '({ key, decor }) =>
+  key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {
+  const { npcs } = api.getCached(home.WORLD_KEY);
+  const player = npcs.getPlayer();
+  return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
+}'
+```
+
+- ✅ TTY: hide pending input whilst resizing, show it on focus
+
+- ✅ improve "tty overwrite scenarios"
+  - ✅ on resize TTY change pending input via `\⏎`
+  - ✅ on pause TTY change pending input via `\⏎`
+
+- ✅ clean Terminal: merge XTerm into it
 - ✅ migrate `track` to `track2`
   - ✅ fix blurry follow by syncing viewport
   - ℹ️ follow speed too fast causes jerk

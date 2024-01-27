@@ -470,7 +470,7 @@
 
         await /** @type {Promise<void>} */ (new Promise(resolve => {
           const subscription = w.npcs.events.subscribe((e) => {
-            if (e.key === "npc-internal" && e.npcKey === npcKey) {
+            if (e.key === "npc-internal" && e.npcKey === npcKey && api.isRunning()) {
               e.event === "paused" && w.panZoom.animationAction("pause");
               e.event === "resumed" && w.panZoom.animationAction("play");
             }
