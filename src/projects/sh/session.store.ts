@@ -373,7 +373,8 @@ const useStore = create<State>()(devtools((set, get): State => ({
     removeSession(sessionKey) {
       const session = get().session[sessionKey];
       if (session) {
-        const { process, ttyShell } = get().session[sessionKey];
+        const { process, ttyShell } = session;
+        session.verbose = false;
         ttyShell.dispose();
         Object.values(process).forEach(x => killProcess(x));
         delete get().device[ttyShell.key];
