@@ -309,8 +309,8 @@ class cmdServiceClass {
 
         const statusColour: Record<ProcessStatus, string> = { 0: ansi.DarkGrey, 1: ansi.White, 2: ansi.Red };
         const statusLinks: Record<ProcessStatus, string> = {
-          0: `${formatLink(`${statusColour[0]} off `)} ${formatLink(`${statusColour[2]} x `)}`,
-          1: `${formatLink(`${statusColour[1]} run `)} ${formatLink(`${statusColour[2]} x `)}`,
+          0: `${formatLink(`${statusColour[0]} no `)} ${formatLink(`${statusColour[2]} x `)}`,
+          1: `${formatLink(`${statusColour[1]} on `)} ${formatLink(`${statusColour[2]} x `)}`,
           2: '',
         };
 
@@ -357,11 +357,11 @@ class cmdServiceClass {
             meta.sessionKey,
             lineText,
             [
-              { lineText, linkText: 'run', linkStartIndex: lineText.indexOf('run') - 1, callback(lineNumber) {
+              { lineText, linkText: 'on', linkStartIndex: lineText.indexOf('on') - 1, callback(lineNumber) {
                 cmdService.killProcesses(meta.sessionKey, [process.key], { STOP: true });
                 updateLine(lineNumber);
               }},
-              { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('off') - 1, callback(lineNumber) {
+              { lineText, linkText: 'no', linkStartIndex: lineText.indexOf('no') - 1, callback(lineNumber) {
                 cmdService.killProcesses(meta.sessionKey, [process.key], { CONT: true });
                 updateLine(lineNumber);
               }},
