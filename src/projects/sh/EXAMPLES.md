@@ -415,6 +415,7 @@ world gmRoomGraph.getVantages "$( click 1 | map meta )" "$( click 1 | map meta )
 click 1 | map meta
 
 world npcs.canSee "$( click 1 )" "$( click 1 )"
+api npcs.canSee $( npc rob getPosition ) $( npc foo getPosition )
 ```
 
 ```sh

@@ -217,6 +217,7 @@ export default function NPCs(props) {
         const { depDoors, dst: dstDr } = assertDefined(vantages.relation.find(x => x.src.doorId === result.doorId));
         
         // Check intermediate doors, assuming they all reside in dstRm's gm
+        // 🔔 handles case where ≤ 1 room away from hull door, looking thru hull door
         [srcL, dstL] = [src, dst].map(gms[dstRm.gmId].toLocalCoords);
         const failure = (depDoors ?? []).find(x =>
           !geom.getLineSegsIntersection(srcL, dstL, ...gms[x.gmId].doors[x.doorId].seg)
