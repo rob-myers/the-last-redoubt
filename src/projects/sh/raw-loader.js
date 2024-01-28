@@ -554,6 +554,9 @@
       await api.eagerReadLoop(/** @param {NPC.GlobalNavPath | Geomorph.PointMaybeMeta} datum */
         async (datum) => {
           try {
+            if (npc.isPaused()) {
+              return;
+            }
             if (w.lib.isVectJson(datum)) {
               if (datum.meta?.npc && datum.meta.npcKey === npc.key) {
                 return; // Ignore self clicks e.g. on unpause

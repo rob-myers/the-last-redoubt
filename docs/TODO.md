@@ -21,6 +21,9 @@
   - ✅ drop shadow
   - ✅ better transition walk -> idle
   - ✅ initial rotate before walking
+  - ✅ paused npc doing `click | walk --open foo` should not remember clicks whilst paused
+  - 🚧 npc paused whilst walking should collide
+  - 🚧 pause "npc" process darkens npc
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
@@ -53,8 +56,6 @@ nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk
   - compare to CSS version
 - BUG pointerdown not detected after resized to full screen
 
-
-- 🚧 pause "npc" process darkens npc
 - ✅ pause "npc" process pauses npc
 - ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
