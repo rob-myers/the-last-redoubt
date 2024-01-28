@@ -449,12 +449,12 @@ export default function NPCs(props) {
           convexPoly
         ));
     },
-    getCloseNpcs(npcKey, isWalking) {
-      return Object.values(state.npc).filter(
-        other => other.key !== npcKey && (
-          (isWalking === undefined) || (other.isWalking() === isWalking)
-        )
-      );
+    getCloseNpcs(npcKey, isWalking) {// 🚧 restrict to close npcs
+      if (isWalking === undefined) {
+        return Object.values(state.npc).filter(x => x.key !== npcKey);
+      } else {
+        return Object.values(state.npc).filter(x => x.key !== npcKey && x.isWalking() === isWalking);
+      }
     },
     getPlayer() {
       return state.playerKey ? state.getNpc(state.playerKey) : null;

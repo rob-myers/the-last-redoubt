@@ -251,8 +251,9 @@ export default function useHandleEvents(api, disabled) {
             break;
           }
 
+          // 🚧 remove: use tween npc.a.rotate instead
           npc.s.body.rotation = npc.a.aux.angs[e.meta.index] + Math.PI/2;
-          npc.updateHead(); // 🚧 bounds too?
+          npc.updateHead();
           
           // npc is walking along a line segment
           npc.updateWalkSegBounds(e.meta.index);
@@ -544,8 +545,8 @@ export default function useHandleEvents(api, disabled) {
 
   /** @param {...string} npcKeys */
   function stopNpcs(...npcKeys) {
-    /** Npcs which are walking but not paused.  */
-    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking(true));
+    // Npcs which are walking but not paused
+    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking() && !x.isPaused());
     return Promise.all(walkingNpcs.map(x => x.cancel()));
   }
 

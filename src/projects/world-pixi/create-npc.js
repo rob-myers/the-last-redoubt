@@ -473,8 +473,10 @@ export default function createNpc(def, api) {
         );
       }
     },
-    isWalking() {// Not walking when transitioning to idle
-      return this.animName === 'walk' && this.frameMap.length === this.tr.length;
+    isWalking(requireMoving) {
+      return this.animName === 'walk'
+        && this.frameMap.length === this.tr.length // Avoids transition to idle
+        && (!requireMoving || !this.isPaused());
     },
     async lookAt(point, ms = 1000) {
       if (!Vect.isVectJson(point)) {

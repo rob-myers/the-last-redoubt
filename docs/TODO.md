@@ -22,7 +22,8 @@
   - ✅ better transition walk -> idle
   - ✅ initial rotate before walking
   - ✅ paused npc doing `click | walk --open foo` should not remember clicks whilst paused
-  - 🚧 npc paused whilst walking should collide
+  - ✅ npc paused whilst walking should collide
+  - ✅ can escape collision with paused npc
   - 🚧 pause "npc" process darkens npc
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
