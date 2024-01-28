@@ -50,7 +50,7 @@ export default function Terminal(props: Props) {
       } else {
         const input = state.xterm.getInput();
         const cursor = state.xterm.getCursor();
-        if (input) {
+        if (input && state.xterm.isPromptReady()) {
           state.xterm.clearInput();
           state.inputOnFocus = { input, cursor };
         }
