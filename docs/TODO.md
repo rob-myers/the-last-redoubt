@@ -26,6 +26,7 @@
   - ✅ can escape collision with paused npc
   - ✅ npc stuck on some stand points
     - can turn away from on-nav do point
+  - ✅ can fadeSpawn to on-nav do point
   - 🚧 pause "npc" process darkens npc
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back

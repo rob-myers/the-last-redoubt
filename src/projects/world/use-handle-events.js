@@ -82,6 +82,7 @@ export default function useHandleEvents(api) {
         case 'npc-internal':
         case 'removed-npc':
         case 'set-player':
+        case 'set-verbose':
         case 'resumed-track':
           break;
         default:

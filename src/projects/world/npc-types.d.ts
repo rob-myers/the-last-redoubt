@@ -218,7 +218,7 @@ declare namespace NPC {
     /** Started off-mesh and clicked point */
     offMeshDoMeta(point: Geomorph.PointMaybeMeta, opts: { fadeOutMs?: number; suppressThrow?: boolean }): Promise<void>;
     /** Started on-mesh and clicked point */
-    onMeshDoMeta(point: Geomorph.PointMaybeMeta, opts: { fadeOutMs?: number; suppressThrow?: boolean }): Promise<void>;
+    onMeshDoMeta(point: Geomorph.PointMaybeMeta, opts: { fadeOutMs?: number; suppressThrow?: boolean; preferSpawn?: boolean; }): Promise<void>;
     
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;

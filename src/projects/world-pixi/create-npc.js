@@ -216,16 +216,16 @@ export default function createNpc(def, api) {
             if (wasOpen === isOpen) throw Error('cannot toggle door');
           }
         } else if (api.npcs.isPointInNavmesh(this.getPosition())) {
-          if (this.doMeta) {// @ do point, on nav
+          if (this.doMeta) {// @ do, nav
             this.doMeta = null;
-            if (point.meta.do) {
-              await this.onMeshDoMeta(point, opts);
-            } else {
+            if (point.meta.do) {// -> do
+              await this.onMeshDoMeta(point, {...opts, preferSpawn: !!point.meta.longClick });
+            } else {// -> nav
               const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
               await this.walk(navPath, { throwOnCancel: false });
             }
           } else {
-            await this.onMeshDoMeta(point, opts);
+            await this.onMeshDoMeta(point, { ...opts, preferSpawn: !!point.meta.longClick });
           }
           this.doMeta = point.meta.do ? point.meta : null;
         } else {
@@ -574,27 +574,29 @@ export default function createNpc(def, api) {
         throw Error('too far away');
       }
 
-      if (api.npcs.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
+      const closeVis = (
+        src.distanceTo(point) <= this.getInteractRadius())
+        && api.npcs.canSee(src, point, this.getInteractRadius()
+      );
+
+      if (!opts.suppressThrow && !closeVis) {
+        throw Error('too far away');
+      }
+
+      if (api.npcs.isPointInNavmesh(decorPoint) && !(opts.preferSpawn && closeVis)) {
+        // Walk, [Turn], Do
         const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
         await this.walk(navPath, { throwOnCancel: true });
         typeof meta.orient === 'number' && await this.animateRotate((meta.orient + 90) * (Math.PI / 180), 100);
         this.startAnimationByMeta(meta);
-        return;
+      } else {
+        await this.fadeSpawn({ ...point, ...decorPoint }, {
+          angle: typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
+          requireNav: false,
+          fadeOutMs: opts.fadeOutMs,
+          meta,
+        });
       }
-
-      if (!opts.suppressThrow && (
-        src.distanceTo(point) > this.getInteractRadius())
-        || !api.npcs.canSee(src, point, this.getInteractRadius())
-      ) {
-        throw Error('too far away');
-      }
-
-      await this.fadeSpawn({ ...point, ...decorPoint }, {
-        angle: typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
-        requireNav: false,
-        fadeOutMs: opts.fadeOutMs,
-        meta,
-      });
     },
     pause(forced = true) {
       if (forced) {
