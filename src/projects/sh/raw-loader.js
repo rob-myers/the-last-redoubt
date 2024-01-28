@@ -342,7 +342,8 @@
           continue;
         }
 
-        if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
+        if (meta.door || meta.do || (npc.doMeta && meta.nav)) {
+          // (1) door, (2) do point, or (3) non-do nav point whilst at do point
           !meta.door && await npc.cancel();
           await npc.do(datum).catch(onError);
         } else if (meta.nav && !meta.ui) {

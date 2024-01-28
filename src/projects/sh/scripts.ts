@@ -262,8 +262,8 @@ npc set-player ${npcKey}
 npc config '{verbose:true}'
 
 click | controlNpc ${npcKey} &
-# pausableNpcs &
-# track ${npcKey} &
+pausableNpcs &
+# track2 ${npcKey} &
 `,
 
 };

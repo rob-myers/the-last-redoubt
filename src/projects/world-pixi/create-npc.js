@@ -201,6 +201,8 @@ export default function createNpc(def, api) {
       point.meta ??= {};
 
       try {
+        // Assume point.meta.door || point.meta.do | (point.meta.nav && npc.doMeta)
+        // i.e. (1) door, (2) do point, or (3) non-do nav point whilst at do point
         if (point.meta.door && hasGmDoorId(point.meta)) {
           /** `undefined` -> toggle, `true` -> open, `false` -> close */
           const extraParam = opts.extraParams?.[0] === undefined ? undefined : !!opts.extraParams[0];
@@ -215,22 +217,29 @@ export default function createNpc(def, api) {
           } else {
             if (wasOpen === isOpen) throw Error('cannot toggle door');
           }
-        } else if (api.npcs.isPointInNavmesh(this.getPosition())) {
-          if (this.doMeta) {// @ do, nav
-            this.doMeta = null;
-            if (point.meta.do) {// -> do
-              await this.onMeshDoMeta(point, {...opts, preferSpawn: !!point.meta.longClick });
-            } else {// -> nav
-              const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
-              await this.walk(navPath, { throwOnCancel: false });
-            }
+          return;
+        }
+
+        // Handle (point.meta.nav && npc.doMeta) || point.meta.do
+        const onNav = api.npcs.isPointInNavmesh(this.getPosition());
+        if (!point.meta.do) {// point.meta.nav && npc.doMeta
+          this.doMeta = null;
+          if (onNav) {
+            const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
+            await this.walk(navPath, { throwOnCancel: false });
+          } else if (api.npcs.canSee(this.getPosition(), point, this.getInteractRadius())) {
+            await this.fadeSpawn(point);
           } else {
-            await this.onMeshDoMeta(point, { ...opts, preferSpawn: !!point.meta.longClick });
+            throw Error('cannot reach navigable point')
           }
-          this.doMeta = point.meta.do ? point.meta : null;
-        } else {
+          return;
+        } else if (onNav) {// nav -> do point
+          this.doMeta = null;
+          await this.onMeshDoMeta(point, { ...opts, preferSpawn: !!point.meta.longClick });
+          this.doMeta = point.meta;
+        } else {// off nav -> do point
           await this.offMeshDoMeta(point, opts);
-          this.doMeta = point.meta.do ? point.meta : null;
+          this.doMeta = point.meta;
         }
       } catch (e) {// Swallow 'cancelled' errors e.g. start new walk, obstruction
         if (!(e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:')))) {
@@ -573,15 +582,8 @@ export default function createNpc(def, api) {
       if (!api.gmGraph.inSameRoom(src, decorPoint)) {
         throw Error('too far away');
       }
-
-      const closeVis = (
-        src.distanceTo(point) <= this.getInteractRadius())
-        && api.npcs.canSee(src, point, this.getInteractRadius()
-      );
-
-      if (!opts.suppressThrow && !closeVis) {
-        throw Error('too far away');
-      }
+      
+      const closeVis = api.npcs.canSee(src, point, this.getInteractRadius());
 
       if (api.npcs.isPointInNavmesh(decorPoint) && !(opts.preferSpawn && closeVis)) {
         // Walk, [Turn], Do
@@ -589,14 +591,19 @@ export default function createNpc(def, api) {
         await this.walk(navPath, { throwOnCancel: true });
         typeof meta.orient === 'number' && await this.animateRotate((meta.orient + 90) * (Math.PI / 180), 100);
         this.startAnimationByMeta(meta);
-      } else {
-        await this.fadeSpawn({ ...point, ...decorPoint }, {
-          angle: typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
-          requireNav: false,
-          fadeOutMs: opts.fadeOutMs,
-          meta,
-        });
+        return;
       }
+
+      if (!opts.suppressThrow && !closeVis) {
+        throw Error('too far away');
+      }
+
+      await this.fadeSpawn({ ...point, ...decorPoint }, {
+        angle: typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
+        requireNav: false,
+        fadeOutMs: opts.fadeOutMs,
+        meta,
+      });
     },
     pause(forced = true) {
       if (forced) {
