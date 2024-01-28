@@ -27,7 +27,8 @@
   - ✅ npc stuck on some stand points
     - can turn away from on-nav do point
   - ✅ can fadeSpawn to on-nav do point
-  - 🚧 pause "npc" process darkens npc
+  - ✅ pause "npc" process darkens npc
+  - ✅ force pause "npc" process dark-reddens npc
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc

@@ -613,6 +613,13 @@ export default function createNpc(def, api) {
       if (this.animName === 'walk') {
         window.clearTimeout(this.a.wayTimeoutId);
       }
+      if (this.forcePaused) {
+        this.s.body.tint = 0xffbbbb;
+        this.s.head.tint = 0xffbbbb;
+      } else {
+        this.s.body.tint = 0xaaaaaa;
+        this.s.head.tint = 0xaaaaaa;
+      }
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'paused' });
     },
@@ -627,6 +634,8 @@ export default function createNpc(def, api) {
       this.a.wait.resume();
       this.forcePaused = false;
       this.paused = false;
+      this.s.body.tint = 0xffffff;
+      this.s.head.tint = 0xffffff;
 
       if (this.animName === 'walk') {
         this.nextWayTimeout();
