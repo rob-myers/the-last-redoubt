@@ -126,6 +126,11 @@ export default function useHandleEvents(api, disabled) {
           // console.log(e);
           api.debug.updateDebugRoom();
           break;
+        case 'set-verbose':
+          Object.keys(api.npcs.session).forEach(sessionKey =>
+            useSession.api.getSession(sessionKey).verbose = e.verbose
+          );
+          break;
         case 'started-walking':
           // Also overwrites extended path
           api.debug.addNavPath(api.lib.getNavPathName(e.npcKey), e.navPath);
@@ -152,6 +157,7 @@ export default function useHandleEvents(api, disabled) {
         case 'npc-internal':
         case 'removed-npc':
         case 'set-player':
+        case 'set-verbose':
         case 'resumed-track':
           break;
         default:

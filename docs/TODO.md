@@ -24,6 +24,7 @@
   - ✅ paused npc doing `click | walk --open foo` should not remember clicks whilst paused
   - ✅ npc paused whilst walking should collide
   - ✅ can escape collision with paused npc
+  - 🚧 npc stuck on some stand points
   - 🚧 pause "npc" process darkens npc
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
@@ -166,8 +167,8 @@ nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk
   - programmable
   - dynamically `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
 
-- processApi.verbose(...) 
-  - session.store has verbose boolean, driving npcs.config.verbose
+- ✅ processApi.verbose(...) 
+  - sessions have verbose boolean, driven by npcs.config.verbose
   - replace: w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 
 - example of picking something up

@@ -145,7 +145,9 @@ export default function NPCs(props) {
             ctxt.scriptDoors = !!value; // 🚧 remove?
             // api.doors.update();
             break;
-          case 'verbose': ctxt.verbose = !!value; break;
+          case 'verbose':
+            state.events.next({ key: 'set-verbose', verbose: ctxt.verbose = !!value });
+            break;
           case 'colliders':
             api.decor.showColliders = !!value;
             api.decor.renderAll();
@@ -230,10 +232,8 @@ export default function NPCs(props) {
       const npc = state.getNpc(npcKey); // Throws if non-existent
       const process = processApi.getProcess();
 
-      process.cleanups.push((SIGINT) => {
-        npc.cancel(SIGINT).catch(e => void (// Ctrl-C overrides forcePaused
-          state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`)
-        ));
+      process.cleanups.push((SIGINT) => {// Ctrl-C overrides forcePaused
+        npc.cancel(SIGINT).catch(e => processApi.verbose(e?.message ?? e));
       });
       process.onSuspends.push(() => { npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });

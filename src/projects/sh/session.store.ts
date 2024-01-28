@@ -93,6 +93,7 @@ export interface Session {
     /** Foreground */ fg: number;
     /** Background */ bg: number;
   };
+  verbose: boolean;
 }
 
 interface Rehydrated {
@@ -235,6 +236,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
           nextPid: 0,
           process: {},
           lastExit: { fg: 0, bg: 0},
+          verbose: false,
         }, session),
       }));
       return get().session[sessionKey];

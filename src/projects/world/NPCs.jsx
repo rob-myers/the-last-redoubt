@@ -201,11 +201,8 @@ export default function NPCs(props) {
       const npc = state.getNpc(npcKey); // Throws if non-existent
       const process = processApi.getProcess();
 
-      process.cleanups.push((SIGINT) => {
-        // Ctrl-C overrides forcePaused
-        npc.cancel(SIGINT).catch(e => void (
-          state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`)
-        ));
+      process.cleanups.push((SIGINT) => {// Ctrl-C overrides forcePaused
+        npc.cancel(SIGINT).catch(e => processApi.verbose(e?.message ?? e));
       });
       process.onSuspends.push(() => { npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });
@@ -741,7 +738,7 @@ export default function NPCs(props) {
           durationMs: 2000,
           scale: npc.everWalked() ? undefined : baseTrackingZoom,
           worldPoint: npc.getPosition(),
-        }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
+        }).catch(e => processApi.verbose(e.message ?? e));
         changeStatus('no-track');
       }
 
@@ -791,7 +788,7 @@ export default function NPCs(props) {
             await api.panZoom.followPath(path, {
               animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
             }).catch(e => // ignore Error('cancelled')
-              void (state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`))
+              processApi.verbose(e?.message ?? e)
             );
           } else if (!api.panZoom.isIdle()) {
             // User is manually pan/zooming

@@ -7,7 +7,7 @@ import { parseJsArg, parseJsonArg } from '../service/dom';
 import { addStdinToArgs, computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
-import useSession, { ProcessMeta, ProcessStatus } from './session.store';
+import useSession, { ProcessMeta, ProcessStatus, Session } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
@@ -680,10 +680,10 @@ class cmdServiceClass {
   }
 
   private readonly processApi = {
-    /**
-     * This will be overwritten via Function.prototype.bind.
-     */
+    // Overwritten via Function.prototype.bind.
     meta: {} as Sh.BaseMeta,
+    session: {} as Session,
+
     ansi,
 
     /** Returns provided cleanup */
@@ -803,6 +803,13 @@ class cmdServiceClass {
       yield* sleep(this.meta, seconds);
     },
 
+    verbose(message: any) {
+      if (this.session.verbose) {
+        useSession.api.writeMsgCleanly(this.meta.sessionKey, `${message}`, { level: 'info' });
+        console.warn(message);
+      }
+    },
+
   };
 
   private readonly processApiKeys = Object.keys(this.processApi);
@@ -821,7 +828,7 @@ class cmdServiceClass {
           return new Proxy(this.processApi, {
             get(target, key: keyof cmdServiceClass['processApi']) {
               if (typeof target[key] === 'function') {
-                return (target[key] as Function).bind({ meta });
+                return (target[key] as Function).bind({ meta, session });
               }
               if (key === 'meta') {
                 return meta;

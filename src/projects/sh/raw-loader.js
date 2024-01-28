@@ -299,7 +299,7 @@
         yield await w.npcs.npcAct(npcAct, api);
       } else {
         /** @param {*} e */
-        const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
+        const onError = e => api.verbose(e?.message ?? e);
 
         if (action === "get" && (args[2] === "walk" || args[2] === "lookAt")) {
           // walk/look need to respond immediately
@@ -330,7 +330,7 @@
       const npc = w.npcs.connectNpcToProcess(api, npcKey);
       
       /** @param {*} e */
-      const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
+      const onError = e => api.verbose(e?.message ?? e);
       let datum = /** @type {Geomorph.PointWithMeta} */ ({});
 
       while ((datum = await api.read()) !== api.eof) {
@@ -572,7 +572,7 @@
             }
           } catch (e) {
             if (opts.forever) {
-              w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
+              api.verbose(/** @type {*} */(e)?.message ?? e);
             } else {
               throw e;
             }
