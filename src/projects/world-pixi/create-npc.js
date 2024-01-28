@@ -141,8 +141,10 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
     canLook() {
-      return (this.animName === 'idle' ||
-        this.animName === 'idle-breathe') && !this.doMeta;
+      return (
+        this.animName === 'idle' ||
+        this.animName === 'idle-breathe'
+      ) && !this.doMeta;
     },
     changeClass(npcClassKey) {
       this.classKey = npcClassKey;
@@ -215,8 +217,13 @@ export default function createNpc(def, api) {
           }
         } else if (api.npcs.isPointInNavmesh(this.getPosition())) {
           if (this.doMeta) {// @ do point, on nav
-            const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
-            await this.walk(navPath, { throwOnCancel: false });
+            this.doMeta = null;
+            if (point.meta.do) {
+              await this.onMeshDoMeta(point, opts);
+            } else {
+              const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
+              await this.walk(navPath, { throwOnCancel: false });
+            }
           } else {
             await this.onMeshDoMeta(point, opts);
           }
