@@ -39,14 +39,13 @@ api panZoom.viewport.resize $(rect/width), $(rect/height)
 
 - ✅ BUG respawn as different class not working 1st time
 - ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
-- 🚧 BUG saw npc vs npc collisions not working when other npc walking
-  - compare to CSS version
+- BUG saw npc vs npc collisions not working when other npc walking
 ```sh
 # REPRO
 spawn foo {"x":270.39,"y":339.25}
 nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk rob --open
 ```
-- BUG TypeError:
+- ✅ BUG TypeError:
   - Cannot destructure property 'gmId' of 'wayMetas[0]' as it is undefined.
     at Object.predictNpcNpcCollision (use-handle-events.js:429:1)
   - repro using `click | walk --open foo`

@@ -126,6 +126,7 @@ export default function createNpc(def, api) {
       if (this.animName === 'walk') {
         this.nextWalk = null;
         this.clearWayMetas();
+        // 🚧 might cause late collision test (when no wayMetas)
         !this.paused && await this.walkToIdle().catch(_ => {});
         this.startAnimation('idle');
       }
@@ -472,8 +473,8 @@ export default function createNpc(def, api) {
         );
       }
     },
-    isWalking() {
-      return this.animName === 'walk';
+    isWalking() {// Not walking when transitioning to idle
+      return this.animName === 'walk' && this.frameMap.length === this.tr.length;
     },
     async lookAt(point, ms = 1000) {
       if (!Vect.isVectJson(point)) {
