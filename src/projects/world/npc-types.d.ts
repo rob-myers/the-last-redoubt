@@ -46,8 +46,8 @@ declare namespace NPC {
     framePtr: number;
     /** Track frames i.e. 0-based frames less than @see tr length */
     frameMap: number[];
-    /** Optional callback to invoke when finish @see frameMap */
-    frameFinish?(): void;
+    /** Invoked when finish @see frameMap */
+    frameFinish(): void;
 
     animName: SpineAnimName;
     /**

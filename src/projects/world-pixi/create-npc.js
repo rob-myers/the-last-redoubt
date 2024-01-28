@@ -29,6 +29,7 @@ export default function createNpc(def, api) {
     distance: 0,
     frame: 0,
     frameDurs: [Infinity],
+    frameFinish: emptyFn,
     frameMap: [0],
     framePtr: 0,
     neckAngle: 0,
@@ -126,7 +127,6 @@ export default function createNpc(def, api) {
       if (this.animName === 'walk') {
         this.nextWalk = null;
         this.clearWayMetas();
-        // 🚧 might cause late collision test (when no wayMetas)
         !this.paused && await this.walkToIdle().catch(_ => {});
         this.startAnimation('idle');
       }
@@ -636,12 +636,13 @@ export default function createNpc(def, api) {
         this.time = 0;
         this.frame = 0;
       }
+
+      this.animName = animName;
+      this.frameFinish = emptyFn;
       this.framePtr = this.frame;
       this.frameMap = this.tr.bodys.map((_, i) => i);
       this.distance = 0;
       this.walkOnSpot = false;
-      this.frameFinish = undefined;
-      this.animName = animName;
       
       const { stationaryFps } = spineAnimSetup[animName];
       this.frameDurs = this.tr.deltas?.map(x => x / this.walkSpeed) ?? this.tr.bodys.map(_ => 1 / stationaryFps);
@@ -705,27 +706,16 @@ export default function createNpc(def, api) {
       }
     },
     startAnimation(animName) {
-      switch (animName) {
-        case 'walk': {
-          this.setupAnim(animName);
-          break;
-        }
-        case 'idle':
-        case 'idle-breathe':
-        case 'lie':
-        case 'sit':
-          this.a.rotate.stop();
-          this.a.rotate = emptyTween;
-          this.clearWayMetas();
-          this.updateStaticBounds();
-          if (animName === 'sit') {// Ensure feet are below surfaces
-            this.obscureBySurfaces();
-          }
-          this.setupAnim(animName);
-          break;
-        default:
-          throw testNever(animName, { suffix: 'create-npc.startAnimation' });
+      if (animName !== 'walk') {
+        this.a.rotate.stop();
+        this.a.rotate = emptyTween;
+        this.clearWayMetas();
+        this.updateStaticBounds();
       }
+      if (animName === 'sit') {
+        this.obscureBySurfaces();
+      }
+      this.setupAnim(animName);
     },
     startAnimationByMeta(meta) {
       switch (true) {
@@ -814,7 +804,7 @@ export default function createNpc(def, api) {
         this.time++;
         this.distance += this.tr.deltas?.[this.frame] ?? 0;
         if (++this.framePtr === frameMap.length) {
-          this.frameFinish?.();
+          this.frameFinish();
           this.framePtr = 0;
         }
         this.frame = frameMap[this.framePtr];
