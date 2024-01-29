@@ -334,7 +334,9 @@
       let datum = /** @type {Geomorph.PointWithMeta} */ ({});
 
       while ((datum = await api.read()) !== api.eof) {
-        const { meta } = (datum);
+        const { meta } = datum;
+        const position = npc.getPosition();
+
         if (meta.npc || npc.forcePaused) {
           if (meta.npcKey === npcKey && meta.longClick) {
             w.fov.mapAct("show-for", 3000);
@@ -343,11 +345,13 @@
         }
 
         if (meta.door || meta.do || (npc.doMeta && meta.nav)) {
-          // (1) door, (2) do point, or (3) non-do nav point whilst at do point
+          // door, do point, or: nav point whilst at do point
           !meta.door && await npc.cancel();
-          await npc.do(datum).catch(onError);
-        } else if (meta.nav && !meta.ui) {
-          const position = npc.getPosition();
+           await npc.do(datum).catch(onError);
+           continue;
+        }
+        
+        if (meta.nav && !meta.ui) {
           if (meta.longClick && !npc.isWalking() || !w.npcs.isPointInNavmesh(position)) {
             await npc.cancel();
             if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
@@ -364,15 +368,17 @@
             }
             await npc.cancel();
             const navPath = w.npcs.getGlobalNavPath(position, datum, {
-              closedWeight: 10000, // 🤔
+              closedWeight: 10000,
               centroidsFallback: true,
-            });
-            npc.walk(navPath, { doorStrategy: "none" });
+            }); // catch "cannot look"
+            npc.walk(navPath, { doorStrategy: "none" }).catch(onError);
           }
-        } else {// look
-          await npc.cancel();
-          npc.lookAt(datum).catch(onError);
+          continue;
         }
+        
+        // look
+        await npc.cancel();
+        npc.lookAt(datum).catch(onError);
       }
     },
 

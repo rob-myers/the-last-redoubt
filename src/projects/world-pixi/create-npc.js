@@ -127,8 +127,7 @@ export default function createNpc(def, api) {
       if (this.animName === 'walk') {
         this.nextWalk = null;
         this.clearWayMetas();
-        !this.paused && await this.walkToIdle().catch(_ => {});
-        this.startAnimation('idle');
+        !this.paused && await this.walkToIdle();
       }
 
       this.paused = false;
@@ -343,15 +342,15 @@ export default function createNpc(def, api) {
       this.nextWayTimeout();
 
       try {
-        console.log(`followNavPath: ${this.key} started walk`);
+        info(`followNavPath: ${this.key} started walk`);
         await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
           this.walkFinish = resolve;
           this.walkCancel = reject;
         }));
-        console.log(`followNavPath: ${this.key} finished walk`);
+        info(`followNavPath: ${this.key} finished walk`);
         this.wayTimeout(); // immediate else startAnimation('idle') will clear
       } catch (e) {
-        console.log(`followNavPath: ${this.key} cancelled walk`);
+        info(`followNavPath: ${this.key} cancelled walk`);
         throw Error('cancelled');
       } finally {// Reset speed to default?
         this.walkSpeed = this.def.walkSpeed;
@@ -621,8 +620,8 @@ export default function createNpc(def, api) {
         window.clearTimeout(this.a.wayTimeoutId);
       }
       if (this.forcePaused) {
-        this.s.body.tint = 0xffbbbb;
-        this.s.head.tint = 0xffbbbb;
+        this.s.body.tint = 0xffcccc;
+        this.s.head.tint = 0xffcccc;
       } else {
         this.s.body.tint = 0xaaaaaa;
         this.s.head.tint = 0xaaaaaa;
@@ -908,7 +907,7 @@ export default function createNpc(def, api) {
 
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
         this.paused = true;
-        await this.waitFor(150);
+        await this.waitFor(150).catch(_ => warn('cancelled walkToIdle'));
         this.paused = false;
       }
       if (this.frameMap.length > 1) {

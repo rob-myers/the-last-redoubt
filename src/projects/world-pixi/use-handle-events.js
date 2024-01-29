@@ -257,7 +257,7 @@ export default function useHandleEvents(api, disabled) {
             break;
           }
 
-          // 🚧 remove: use tween npc.a.rotate instead
+          // 🚧 remove (use tween npc.a.rotate instead)
           npc.s.body.rotation = npc.a.aux.angs[e.meta.index] + Math.PI/2;
           npc.updateHead();
           

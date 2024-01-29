@@ -5,6 +5,8 @@
 - 🚧 start new repo `npc-cli`
   - new layout i.e. right-pane with Tabs
   - redo Tabs avoiding "cannot update component" error?
+  - geomorph layouts via SVG, inducing current format
+  - world layouts via SVG, inducing current format
 
 - 🚧 more decor images
   - 🚧 `computer-2`
@@ -29,7 +31,14 @@
   - ✅ can fadeSpawn to on-nav do point
   - ✅ pause "npc" process darkens npc
   - ✅ force pause "npc" process dark-reddens npc
-  - 🚧 chained rotate tween instead of sharp rotate
+  - ✅ BUG `controlNpc` never-ending walk by
+    - clicking beyond blocked door many times
+    - clicking next to npc many times
+  - BUG npc disappears when click many times (NEED REPRO)
+  - npc paused via process pause should resume
+  - should not go off-nav: `click | walk --open foo`
+  - fix controlNpc fadeSpawn from do point (on-nav)
+  - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
   - finish obscureBySurfaces
