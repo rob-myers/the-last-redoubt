@@ -320,7 +320,7 @@ export default function createNpc(def, api) {
         await this.lookAt(path[1], 500 * geom.compareAngles(
           this.getAngle(),
           this.a.aux.angs[0] + Math.PI/2,
-        ));
+        )).catch(e => warn(`lookAt failed: ${e}`));
       }
 
       this.startAnimation('walk');
@@ -818,6 +818,10 @@ export default function createNpc(def, api) {
       if (this.paused === true || frameMap.length === 1) {
         return;
       }
+      if (frameMap.length === 0) {
+        console.log('AWOOGA');
+      }
+
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
       let lag = ((this.time % 1) * durs[this.frame]) + (deltaRatio * (1 / 60));
