@@ -348,10 +348,10 @@ declare namespace NPC {
     /** Bounds when stationary. */
     staticBounds: Geom.Rect;
 
-    opacity: TweenExt;
-    rotate: TweenExt;
+    opacity: TweenExt<import('pixi.js').Sprite | import('pixi.js').Sprite[]>;
+    rotate: TweenExt<import('pixi.js').Sprite>;
     /** Waiting needn't pause */
-    wait: TweenExt;
+    wait: TweenExt<{}>;
 
     /** Depends on head skin */
     initHeadWidth: number;

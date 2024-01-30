@@ -171,13 +171,9 @@ export default function useHandleEvents(api, disabled) {
           api.fov.forgetPrev();
           api.fov.setRoomByNpc(e.npcKey);
           break;
-        case 'started-walking': {
-          if (!e.continuous) {// Player warped to navPath start
+        case 'started-walking':
+          if (!e.continuous) // Player warped to navPath start
             api.fov.setRoomByNpc(e.npcKey);
-          }
-          break;
-        }
-        case 'stopped-walking':
           break;
         case 'way-point':
           state.handlePlayerWayEvent(e);
@@ -187,6 +183,7 @@ export default function useHandleEvents(api, disabled) {
         case 'npc-internal':
         case 'removed-npc':
         case 'set-player':
+        case 'stopped-walking':
         case 'resumed-track':
           break;
         default:

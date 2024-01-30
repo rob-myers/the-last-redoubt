@@ -64,8 +64,8 @@ export default function createNpc(def, api) {
       staticBounds: new Rect,
       initHeadWidth: 0,
       
-      opacity: emptyTween,
-      rotate: emptyTween,
+      opacity: /** @type {*} */ (emptyTween),
+      rotate: /** @type {*} */ (emptyTween),
       wait: emptyTween,
 
       doorStrategy: 'none',
@@ -92,7 +92,7 @@ export default function createNpc(def, api) {
         await (this.a.opacity = api.tween(
           onlyBody ? this.s.body : [this.s.body, this.s.head]
         ).to(
-          onlyBody ? {alpha: targetOpacity} : [{ alpha: targetOpacity }, { alpha: targetOpacity }],
+          onlyBody ? { alpha: targetOpacity} : [{ alpha: targetOpacity }, { alpha: targetOpacity }],
           durationMs,
         )).promise();
       } catch (e) {// Reset opacity if cancelled
@@ -650,12 +650,11 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
     setupAnim(animName) {
-      this.tr = tracks[animName];
       if (animName === 'walk') {
         if (this.animName === animName) {
           // preserve walk
-        } else {// 🚧 remove hard-coding
-          this.time = 0;
+        } else {
+          this.time = 0; // 🚧 remove hard-coding:
           this.frame = Math.random() > 0.5 ? 0 : 16;
         }
       } else {
@@ -664,6 +663,7 @@ export default function createNpc(def, api) {
       }
 
       this.animName = animName;
+      this.tr = tracks[animName];
       this.frameFinish = emptyFn;
       this.framePtr = this.frame;
       this.frameMap = this.tr.bodys.map((_, i) => i);
@@ -692,7 +692,6 @@ export default function createNpc(def, api) {
       );
 
       body.scale.set(spineMeta.npcScaleFactor);
-      body.rotation = this.getAngle();
       this.a.initHeadWidth = headRect.width;
 
       this.updateSprites();
@@ -734,7 +733,7 @@ export default function createNpc(def, api) {
     startAnimation(animName) {
       if (animName !== 'walk') {
         this.a.rotate.stop();
-        this.a.rotate = emptyTween;
+        // this.a.rotate = emptyTween;
         this.clearWayMetas();
         this.updateStaticBounds();
       }
@@ -780,10 +779,8 @@ export default function createNpc(def, api) {
       const { body, head } = this.s;
       const { heads, necks } = this.tr;
 
-      // const currFrame = this.getFrame();
-      const currFrame = this.frame;
-      const { angle, width } = heads[currFrame];
-      const neckPos = necks[currFrame];
+      const { angle, width } = heads[this.frame];
+      const neckPos = necks[this.frame];
       const radians = body.rotation;
 
       head.angle = angle + body.angle + this.neckAngle;
@@ -830,8 +827,8 @@ export default function createNpc(def, api) {
         this.time++;
         this.distance += this.tr.deltas?.[this.frame] ?? 0;
         if (++this.framePtr === frameMap.length) {
-          this.frameFinish();
           this.framePtr = 0;
+          this.frameFinish();
         }
         this.frame = frameMap[this.framePtr];
       }
