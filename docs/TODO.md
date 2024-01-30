@@ -34,7 +34,13 @@
   - ✅ BUG `controlNpc` never-ending walk by
     - clicking beyond blocked door many times
     - clicking next to npc many times
-  - BUG npc disappears when click many times (NEED REPRO)
+  - 🚧 BUG npc disappears when click many times
+    - ℹ️ `npc rob s.body.{x,y,rotation}` are null
+    - ℹ️ turn off `pausableNpcs`, click diagonal of door entry many times...
+    - ℹ️ not related to walkToIdle
+    - ✅ `click | walk rob` sometimes throws `walk: run: cannot look`
+      - catch initial lookAt before start walk
+    - `click | walk rob` still crashes
   - npc paused via process pause should resume
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
