@@ -788,6 +788,7 @@ export default function NPCs(props) {
   return (
     <ParticleContainer
       ref={pc => pc && (state.pc = pc)}
+      name="npcs"
       properties={{
         alpha: true,
         position: true,

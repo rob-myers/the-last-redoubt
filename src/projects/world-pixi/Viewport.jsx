@@ -54,6 +54,6 @@ export default Viewport;
 
 /**
  * @typedef {import("@pixi/react").InteractionEvents &
- *  Partial<Pick<import("@pixi/display").Container, 'eventMode'>>
+ *  Partial<Pick<import("@pixi/display").Container, 'eventMode' | 'name'>>
  * } PickedContainerProps
  */

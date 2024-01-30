@@ -12,7 +12,7 @@ export function Origin() {
     app.renderer.render(gfx, { renderTexture: rt });
     return rt;
   }, []);
-  return <PixiReact.Sprite texture={rt} x={-2.5} y={-2.5} />;
+  return <PixiReact.Sprite name="origin" texture={rt} x={-2.5} y={-2.5} />;
 }
 
 export function TestSprite() {

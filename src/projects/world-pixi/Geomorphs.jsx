@@ -278,6 +278,7 @@ export default function Geomorphs(props) {
   return (
     <GmSprites
       gms={gms}
+      name="geomorphs"
       tex={state.tex}
       filters={[colMatFilter1]}
       visible={api.visibleGms}

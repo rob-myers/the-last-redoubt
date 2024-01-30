@@ -241,6 +241,7 @@ export default function Doors(props) {
   return (
     <GmSprites
       gms={gms}
+      name="doors"
       tex={state.tex}
       visible={api.visibleGms}
     />

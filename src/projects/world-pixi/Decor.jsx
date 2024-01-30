@@ -246,6 +246,7 @@ export default function Decor(props) {
   return (
     <GmSprites
       gms={gms}
+      name="decor"
       tex={state.tex}
       filters={[colMatFilter2]}
       visible={api.visibleGms}

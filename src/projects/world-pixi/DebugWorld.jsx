@@ -227,6 +227,7 @@ export default function DebugWorld(props) {
   return (
     <GmSprites
       gms={gms}
+      name="debug"
       tex={state.tex}
       visible={api.visibleGms}
     />
