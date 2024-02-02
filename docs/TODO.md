@@ -2,22 +2,17 @@
 
 ## In progress
 
-- 🚧 start new repo `npc-cli`
-  - new layout i.e. right-pane with Tabs
-  - redo Tabs avoiding "cannot update component" error?
-  - geomorph layouts via SVG, inducing current format
-  - world layouts via SVG, inducing current format
+- 🤔 first wait for world/geomorph editor in new repo
+  - 🚧 more decor images
+    - 🚧 `computer-2`
+    - `speaker-1`
+    - `communicator-1`
+    - `fabricator-1`
+  - place decor points on many tables
+  - more tables in 301
+  - more tables in 101
 
-- 🚧 more decor images
-  - 🚧 `computer-2`
-  - `speaker-1`
-  - `communicator-1`
-  - `fabricator-1`
-- place decor points on many tables
-- more tables in 301
-- more tables in 101
-
-- ✅ BUG resuming npc `rob` with paused process `track2 rob &` should not resume tracking
+- 🚧 handles wayMetas in updateFrame rather than via setTimeout
 
 - 🚧 improve npc
   - ✅ drop shadow
@@ -41,7 +36,7 @@
     - ✅ `click | walk rob` sometimes throws `walk: run: cannot look`
       - catch initial lookAt before start walk
     - `click | walk rob` still crashes
-  - npc paused via process pause should resume
+  - 🚧 npc paused via process pause should resume
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
   - chained rotate tween instead of sharp rotate
@@ -49,35 +44,13 @@
   - darker npc
   - finish obscureBySurfaces
 
-- ✅ get pixi-viewport `follow` working manually
-```sh
-npc rob s.body | api panZoom.viewport.follow - '{ speed: 1, radius: 0, acceleration: 0. }'
-api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
-api panZoom.viewport.plugins.remove follow
-
-# manually fix pixi-viewport size
-api canvas.getBoundingClientRect >rect
-api panZoom.viewport.resize $(rect/width), $(rect/height)
-```
-
 - BUG saw npc vs npc collisions not working when other npc walking
 ```sh
 # REPRO
 spawn foo {"x":270.39,"y":339.25}
 nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk rob --open
 ```
-- ✅ BUG respawn as different class not working 1st time
-- ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
-- ✅ BUG TypeError:
-  - Cannot destructure property 'gmId' of 'wayMetas[0]' as it is undefined.
-    at Object.predictNpcNpcCollision (use-handle-events.js:429:1)
-  - repro using `click | walk --open foo`
 - BUG saw doors not opening when other npc is `walk --open`
-  - compare to CSS version
-- BUG pointerdown not detected after resized to full screen
-
-- ✅ pause "npc" process pauses npc
-- ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
 - try vary panZoom follow speed/acceleration
 - mistakenly setting e.g. `window.bar = 2` breaks `npc foo bar`
@@ -753,6 +726,34 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ start new repo `npc-cli`
+  - ✅ connect new repo to netlify (renaming previous)
+  
+- ✅ BUG resuming npc `rob` with paused process `track2 rob &` should not resume tracking
+
+- ✅ get pixi-viewport `follow` working manually
+```sh
+npc rob s.body | api panZoom.viewport.follow - '{ speed: 1, radius: 0, acceleration: 0. }'
+api pixiApp.stage.children.0.children.at -1 | api panZoom.viewport.follow - '{ speed: 1 }'
+api panZoom.viewport.plugins.remove follow
+
+# manually fix pixi-viewport size
+api canvas.getBoundingClientRect >rect
+api panZoom.viewport.resize $(rect/width), $(rect/height)
+```
+
+- ✅ BUG respawn as different class not working 1st time
+- ✅ BUG `declare -f f` of `f() { while true; do echo; done; }` is wrong
+- ✅ BUG TypeError:
+  - Cannot destructure property 'gmId' of 'wayMetas[0]' as it is undefined.
+    at Object.predictNpcNpcCollision (use-handle-events.js:429:1)
+  - repro using `click | walk --open foo`
+- ✅ BUG pointerdown not detected after resized to full screen
+  - should be fixed by pixi-viewport resizing
+
+- ✅ pause "npc" process pauses npc
+- ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
 - ✅ TTY BUG links not pan-zooming when TTY not wide enough
  - bad `lineText` e.g. `ℹ️  [ corridor ] with 11 oors`
