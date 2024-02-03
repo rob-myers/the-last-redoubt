@@ -232,6 +232,7 @@ declare namespace NPC {
     animateOpacity(targetOpacity: number, durationMs: number, onlyBody?: boolean): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateHead(): void;
+    updateMotion(): void;
     /**
      * Invoke initially, or just after `enter-room`.
      * @param srcIndex Index of 1st vertex in room.
@@ -366,15 +367,15 @@ declare namespace NPC {
   
   interface Track {
     animName: string;
-    /** Body rects in SpriteSheet, length @see length */
+    /** Body rects in SpriteSheet, (length @see length )*/
     bodys: Geom.RectJson[];
-    /** Root motion deltas, length @see length */
+    /** Root motion deltas  (length @see length )*/
     deltas: null | number[];
-    /** Implicit head rects on body rects in SpriteSheet, length @see length */
+    /** Implicit head rects on body rects in SpriteSheet, (length @see length )*/
     heads: (Geom.RectJson & { angle: number; })[];
     /** Number of frames */
     length: number;
-    /** Neck positions, length @see length */
+    /** Neck positions, (length @see length )*/
     necks: Geom.VectJson[];
   }
 

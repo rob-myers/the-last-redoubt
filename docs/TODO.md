@@ -12,7 +12,10 @@
   - more tables in 301
   - more tables in 101
 
-- 🚧 handles wayMetas in updateFrame rather than via setTimeout
+- ✅ handle wayMetas in npc.updateTime rather than via setTimeout
+- 🚧 ensure immediate move to vertex 0
+- 🚧 shorten step before other vertices so hit them exactly
+- 🚧 npc should follow path "exactly"
 
 - 🚧 improve npc
   - ✅ drop shadow

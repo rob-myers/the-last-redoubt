@@ -151,7 +151,6 @@ export default function createNpc(def, api) {
     clearWayMetas() {
       this.a.wayMetas.length = 0;
       this.a.prevWayMetas.length = 0;
-      window.clearTimeout(this.a.wayTimeoutId);
     },
     computeAnimAux() {
       const { aux } = this.a;
@@ -247,12 +246,12 @@ export default function createNpc(def, api) {
       }
     },
     everWalked() {
-      return this.a.wayTimeoutId !== 0;
+      return true; // Fix types during migration
     },
     extendNextWalk(...points) {// 👈 often a single point
       const currentNavPath = this.navPath;
       if (!this.isWalking() || !currentNavPath || currentNavPath.path.length === 0) {
-        return warn(`extendNextWalk: ${this.animName}: must be walking`);
+        return warn(`extendNextWalk: ${this.key} must be walking ( ${this.animName})`);
       }
       if (points.length === 0) {
         return;
@@ -291,12 +290,7 @@ export default function createNpc(def, api) {
       }
     },
     filterWayMetas(shouldRemove) {
-      const { wayMetas } = this.a;
-      this.a.wayMetas = wayMetas.filter(meta => !shouldRemove(meta));
-      if (wayMetas[0] && shouldRemove(wayMetas[0])) {
-        window.clearTimeout(this.a.wayTimeoutId);
-        this.nextWayTimeout();
-      }
+      this.a.wayMetas = this.a.wayMetas.filter(meta => !shouldRemove(meta));
     },
     async followNavPath(navPath, doorStrategy) {
       const { path, navMetas: globalNavMetas, gmRoomIds } = navPath;
@@ -339,7 +333,6 @@ export default function createNpc(def, api) {
         extends: !!this.nextWalk,
       });
       this.nextWalk = null;
-      this.nextWayTimeout();
 
       try {
         info(`followNavPath: ${this.key} started walk`);
@@ -348,7 +341,6 @@ export default function createNpc(def, api) {
           this.walkCancel = reject;
         }));
         info(`followNavPath: ${this.key} finished walk`);
-        this.wayTimeout(); // immediate else startAnimation('idle') will clear
       } catch (e) {
         info(`followNavPath: ${this.key} cancelled walk`);
         throw Error('cancelled');
@@ -516,10 +508,7 @@ export default function createNpc(def, api) {
       await this.animateRotate(targetRadians, ms);
     },
     nextWayTimeout() {
-      if (this.a.wayMetas[0]) {
-        const msToWait = (this.a.wayMetas[0].length - this.distance) * this.getAnimScaleFactor();
-        this.a.wayTimeoutId = window.setTimeout(this.wayTimeout.bind(this), msToWait);
-      }
+     // Fix types during migration
     },
     npcRef() {
       // Fix types during migration
@@ -616,9 +605,6 @@ export default function createNpc(def, api) {
       this.a.wait.pause();
       this.paused = true;
 
-      if (this.animName === 'walk') {
-        window.clearTimeout(this.a.wayTimeoutId);
-      }
       if (this.forcePaused) {
         this.s.body.tint = 0xffcccc;
         this.s.head.tint = 0xffcccc;
@@ -642,10 +628,6 @@ export default function createNpc(def, api) {
       this.paused = false;
       this.s.body.tint = 0xffffff;
       this.s.head.tint = 0xffffff;
-
-      if (this.animName === 'walk') {
-        this.nextWayTimeout();
-      }
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
@@ -790,6 +772,27 @@ export default function createNpc(def, api) {
         body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y,
       );
     },
+    updateMotion() {
+      if (this.tr.deltas == null || this.walkOnSpot === true) {
+        return;
+      }
+      // 🚧 ensure immediate move to vertex 0
+      // 🚧 shorten step before other vertices so hit them exactly
+
+      const rootDelta = this.tr.deltas[this.frame];
+      this.distance += rootDelta;
+
+      // trigger wayMetas we're about to step over
+      /** @type {NPC.NpcWayMeta} */ let wayMeta;
+      while (this.a.wayMetas[0]?.length <= this.distance) {
+        this.a.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.a.wayMetas.shift()));
+        api.npcs.events.next({ key: 'way-point', npcKey: this.key, meta: wayMeta });
+      }
+
+      const radians = this.s.body.rotation;
+      this.s.body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
+      this.s.body.y -= rootDelta * Math.cos(radians);
+    },
     updateRoomWalkBounds(srcIndex) {
       // Fix types during migration
     },
@@ -797,14 +800,6 @@ export default function createNpc(def, api) {
       const { bodys, deltas } = this.tr;
       const { body } = this.s;
       body.texture._uvs.set(/** @type {Rectangle} */ (bodys[this.frame]), baseTexture, 0);
-
-      if (deltas !== null && this.walkOnSpot === false) {
-        const radians = body.rotation;
-        const rootDelta = deltas[this.frame];
-        body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
-        body.y -= rootDelta * Math.cos(radians);
-      }
-
       this.updateHead();
       this.s.bounds?.position.copyFrom(body.position);
     },
@@ -814,33 +809,29 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
-      const { frame: prevFrame, frameDurs: durs, frameMap } = this;
+      const { frameDurs: durs, frameMap } = this;
       if (this.paused === true || frameMap.length === 1) {
         return;
-      }
-      if (frameMap.length === 0) {
-        console.log('AWOOGA');
       }
 
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
       let lag = ((this.time % 1) * durs[this.frame]) + (deltaRatio * (1 / 60));
-
       while (lag >= durs[this.frame]) {
         lag -= durs[this.frame];
+
         this.time++;
-        this.distance += this.tr.deltas?.[this.frame] ?? 0;
         if (++this.framePtr === frameMap.length) {
           this.framePtr = 0;
           this.frameFinish();
         }
         this.frame = frameMap[this.framePtr];
-      }
-      this.time = Math.floor(this.time) + (lag / durs[this.frame]);
 
-      if (prevFrame !== this.frame) {
+        this.updateMotion();
         this.updateSprites();
       }
+
+      this.time = Math.floor(this.time) + (lag / durs[this.frame]);
     },
     updateWalkSegBounds(index) {
       const { aux, path } = this.a;
@@ -918,37 +909,8 @@ export default function createNpc(def, api) {
     async waitFor(ms) {
       await (this.a.wait = api.tween({}).to({}, ms)).promise();
     },
-    // 🚧 avoid many short timeouts?
     wayTimeout() {
-      // console.warn('wayTimeout next:', this.anim.wayMetas[0]);
-      const metaLength = this.a.wayMetas[0]?.length;
-
-      if (metaLength === undefined) {
-        return console.warn('wayTimeout: empty wayMetas');
-      } else if (this.animName !== 'walk') {
-        return console.warn(`wayTimeout: not walking: ${this.animName}`);
-      } else if (this.paused) {
-        return; // This handles World pause
-      }
-
-      /** @type {NPC.NpcWayMeta} */ let wayMeta;
-      if (this.distance >= metaLength - 1) {
-        // Reached wayMeta's `length`, so remove/trigger respective event (+adjacents)
-        while (this.a.wayMetas[0]?.length <= metaLength) {
-          // console.warn('wayMeta shift', this.anim.wayMetas[0])
-          this.a.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.a.wayMetas.shift()));
-          api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
-        }
-      } else {
-        // console.warn(
-        //   'wayTimeout not ready',
-        //   this.anim.wayMetas[0],
-        //   this.anim.translate.currentTime,
-        //   this.anim.translate.effect?.getTiming().duration,
-        //   this.anim.wayMetas[0].length * this.getAnimScaleFactor(),
-        // );
-      }
-      this.nextWayTimeout();
+      // Fix types during migration
     },
   };
 }

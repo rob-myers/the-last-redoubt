@@ -916,6 +916,9 @@ export default function createNpc(
     updateHead() {
       // Fix types during migration
     },
+    updateMotion() {
+      // Fix types during migration
+    },
     updateRoomWalkBounds(srcIndex) {
       // We start from vertex 0 or an `exit-room`, and look for next `exit-room`
       const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;

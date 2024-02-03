@@ -93,9 +93,6 @@ export default function useHandleEvents(api, disabled) {
             // recompute pending npc collisions (but not decor collisions)
             npc.filterWayMetas((meta) => meta.key === 'npcs-collide');
             state.predictNpcNpcsCollision(npc);
-            // recompute timeout now speed has changed
-            window.clearTimeout(npc.a.wayTimeoutId);
-            npc.nextWayTimeout();
             // close npcs should recompute respective collision
             for (const other of api.npcs.getCloseNpcs(npc.key)) {
               other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === npc.key);
@@ -420,7 +417,7 @@ export default function useHandleEvents(api, disabled) {
 
       if (collision) {
         const { aux, path, wayMetas } = npc.a;
-        console.warn(`${npc.key} will collide with ${otherNpc.key}`, collision);
+        warn(`${npc.key} will collide with ${otherNpc.key}`, collision);
 
         const length = aux.sofars[aux.index] + (
           npc.getPosition().distanceTo(path[aux.index]) // always account for offset
@@ -435,11 +432,6 @@ export default function useHandleEvents(api, disabled) {
           gmId,
           length,
         });
-
-        if (insertIndex === 0) {
-          window.clearTimeout(npc.a.wayTimeoutId);
-          npc.nextWayTimeout();
-        }
       }
     },
 
