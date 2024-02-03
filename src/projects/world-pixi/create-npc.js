@@ -759,18 +759,13 @@ export default function createNpc(def, api) {
     },
     updateHead() {
       const { body, head } = this.s;
-      const { heads, necks } = this.tr;
-
-      const { angle, width } = heads[this.frame];
-      const neckPos = necks[this.frame];
+      const { angle, width } = this.tr.heads[this.frame];
+      const neckPos = this.tr.necks[this.frame];
       const radians = body.rotation;
-
       head.angle = angle + body.angle + this.neckAngle;
       head.scale.set(width / this.a.initHeadWidth);
-      head.position.set(
-        body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y,
-        body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y,
-      );
+      head.x = body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y;
+      head.y = body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y;
     },
     updateMotion() {
       if (this.tr.deltas == null || this.walkOnSpot === true) {
@@ -797,11 +792,9 @@ export default function createNpc(def, api) {
       // Fix types during migration
     },
     updateSprites() {
-      const { bodys, deltas } = this.tr;
-      const { body } = this.s;
-      body.texture._uvs.set(/** @type {Rectangle} */ (bodys[this.frame]), baseTexture, 0);
+      this.s.body.texture._uvs.set(/** @type {Rectangle} */ (this.tr.bodys[this.frame]), baseTexture, 0);
       this.updateHead();
-      this.s.bounds?.position.copyFrom(body.position);
+      this.s.bounds?.position.copyFrom(this.s.body.position);
     },
     updateStaticBounds() {
       const pos = this.getPosition();
