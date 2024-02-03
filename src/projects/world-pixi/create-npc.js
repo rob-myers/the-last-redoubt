@@ -156,10 +156,10 @@ export default function createNpc(def, api) {
       const { aux } = this.a;
       const radius = this.getRadius();
       aux.outsetWalkBounds = Rect.fromPoints(...this.a.path).outset(radius);
-      aux.edges = this.a.path.map((p, i) => ({ p, q: this.a.path[i + 1] })).slice(0, -1);
-      aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
+      aux.edges = this.a.path.flatMap((p, i) => this.a.path[i + 1]?.clone().sub(p) ?? []);
+      aux.angs = aux.edges.map(e => precision(Math.atan2(e.y, e.x)));
       // accuracy needed for wayMeta length computation
-      aux.elens = aux.edges.map(({ p, q }) => p.distanceTo(q));
+      aux.elens = aux.edges.map(e => e.length);
       // aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
       // aux.navPathPolys = aux.edges.map(e => {
       //   const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
@@ -333,6 +333,8 @@ export default function createNpc(def, api) {
         extends: !!this.nextWalk,
       });
       this.nextWalk = null;
+
+      this.updateWayMetas(); // wayEvents of length 0
 
       try {
         info(`followNavPath: ${this.key} started walk`);
@@ -771,22 +773,24 @@ export default function createNpc(def, api) {
       if (this.tr.deltas == null || this.walkOnSpot === true) {
         return;
       }
-      // 🚧 ensure immediate move to vertex 0
-      // 🚧 shorten step before other vertices so hit them exactly
 
       const rootDelta = this.tr.deltas[this.frame];
       this.distance += rootDelta;
 
       // trigger wayMetas we're about to step over
-      /** @type {NPC.NpcWayMeta} */ let wayMeta;
-      while (this.a.wayMetas[0]?.length <= this.distance) {
-        this.a.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.a.wayMetas.shift()));
-        api.npcs.events.next({ key: 'way-point', npcKey: this.key, meta: wayMeta });
+      this.updateWayMetas();
+      
+      const nextVid = this.a.aux.sofars.findIndex(sofar => sofar > this.distance);
+      if (nextVid === -1) {// goto end
+        this.s.body.position.copyFrom(this.a.path[this.a.path.length - 1]);
+      } else {// position npc along track using `distance`
+        const ratio = (this.distance - this.a.aux.sofars[nextVid - 1]) / this.a.aux.elens[nextVid - 1];
+        const edge = this.a.aux.edges[nextVid - 1];
+        this.s.body.position.set(
+          this.a.path[nextVid - 1].x + ratio * edge.x,
+          this.a.path[nextVid - 1].y + ratio * edge.y,
+        );
       }
-
-      const radians = this.s.body.rotation;
-      this.s.body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
-      this.s.body.y -= rootDelta * Math.cos(radians);
     },
     updateRoomWalkBounds(srcIndex) {
       // Fix types during migration
@@ -828,9 +832,15 @@ export default function createNpc(def, api) {
     },
     updateWalkSegBounds(index) {
       const { aux, path } = this.a;
-      aux.index = index;
       aux.segBounds.copy(Rect.fromPoints(path[index], path[index + 1]));
       aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
+    },
+    updateWayMetas() {
+      /** @type {NPC.NpcWayMeta} */ let wayMeta;
+      while (this.a.wayMetas[0]?.length <= this.distance) {
+        this.a.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.a.wayMetas.shift()));
+        api.npcs.events.next({ key: 'way-point', npcKey: this.key, meta: wayMeta });
+      }
     },
     async walk(navPath, opts = {}) {
       if (api.lib.isVectJson(navPath)) {

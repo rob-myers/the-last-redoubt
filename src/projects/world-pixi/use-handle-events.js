@@ -256,6 +256,7 @@ export default function useHandleEvents(api, disabled) {
           npc.updateHead();
           
           // npc is walking along a line segment
+          npc.a.aux.index = e.meta.index;
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc);
           state.predictNpcDecorCollision(npc);

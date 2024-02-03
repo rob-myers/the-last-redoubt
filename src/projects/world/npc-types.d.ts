@@ -243,6 +243,7 @@ declare namespace NPC {
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateTime(deltaRatio: number): void;
     updateWalkSegBounds(index: number): void;
+    updateWayMetas(): void;
     waitFor(ms: number): Promise<void>;
     walk(navPath: NPC.GlobalNavPath | Geom.VectJson, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     /** Transition animation from walking to idle */
@@ -332,7 +333,9 @@ declare namespace NPC {
     aux: {
       /** Radians */
       angs: number[];
-      edges: ({ p: Geom.Vect; q: Geom.Vect })[];
+      /** Outgoing edges `path[i] -> path[i+1]` */
+      edges: Geom.Vect[];
+      /** Aligned to `edges` */
       elens: number[];
       /** Last seen index of path */
       index: number;
@@ -342,6 +345,7 @@ declare namespace NPC {
       outsetSegBounds: Geom.Rect;
       /** For npc vs decor collisions */
       segBounds: Geom.Rect;
+      /** Distance travelled when at respective node, hence `sofars[0]` is `0`  */
       sofars: number[];
       /** Length of path */
       total: number;

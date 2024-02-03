@@ -986,6 +986,9 @@ export default function createNpc(
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
     },
+    updateWayMetas() {
+      // Fix types during migration
+    },
     async walkToIdle() {
       // Fix types during migration
     },

@@ -13,9 +13,12 @@
   - more tables in 101
 
 - ✅ handle wayMetas in npc.updateTime rather than via setTimeout
-- 🚧 ensure immediate move to vertex 0
-- 🚧 shorten step before other vertices so hit them exactly
 - 🚧 npc should follow path "exactly"
+  - ✅ ensure immediate move to vertex 0
+  - ✅ prevent move thru closed door
+    - early `updateWayMetas()`
+  - ✅ move along track by amount rootDelta
+  - 🚧 clean up track motion
 
 - 🚧 improve npc
   - ✅ drop shadow
@@ -49,7 +52,7 @@
 
 - BUG saw npc vs npc collisions not working when other npc walking
 ```sh
-# REPRO
+# REPRO ❌ need another
 spawn foo {"x":270.39,"y":339.25}
 nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk rob --open
 ```
