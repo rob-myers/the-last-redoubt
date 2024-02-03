@@ -499,12 +499,10 @@ click | world npcs.canSee $fixed -
 # try spawn a bunch of bots and make them all look at some point
 
 # spawner
-multiSpawn() {
+multiSpawn() { # no spaces allowed
   echo name⏎ click, e.g. "rob --zhodani"
-  local npcKey
-  while true; do
-    npcKey=$( take 1 )
-    spawn ${npcKey} $( click 1 )
+  take | while true; do
+    spawn $( take 1 ) $( click 1 )
   done
 }
 multiSpawn

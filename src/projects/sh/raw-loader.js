@@ -425,11 +425,11 @@
         }
       }
 
-      if (api.isTtyAt(0)) {
+      if (api.isTtyAt(0) || args[0]) {// spawn {npcKey} {point}
         const point = api.parseJsArg(pointStr);
         point.meta ??= {};
         await fadeSpawnDo(npcKey, point, npcClassKey);
-      } else {
+      } else {// ... | spawn
         while ((datum = await api.read()) !== api.eof) {
           await fadeSpawnDo(datum.npcKey, datum.point, datum.classKey ?? npcClassKey);
         }
