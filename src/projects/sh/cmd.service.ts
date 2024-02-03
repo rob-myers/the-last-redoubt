@@ -6,7 +6,7 @@ import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify,
 import { parseJsArg, parseJsonArg } from '../service/dom';
 import { addStdinToArgs, computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
-import { ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
+import { ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand, isDataChunk } from './io';
 import useSession, { ProcessMeta, ProcessStatus, Session } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
@@ -708,6 +708,8 @@ class cmdServiceClass {
 
     addStdinToArgs,
 
+    dataChunk,
+
     eof: EOF,
 
     generateSelector,
@@ -732,6 +734,8 @@ class cmdServiceClass {
     info(message: string) {
       useSession.api.writeMsgCleanly(this.meta.sessionKey, message, { level: 'info' });
     },
+
+    isDataChunk,
 
     /** Is the process running? */
     isRunning() {
@@ -769,9 +773,7 @@ class cmdServiceClass {
       return prettySafe(isProxy(x) ? {...x} : x);
     },
 
-    /**
-     * Read once from stdin.
-     */
+    /** Read once from stdin. */
     read(chunks?: boolean) {
       return read(this.meta, chunks);
     },
