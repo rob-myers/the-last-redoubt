@@ -106,7 +106,7 @@ export default function useHandleEvents(api, disabled) {
           break;
         case 'disabled':
           api.disabled = true;
-          api.fov.mapAct('pause');
+          api.fov.mapAct('pause'); // Needed?
           api.panZoom.animationAction('pause');
           api.setTicker(false);
           break;
@@ -532,8 +532,9 @@ export default function useHandleEvents(api, disabled) {
   React.useMemo(() => {
     if (worldReady) {
       api.npcs.events.next({ key: disabled ? 'disabled' : 'enabled' });
-    } else if (api.panZoom.ready) {// Start ticker early for loading tweens
-      api.setTicker(true);
+    } else if (api.panZoom.ready) {
+      // Start ticker early for loading tweens
+      api.setTicker(!disabled);
     }
   }, [worldReady, api.panZoom.ready, disabled]);
   //#endregion
