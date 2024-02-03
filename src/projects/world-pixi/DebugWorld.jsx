@@ -49,13 +49,14 @@ export default function DebugWorld(props) {
       const gmIds = api.lib.getNavPathGmIds(navPath);
 
       // Draw navpath once in own canvas
-      ctxt.canvas.width = worldRect.width;
-      ctxt.canvas.height = worldRect.height;
+      ctxt.canvas.width = worldRect.width * gmScale;
+      ctxt.canvas.height = worldRect.height * gmScale;
       ctxt.strokeStyle = '#ffffff33';
       // ctxt.strokeStyle = '#ff0000';
       ctxt.lineWidth = 1;
       ctxt.lineJoin = 'bevel';
       ctxt.setLineDash([4, 4]);
+      ctxt.scale(gmScale, gmScale);
       ctxt.translate(-worldRect.x, -worldRect.y);
       ctxt.moveTo(path[0].x, path[0].y);
       path.forEach(p => ctxt.lineTo(p.x, p.y));
@@ -175,7 +176,7 @@ export default function DebugWorld(props) {
 
         // Nav paths
         state.pathsByGmId[gmId].forEach(({ worldRect, texture }) => {
-          gfx.beginTextureFill({ texture, matrix: tempMatrix.set(1, 0, 0, 1, worldRect.x, worldRect.y) });
+          gfx.beginTextureFill({ texture, matrix: tempMatrix.set(1 / gmScale, 0, 0, 1 / gmScale, worldRect.x, worldRect.y) });
           gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
           gfx.endFill();
           // gfx.beginFill(0, 0).lineStyle({ width: 2, color: 0xff0000 });
