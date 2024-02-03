@@ -52,21 +52,24 @@
         api.parseFnOrStr(args[0]),
         args.slice(1).map(x => api.parseJsArg(x)),
       );
-      while ((datum = await api.read()) !== api.eof)
-        if (func(datum, ctxt)) yield datum
+      while ((datum = await api.read(true)) !== api.eof)
+        if (api.isDataChunk(datum))
+          yield api.dataChunk(datum.items.filter(x => func(x, ctxt)));
+        else if (func(datum, ctxt))
+          yield datum
     },
 
     /** Combines map (singleton), filter (empty array) and split (of arrays) */
     flatMap: async function* (ctxt) {
       let { api, args, datum } = ctxt, result
       const func = Function(`return ${args[0]}`)()
-      while ((datum = await api.read(true)) !== api.eof) { 
-        if (datum?.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).flatMap(x => func(x, ctxt)) }
-        else {
-          if (Array.isArray(result = func(datum, ctxt))) for (const item of result) yield item;
-          else yield result;
-        }
-      }
+      while ((datum = await api.read(true)) !== api.eof)
+        if (api.isDataChunk(datum))
+          yield api.dataChunk(datum.items.flatMap(x => func(x, ctxt)));
+        else if (Array.isArray(result = func(datum, ctxt)))
+          yield* result;
+        else
+          yield result;
     },
   
     /** Execute a javascript function */
@@ -83,10 +86,10 @@
         api.parseFnOrStr(args[0]),
         args.slice(1).map(x => api.parseJsArg(x)),
       );
-      while ((datum = await api.read(true)) !== api.eof) {
-        if (datum?.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).map(x => func(x, ctxt)) }
-        else yield func(datum, ctxt)
-      }
+      while ((datum = await api.read(true)) !== api.eof)
+        yield api.isDataChunk(datum)
+          ? api.dataChunk(datum.items.map(x => func(x, ctxt)))
+          : func(datum, ctxt);
     },
   
     poll: async function* ({ api, args }) {
@@ -97,11 +100,16 @@
     reduce: async function* ({ api, args, datum }) {
       const inputs = []
       const reducer = Function(`return ${args[0]}`)()
-      while ((datum = await api.read()) !== api.eof)
-        inputs.push(datum)
+      while ((datum = await api.read(true)) !== api.eof)
+        // Spread throws: Maximum call stack size exceeded
+        if (api.isDataChunk(datum)) {
+          datum.items.forEach(item => inputs.push(item))
+        } else {
+          inputs.push(datum);
+        }
       yield args[1]
         ? inputs.reduce(reducer, api.parseJsArg(args[1]))
-        : inputs.reduce(reducer)
+        : inputs.reduce(reducer);
     },
   
     /**
@@ -111,22 +119,26 @@
      */
     split: async function* ({ api, args, datum }) {
       const arg = args[0] || ""
-      while ((datum = await api.read()) !== api.eof) {
+      while ((datum = await api.read()) !== api.eof)
         if (datum instanceof Array) {
           // yield* datum
-          yield { __chunk__: true, items: datum };
+          yield api.dataChunk(datum);
         } else if (typeof datum === "string") {
           // yield* datum.split(arg)
-          yield { __chunk__: true, items: datum.split(arg) };
+          yield api.dataChunk(datum.split(arg));
         }
-      }
     },
   
     /** Collect stdin into a single array */
     sponge: async function* ({ api, datum }) {
       const outputs = []
-      while ((datum = await api.read()) !== api.eof)
-        outputs.push(datum)
+      while ((datum = await api.read(true)) !== api.eof)
+        if (api.isDataChunk(datum)) {
+          // Spread throws: Maximum call stack size exceeded
+          datum.items.forEach(item => outputs.push(item));
+        } else {
+          outputs.push(datum);
+        }
       yield outputs
     },
   
@@ -134,16 +146,16 @@
       try {
         let remainder = Number(args[0] || Number.POSITIVE_INFINITY)
         while ((remainder-- > 0) && ((datum = await api.read(true)) !== api.eof)) {
-          if (datum?.__chunk__) {
-            let items = datum.items.slice(0, remainder + 1)
+          if (api.isDataChunk(datum)) {
+            const items = datum.items.slice(0, remainder + 1)
             remainder -= (items.length - 1)
-            yield* items 
+            yield api.dataChunk(items );
           } else {
             yield datum
           }
         }
       } catch (e) {
-        throw api.getKillError();
+        throw e ?? api.getKillError();
       }
     },
 
@@ -360,6 +372,8 @@
           } else {// walk
             if (npc.isWalking(true)) {// keep walking on long click or angle ≤ 90°
               const [u, v] = npc.getPath().concat(npc.nextWalk?.visits ?? []).slice(-2);
+              if (!v || !u)
+                continue;
               const dp = (v.x - u.x) * (datum.x - v.x) + (v.y - u.y) * (datum.y - v.y);
               if (meta.longClick || dp >= 0) {
                 npc.extendNextWalk(datum);

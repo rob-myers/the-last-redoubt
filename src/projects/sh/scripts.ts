@@ -35,10 +35,10 @@ export const utilFunctions = [
     args.forEach(arg => console.log(arg))
     if (api.isTtyAt(0)) return
     while ((datum = await api.read(true)) !== api.eof) {
-      if (datum?.__chunk__ && datum.items?.length <= 1000) {
-        datum.items.forEach(x => console.log(x))
+      if (api.isDataChunk(datum) && datum.items.length <= 1000) {
+        datum.items.forEach(x => console.log(x));
       } else {
-        console.log(datum)
+        console.log(datum);
       }
     }
   }' $@
