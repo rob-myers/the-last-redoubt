@@ -22,11 +22,12 @@
     - both `controlNpc` and `walk`
     - happens w/o `walkToIdle`, with `nextWalk`
     - ℹ️ navPath of length 1 was not resolving
-  - 🚧 BUG on change walk
-    - sometimes no initial rotation
-    - slight jump after/during turning
-  - 🚧 BUG related to pause?
+  - ✅ BUG slight jump after/during initial turn (quickly changing walk)
+    - both `controlNpc` and `walk`; requires initial turn
+  - 🚧 BUG initial wrong rotation: sometimes on change walk
   - 🚧 clean up track motion
+
+- change `controlNpc` to align with `walk`?
 
 - 🚧 improve npc
   - ✅ drop shadow

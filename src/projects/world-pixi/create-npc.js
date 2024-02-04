@@ -294,7 +294,7 @@ export default function createNpc(def, api) {
     },
     async followNavPath(navPath, doorStrategy) {
       const { path, navMetas: globalNavMetas, gmRoomIds } = navPath;
-      this.navPath = navPath; // can jump: path needn't start from npc position
+      this.navPath = navPath; // needn't start from npc position
       this.a.path = path.map(Vect.from);
       // for decor collisions
       this.a.gmRoomIds = gmRoomIds;
@@ -303,18 +303,16 @@ export default function createNpc(def, api) {
       this.walkSpeed = this.def.walkSpeed;
 
       this.clearWayMetas();
-      this.computeAnimAux();
-      // Convert navMetas to wayMetas
+      this.computeAnimAux(); // Convert navMetas to wayMetas:
       this.a.wayMetas = globalNavMetas.map((navMeta) => ({
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
 
-      if (path.length > 1 && this.nextWalk === null) {// turn first
-        await this.lookAt(path[1], 500 * geom.compareAngles(
-          this.getAngle(),
-          this.a.aux.angs[0] + Math.PI/2,
-        )).catch(e => warn(`lookAt failed: ${e}`));
+      if (path.length > 1 && this.nextWalk === null) {
+        await this.lookAt(path[1], { force: true,
+          ms: 500 * geom.compareAngles(this.getAngle(), this.a.aux.angs[0] + Math.PI/2),
+        });
       }
 
       this.startAnimation('walk');
@@ -486,27 +484,26 @@ export default function createNpc(def, api) {
         && this.frameMap.length === this.tr.length // Avoids transition to idle
         && (!requireMoving || !this.isPaused());
     },
-    async lookAt(point, ms = 1000) {
+    async lookAt(point, opts = {}) {
       if (!Vect.isVectJson(point)) {
         throw Error(`invalid point: ${JSON.stringify(point)}`);
       }
       if (this.forcePaused) {
         throw Error('paused: cannot look');
       }
-      if (this.isWalking() || this.isPaused()) {
-        await this.cancel(); // 🤔
+      // cancelling walk can break
+      if (this.isPaused()) {
+        await this.cancel();
       }
-      if (!this.canLook()) {
+      if (!opts.force && !this.canLook()) {
         throw Error('cannot look');
       }
-
       const position = this.getPosition();
       const direction = Vect.from(point).sub(position);
-      if (direction.length === 0) {
-        return; // Don't animate
+      if (!(direction.x === 0 && direction.y === 0)) {
+        const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
+        await this.animateRotate(targetRadians, opts.ms ?? 0);
       }
-      const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
-      await this.animateRotate(targetRadians, ms);
     },
     nextWayTimeout() {
      // Fix types during migration
