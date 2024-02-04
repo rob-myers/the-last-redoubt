@@ -18,6 +18,14 @@
   - ✅ prevent move thru closed door
     - early `updateWayMetas()`
   - ✅ move along track by amount rootDelta
+  - ✅ BUG never-ending walk: on click many times near walk dst
+    - both `controlNpc` and `walk`
+    - happens w/o `walkToIdle`, with `nextWalk`
+    - ℹ️ navPath of length 1 was not resolving
+  - 🚧 BUG on change walk
+    - sometimes no initial rotation
+    - slight jump after/during turning
+  - 🚧 BUG related to pause?
   - 🚧 clean up track motion
 
 - 🚧 improve npc
@@ -43,6 +51,7 @@
       - catch initial lookAt before start walk
     - `click | walk rob` still crashes
   - 🚧 npc paused via process pause should resume
+  - fix setWalkSpeed
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
   - chained rotate tween instead of sharp rotate

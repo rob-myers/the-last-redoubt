@@ -309,7 +309,7 @@ export default function createNpc(def, api) {
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
-      
+
       if (path.length > 1 && this.nextWalk === null) {// turn first
         await this.lookAt(path[1], 500 * geom.compareAngles(
           this.getAngle(),
@@ -334,13 +334,12 @@ export default function createNpc(def, api) {
       });
       this.nextWalk = null;
 
-      this.updateWayMetas(); // wayEvents of length 0
-
       try {
         info(`followNavPath: ${this.key} started walk`);
         await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
           this.walkFinish = resolve;
           this.walkCancel = reject;
+          this.updateWayMetas(); // wayEvents of length 0
         }));
         info(`followNavPath: ${this.key} finished walk`);
       } catch (e) {
@@ -774,16 +773,15 @@ export default function createNpc(def, api) {
         return;
       }
 
-      const rootDelta = this.tr.deltas[this.frame];
-      this.distance += rootDelta;
+      this.distance += this.tr.deltas[this.frame];
 
-      // trigger wayMetas we're about to step over
-      this.updateWayMetas();
+      this.updateWayMetas(); // ones we're about to step over
       
+      // 🚧 clean below
       const nextVid = this.a.aux.sofars.findIndex(sofar => sofar > this.distance);
       if (nextVid === -1) {// goto end
         this.s.body.position.copyFrom(this.a.path[this.a.path.length - 1]);
-      } else {// position npc along track using `distance`
+      } else {// position on track using `this.distance`
         const ratio = (this.distance - this.a.aux.sofars[nextVid - 1]) / this.a.aux.elens[nextVid - 1];
         const edge = this.a.aux.edges[nextVid - 1];
         this.s.body.position.set(
