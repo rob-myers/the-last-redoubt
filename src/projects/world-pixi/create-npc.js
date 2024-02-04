@@ -3,7 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { precision, testNever } from "../service/generic";
+import { precision } from "../service/generic";
 import { info, warn } from "../service/log";
 import { geom } from "../service/geom";
 import { hasGmDoorId } from "../service/geomorph";
@@ -149,6 +149,7 @@ export default function createNpc(def, api) {
       this.classKey = npcClassKey;
     },
     clearWayMetas() {
+      // console.log("CLEARED wayMetas");
       this.a.wayMetas.length = 0;
       this.a.prevWayMetas.length = 0;
     },
@@ -304,13 +305,15 @@ export default function createNpc(def, api) {
 
       this.clearWayMetas();
       this.computeAnimAux(); // Convert navMetas to wayMetas:
+      // console.log("SET wayMetas");
       this.a.wayMetas = globalNavMetas.map((navMeta) => ({
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
 
       if (path.length > 1 && this.nextWalk === null) {
-        await this.lookAt(path[1], { force: true,
+        await this.lookAt(path[1], {
+          force: true,
           ms: 500 * geom.compareAngles(this.getAngle(), this.a.aux.angs[0] + Math.PI/2),
         });
       }
@@ -402,7 +405,6 @@ export default function createNpc(def, api) {
     getTarget() {
       if (this.isWalking()) {
         const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.distance);
-        // Expect -1 iff at final point
         return nextIndex === -1 ? null : this.a.path[nextIndex].clone();
       } else {
         return null;
@@ -502,7 +504,8 @@ export default function createNpc(def, api) {
       const direction = Vect.from(point).sub(position);
       if (!(direction.x === 0 && direction.y === 0)) {
         const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
-        await this.animateRotate(targetRadians, opts.ms ?? 0);
+        // throw on cancel
+        await this.animateRotate(targetRadians, opts.ms ?? 0, true);
       }
     },
     nextWayTimeout() {
