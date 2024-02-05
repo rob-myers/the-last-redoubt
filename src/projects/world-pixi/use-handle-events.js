@@ -240,6 +240,8 @@ export default function useHandleEvents(api, disabled) {
           await stopNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
+          npc.aux.index = e.meta.index;
+
           if (e.meta.index === 0) {
             npc.s.body.position.copyFrom(npc.a.path[0]);
           }
@@ -254,11 +256,10 @@ export default function useHandleEvents(api, disabled) {
           }
 
           // 🚧 use tween npc.a.rotate instead
-          npc.s.body.rotation = npc.a.aux.angs[e.meta.index] + Math.PI/2;
+          npc.s.body.rotation = npc.aux.angs[e.meta.index] + Math.PI/2;
           npc.updateHead();
           
           // npc is walking along a line segment
-          npc.a.aux.index = e.meta.index;
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc);
           state.predictNpcDecorCollision(npc);
@@ -364,7 +365,7 @@ export default function useHandleEvents(api, disabled) {
       }
       const { gmId, roomId } = npc.gmRoomId;
       
-      const { aux, path } = npc.a;
+      const { aux, a: { path } } = npc;
       const currPosition = npc.getPosition();
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
 
@@ -419,7 +420,7 @@ export default function useHandleEvents(api, disabled) {
       const collision = api.lib.predictNpcNpcCollision(npc, otherNpc);
 
       if (collision) {
-        const { aux, path, wayMetas } = npc.a;
+        const { aux, a: {path, wayMetas} } = npc;
         warn(`${npc.key} will collide with ${otherNpc.key}`, collision);
 
         const length = aux.sofars[aux.index] + (

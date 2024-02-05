@@ -24,6 +24,7 @@ export default function createNpc(
     def,
 
     // Fix types during migration
+    aux: /** @type {NPC.NPC['aux']} */ ({}),
     animName: 'idle',
     distance: 0,
     frame: 0,
@@ -32,6 +33,7 @@ export default function createNpc(
     framePtr: 0,
     frameFinish: emptyFn,
     neckAngle: 0,
+    pendingWalk: false,
     time: 0,
     tr: /** @type {*} */ ({}),
     walkCancel: emptyFn,

@@ -39,7 +39,31 @@ declare namespace NPC {
 
     /** Track - there is one for each animation e.g. `walk` */
     tr: Track;
-    
+    /**
+     * Data derived from `a.path`.
+     * However, `outsetWalkBounds` and `outsetSegBounds` depend on npc radius.
+     */
+    aux: {
+      /** Radians */
+      angs: number[];
+      /** Outgoing edges `path[i] -> path[i+1]` */
+      edges: Geom.Vect[];
+      /** Aligned to `edges` */
+      elens: number[];
+      /** Last seen index of path */
+      index: number;
+      /** Outset by npc radius, for npc vs npc collisions */
+      outsetWalkBounds: Geom.Rect;
+      /** Outset by npc radius, for npc vs npc collisions */
+      outsetSegBounds: Geom.Rect;
+      /** For npc vs decor collisions */
+      segBounds: Geom.Rect;
+      /** Distance travelled when at respective node, hence `sofars[0]` is `0`  */
+      sofars: number[];
+      /** Length of path */
+      total: number;
+    };
+
     /** Frame durations (secs), aligned to @see tr length */
     frameDurs: number[];
     /** Frame pointer: index of @see frameMap */
@@ -50,6 +74,14 @@ declare namespace NPC {
     frameFinish(): void;
 
     animName: SpineAnimName;
+    /** Induced by @see time @see framePtr @see frameMap */
+    frame: number;
+    /** Total distance travelled since animation began (world units). */
+    distance: number;
+    /** Degrees */
+    neckAngle: number;
+    /** Has npc `started-walking` but hasn't `stopped-walking` yet? */
+    pendingWalk: boolean;
     /**
      * SpriteSheet-normalized time.
      * - starts from `0` when animation begins
@@ -57,12 +89,6 @@ declare namespace NPC {
      * - actual time between increments follows from @see frameDurs
      */
     time: number;
-    /** Induced by @see time @see framePtr @see frameMap */
-    frame: number;
-    /** Total distance travelled since animation began (world units). */
-    distance: number;
-    /** Degrees */
-    neckAngle: number;
     /** Invoked on walk cancel */
     walkCancel: (err: Error) => void;
     /** Invoked on walk finish */
@@ -71,8 +97,6 @@ declare namespace NPC {
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
     
-    /** Has npc `started-walking` but hasn't `stopped-walking` yet? */
-    pendingWalk: boolean;
     //#endregion
 
 
@@ -328,31 +352,6 @@ declare namespace NPC {
   interface AnimData {
     /** Path for walking along */
     path: Geom.Vect[];
-    /**
-     * Data derived from `anim.path`.
-     * However, `outsetWalkBounds` and `outsetSegBounds`
-     * depend on npc radius.
-     */
-    aux: {
-      /** Radians */
-      angs: number[];
-      /** Outgoing edges `path[i] -> path[i+1]` */
-      edges: Geom.Vect[];
-      /** Aligned to `edges` */
-      elens: number[];
-      /** Last seen index of path */
-      index: number;
-      /** Outset by npc radius, for npc vs npc collisions */
-      outsetWalkBounds: Geom.Rect;
-      /** Outset by npc radius, for npc vs npc collisions */
-      outsetSegBounds: Geom.Rect;
-      /** For npc vs decor collisions */
-      segBounds: Geom.Rect;
-      /** Distance travelled when at respective node, hence `sofars[0]` is `0`  */
-      sofars: number[];
-      /** Length of path */
-      total: number;
-    };
     /** Bounds when stationary. */
     staticBounds: Geom.Rect;
 
@@ -369,7 +368,6 @@ declare namespace NPC {
     gmRoomIds: { [vertexId: number]: Geomorph.GmRoomId };
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
-    wayTimeoutId: number;
   }
   
   interface Track {
