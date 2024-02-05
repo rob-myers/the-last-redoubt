@@ -381,11 +381,18 @@
               }
             }
             await npc.cancel();
+
+            if (npc.pendingWalk) {// avoid idle-breathe cancelling next npc.walk
+              await w.lib.firstValueFrom(w.npcs.events.pipe(
+                w.lib.filter(e => e.key === "stopped-walking" && e.npcKey === npcKey)
+              ));
+            }
+
             const navPath = w.npcs.getGlobalNavPath(position, datum, {
               closedWeight: 10000,
               centroidsFallback: true,
-            }); // catch "cannot look"
-            npc.walk(navPath, { doorStrategy: "none" }).catch(onError);
+            });
+            npc.walk(navPath, { doorStrategy: "none", throwOnCancel: true }).catch(onError);
           }
           continue;
         }

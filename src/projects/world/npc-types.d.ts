@@ -70,6 +70,9 @@ declare namespace NPC {
     walkOnSpot: boolean;
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
+    
+    /** Has npc `started-walking` but hasn't `stopped-walking` yet? */
+    pendingWalk: boolean;
     //#endregion
 
 

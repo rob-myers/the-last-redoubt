@@ -246,12 +246,14 @@ export default function useHandleEvents(api, disabled) {
           if (e.meta.index in npc.a.gmRoomIds) {
             npc.setGmRoomId(npc.a.gmRoomIds[e.meta.index]);
           }
+          // console.log('VERTEX', e.meta.index);
           if ((e.meta.index + 1) === npc.a.path.length) {
+            // console.log('FINAL VERTEX');
             npc.walkFinish(); // npc at final vertex
             break;
           }
 
-          // 🚧 remove (use tween npc.a.rotate instead)
+          // 🚧 use tween npc.a.rotate instead
           npc.s.body.rotation = npc.a.aux.angs[e.meta.index] + Math.PI/2;
           npc.updateHead();
           

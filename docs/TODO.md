@@ -23,8 +23,17 @@
     - happens w/o `walkToIdle`, with `nextWalk`
     - ℹ️ navPath of length 1 was not resolving
   - ✅ BUG slight jump after/during initial turn (quickly changing walk)
-    - both `controlNpc` and `walk`; requires initial turn
-  - 🚧 BUG initial wrong rotation: sometimes on change walk
+    - both `controlNpc` and `walk`
+    - initial turn was cancelling walk
+  - ✅ BUG wrong rotation `walk` and infinite loop
+    - repro: click either side continually
+    - seen wayMetas empty
+    - lookAt wasn't throwing on cancel
+  - ✅ BUG npc jumps + infinite loop
+    - ✅ metas set post-cancellation via late set 
+    - ℹ️ repro: click during walkToIdle
+    - ℹ️ startAnimation("idle-breathe") was interrupting new walk
+    - ℹ️ the two walkToIdle were clashing
   - 🚧 clean up track motion
 
 - change `controlNpc` to align with `walk`?
@@ -51,6 +60,7 @@
     - ✅ `click | walk rob` sometimes throws `walk: run: cannot look`
       - catch initial lookAt before start walk
     - `click | walk rob` still crashes
+    - saw for `click | walk --open foo` too
   - 🚧 npc paused via process pause should resume
   - fix setWalkSpeed
   - should not go off-nav: `click | walk --open foo`
@@ -62,9 +72,9 @@
 
 - BUG saw npc vs npc collisions not working when other npc walking
 ```sh
-# REPRO ❌ need another
-spawn foo {"x":270.39,"y":339.25}
-nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk rob --open
+# 🚧 REPRO e.g. when collide after both going thru a door
+# spawn foo {"x":270.39,"y":339.25}
+# nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk rob --open
 ```
 - BUG saw doors not opening when other npc is `walk --open`
 

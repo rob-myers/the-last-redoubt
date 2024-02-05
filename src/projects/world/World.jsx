@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { filter, first, map, take } from "rxjs/operators";
-import { merge } from "rxjs";
+import { firstValueFrom, merge } from "rxjs";
 
 import { precision, removeFirst } from "../service/generic";
 import { removeCached, setCached } from "../service/query-client";
@@ -54,7 +54,7 @@ export default function World(props) {
       ].every(x => x.ready);
     },
     lib: {
-      filter, first, map, merge, take,
+      filter, first, map, merge, take, firstValueFrom,
       isVectJson: Vect.isVectJson,
       vectFrom: Vect.from,
       precision, removeFirst,
@@ -180,6 +180,7 @@ export default function World(props) {
  * @property {typeof import('../geom').Vect['from']} vectFrom
  * @property {typeof filter} filter
  * @property {typeof first} first
+ * @property {typeof firstValueFrom} firstValueFrom
  * @property {typeof map} map
  * @property {typeof merge} merge
  * @property {typeof precision} precision

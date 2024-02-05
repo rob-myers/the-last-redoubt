@@ -8,7 +8,7 @@ import { Container } from "@pixi/display";
 import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
-import { merge } from "rxjs";
+import { firstValueFrom, merge } from "rxjs";
 import * as TWEEN from "@tweenjs/tween.js";
 
 import { precision, removeFirst } from "../service/generic";
@@ -58,7 +58,7 @@ export default function WorldPixi(props) {
     npcs: /** @type {State['npcs']} */  ({ ready: false }),
     panZoom: /** @type {State['panZoom']} */  ({ ready: false }),
     lib: {
-      filter, first, map, merge, take,
+      filter, first, map, merge, take, firstValueFrom,
       isVectJson: Vect.isVectJson,
       vectFrom: Vect.from,
       precision, removeFirst,
@@ -273,6 +273,7 @@ export default function WorldPixi(props) {
  * @property {typeof import('../geom').Vect['from']} vectFrom
  * @property {typeof filter} filter
  * @property {typeof first} first
+ * @property {typeof firstValueFrom} firstValueFrom
  * @property {typeof map} map
  * @property {typeof merge} merge
  * @property {typeof precision} precision

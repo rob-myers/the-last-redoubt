@@ -33,6 +33,7 @@ export default function createNpc(def, api) {
     frameMap: [0],
     framePtr: 0,
     neckAngle: 0,
+    pendingWalk: false,
     time: 0,
     tr: tracks['idle'],
     walkCancel: emptyFn,
@@ -123,10 +124,11 @@ export default function createNpc(def, api) {
         throw Error('paused: cannot cancel');
       }
       info(`cancel: cancelling ${this.def.key}`);
+      this.clearWayMetas();
 
+      // 🚧 move to walk's catch?
       if (this.animName === 'walk') {
         this.nextWalk = null;
-        this.clearWayMetas();
         !this.paused && await this.walkToIdle();
       }
 
@@ -305,18 +307,19 @@ export default function createNpc(def, api) {
 
       this.clearWayMetas();
       this.computeAnimAux(); // Convert navMetas to wayMetas:
-      // console.log("SET wayMetas");
       this.a.wayMetas = globalNavMetas.map((navMeta) => ({
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
 
+      // 🚧 move into walk i.e. compute angs[0] directly
       if (path.length > 1 && this.nextWalk === null) {
         await this.lookAt(path[1], {
           force: true,
           ms: 500 * geom.compareAngles(this.getAngle(), this.a.aux.angs[0] + Math.PI/2),
         });
       }
+      this.nextWalk = null;
 
       this.startAnimation('walk');
 
@@ -326,14 +329,6 @@ export default function createNpc(def, api) {
       //   return agg.chain({  });
       // }, api.tween(this.s.body));
 
-      api.npcs.events.next({
-        key: 'started-walking',
-        npcKey: this.key,
-        navPath,
-        continuous: this.getPosition().distanceTo(path[0]) <= 0.01,
-        extends: !!this.nextWalk,
-      });
-      this.nextWalk = null;
 
       try {
         info(`followNavPath: ${this.key} started walk`);
@@ -493,7 +488,7 @@ export default function createNpc(def, api) {
       if (this.forcePaused) {
         throw Error('paused: cannot look');
       }
-      // cancelling walk can break
+      // cancel when walking can break (?)
       if (this.isPaused()) {
         await this.cancel();
       }
@@ -841,6 +836,7 @@ export default function createNpc(def, api) {
       }
     },
     async walk(navPath, opts = {}) {
+      const isRoot = this.nextWalk === null;
       if (api.lib.isVectJson(navPath)) {
         navPath = api.npcs.getGlobalNavPath(this.getPosition(), navPath, this.navOpts);
       }
@@ -862,9 +858,18 @@ export default function createNpc(def, api) {
 
       try {
         if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
-          throw new Error('cancelled');
+          throw new Error('cancelled'); // move block above try?
         }
         // Walk along navpath, possibly throwing 'cancelled' on collide
+        this.pendingWalk = true;
+        api.npcs.events.next({
+          key: 'started-walking',
+          npcKey: this.key,
+          navPath,
+          continuous: this.getPosition().distanceTo(navPath.path[0]) <= 0.01,
+          extends: !!this.nextWalk,
+        });
+
         await this.followNavPath(navPath, opts.doorStrategy);
         
         // Continue to next walk or transition to idle
@@ -876,12 +881,18 @@ export default function createNpc(def, api) {
         }
         throw err;
       } finally {
-        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
-        // this.startAnimation('idle');
-        this.startAnimation('idle-breathe');
+        if (isRoot) {
+          api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
+          this.startAnimation('idle-breathe');
+          this.pendingWalk = false;
+        }
       }
     },
     async walkToIdle() {
+      if (this.walkOnSpot) {
+        return; // 🔔 prevent two concurrent transitions
+      }
+
       // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` where first-cross `0`
       const frames = /** @type {number[]} */ (spineMeta.anim[this.animName].extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
@@ -900,7 +911,7 @@ export default function createNpc(def, api) {
 
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
         this.paused = true;
-        await this.waitFor(150).catch(_ => warn('cancelled walkToIdle'));
+        await this.waitFor(150).catch(_ => warn('walkToIdle: waitFor: ignored error'));
         this.paused = false;
       }
       if (this.frameMap.length > 1) {
