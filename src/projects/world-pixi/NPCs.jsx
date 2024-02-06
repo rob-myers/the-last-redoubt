@@ -584,8 +584,8 @@ export default function NPCs(props) {
           return api.fov.mapAct(e.mapAction, e.timeMs);
         case 'rm':
         case 'remove':
-          e.npcKey !== undefined && state.removeNpc(e.npcKey);
-          e.npcKeys?.forEach(npcKey => state.removeNpc(npcKey));
+          e.npcKey !== undefined && await state.removeNpc(e.npcKey);
+          e.npcKeys?.length && await Promise.all(e.npcKeys.map(npcKey => state.removeNpc(npcKey)));
           return;
         case 'remove-decor':
         case 'rm-decor':
@@ -643,9 +643,12 @@ export default function NPCs(props) {
         throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
       }
     },
-    removeNpc(npcKey) {
-      const npc = state.getNpc(npcKey); // Throw if n'exist pas
-      
+    async removeNpc(npcKey) {
+      const npc = state.getNpc(npcKey); // throw if n'exist pas
+
+      npc.paused = true;
+      await npc.cancel();
+
       // clean lookups
       npc.gmRoomId && api.decor.getDecorAtPoint(
         npc.getPosition(), npc.gmRoomId.gmId, npc.gmRoomId.roomId
@@ -660,7 +663,7 @@ export default function NPCs(props) {
         }})
       );
       npc.setGmRoomId(null);
-      delete state.npc[npcKey]; // after event handling
+      delete state.npc[npcKey];
 
       if (state.playerKey === npcKey) {
         state.npcAct({ action: 'set-player', npcKey: undefined });
@@ -853,7 +856,7 @@ export default function NPCs(props) {
  * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
- * @property {(npcKey: string) => void} removeNpc
+ * @property {(npcKey: string) => Promise<void>} removeNpc
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  */

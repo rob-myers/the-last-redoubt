@@ -138,6 +138,12 @@ export default function createNpc(def, api) {
       this.a.wait.stop();
       this.walkCancel(new Error('cancelled'));
 
+      if (this.pendingWalk) {
+        await api.lib.firstValueFrom(api.npcs.events.pipe(
+          api.lib.filter(e => e.key === "stopped-walking" && e.npcKey === this.key)
+        ));
+      }
+
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
     canLook() {
