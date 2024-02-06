@@ -67,7 +67,6 @@ export default function createNpc(def, api) {
       
       opacity: /** @type {*} */ (emptyTween),
       rotate: /** @type {*} */ (emptyTween),
-      wait: emptyTween,
 
       doorStrategy: 'none',
       gmRoomIds: [],
@@ -135,7 +134,6 @@ export default function createNpc(def, api) {
       this.walkOnSpot = false;
       this.a.opacity.stop();
       this.a.rotate.stop();
-      this.a.wait.stop();
       this.walkCancel(new Error('cancelled'));
 
       if (this.pendingWalk) {
@@ -593,7 +591,6 @@ export default function createNpc(def, api) {
       console.log(`pause: pausing ${this.def.key}`);
       this.a.opacity.pause();
       this.a.rotate.pause();
-      this.a.wait.pause();
       this.paused = true;
 
       if (this.forcePaused) {
@@ -614,7 +611,6 @@ export default function createNpc(def, api) {
 
       this.a.opacity.resume();
       this.a.rotate.resume();
-      this.a.wait.resume();
       this.forcePaused = false;
       this.paused = false;
       this.s.body.tint = 0xffffff;
@@ -901,16 +897,11 @@ export default function createNpc(def, api) {
       this.frameDurs = this.frameDurs.map(x => x/2);
 
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
-        this.paused = true;
-        await this.waitFor(150).catch(_ => warn('walkToIdle: waitFor: ignored error'));
-        this.paused = false;
+        this.frameDurs[this.frame] = 150 / 1000;
       }
       if (this.frameMap.length > 1) {
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
       }
-    },
-    async waitFor(ms) {
-      await (this.a.wait = api.tween({}).to({}, ms)).promise();
     },
     wayTimeout() {
       // Fix types during migration

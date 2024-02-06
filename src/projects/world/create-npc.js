@@ -994,9 +994,6 @@ export default function createNpc(
     async walkToIdle() {
       // Fix types during migration
     },
-    async waitFor() {
-      // Fix types during migration
-    },
     /**
      * 🚧 avoid many short timeouts?
      */

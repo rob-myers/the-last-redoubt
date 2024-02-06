@@ -271,7 +271,6 @@ declare namespace NPC {
     updateTime(deltaRatio: number): void;
     updateWalkSegBounds(index: number): void;
     updateWayMetas(): void;
-    waitFor(ms: number): Promise<void>;
     walk(navPath: NPC.GlobalNavPath | Geom.VectJson, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     /** Transition animation from walking to idle */
     walkToIdle(): Promise<void>;
@@ -357,8 +356,6 @@ declare namespace NPC {
 
     opacity: TweenExt<import('pixi.js').Sprite | import('pixi.js').Sprite[]>;
     rotate: TweenExt<import('pixi.js').Sprite>;
-    /** Waiting needn't pause */
-    wait: TweenExt<{}>;
 
     /** Depends on head skin */
     initHeadWidth: number;
