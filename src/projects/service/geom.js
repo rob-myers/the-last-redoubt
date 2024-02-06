@@ -78,7 +78,8 @@ class geomServiceClass {
   compareAngles(srcAng, dstAng) {
     tmpVec1.set(Math.cos(srcAng), Math.sin(srcAng));
     tmpVec2.set(Math.cos(dstAng), Math.sin(dstAng));
-    return Math.acos(tmpVec1.dot(tmpVec2)) / Math.PI;
+    // srcAng = dstAng = 0.8207963267948966 has dot product 1.0000000000000002
+    return Math.acos(Math.min(1, Math.max(-1, tmpVec1.dot(tmpVec2)))) / Math.PI;
   }
 
   /**

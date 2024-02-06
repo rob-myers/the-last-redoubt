@@ -102,7 +102,7 @@ export default function createNpc(def, api) {
     },
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
       this.a.rotate.stop();
-    
+
       // Assume {source,target}Radians in [-π, π]
       const sourceRadians = this.getAngle();
       if (targetRadians - sourceRadians > Math.PI) targetRadians -= 2 * Math.PI;
@@ -495,8 +495,7 @@ export default function createNpc(def, api) {
       const direction = Vect.from(point).sub(position);
       if (!(direction.x === 0 && direction.y === 0)) {
         const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
-        // throw on cancel
-        await this.animateRotate(targetRadians, opts.ms ?? 0, true);
+        await this.animateRotate(targetRadians, opts.ms ?? 0, true); // throw on cancel
       }
     },
     nextWayTimeout() {

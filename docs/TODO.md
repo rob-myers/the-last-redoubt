@@ -13,7 +13,7 @@
   - more tables in 101
 
 - ✅ handle wayMetas in npc.updateTime rather than via setTimeout
-- 🚧 npc should follow path "exactly"
+- ✅ npc should follow path "exactly"
   - ✅ ensure immediate move to vertex 0
   - ✅ prevent move thru closed door
     - early `updateWayMetas()`
@@ -34,9 +34,11 @@
     - ℹ️ repro: click during walkToIdle
     - ℹ️ startAnimation("idle-breathe") was interrupting new walk
     - ℹ️ the two walkToIdle were clashing
-  - 🚧 clean up track motion
+  - ✅ clean up track motion
 
-- change `controlNpc` to align with `walk`?
+- ✅ BUG `s.body.angle` null and npc disappears
+  - ℹ️ compareAngles was NaN due to numerical error term
+
 
 - 🚧 improve npc
   - ✅ drop shadow
