@@ -12,34 +12,6 @@
   - more tables in 301
   - more tables in 101
 
-- ✅ handle wayMetas in npc.updateTime rather than via setTimeout
-- ✅ npc should follow path "exactly"
-  - ✅ ensure immediate move to vertex 0
-  - ✅ prevent move thru closed door
-    - early `updateWayMetas()`
-  - ✅ move along track by amount rootDelta
-  - ✅ BUG never-ending walk: on click many times near walk dst
-    - both `controlNpc` and `walk`
-    - happens w/o `walkToIdle`, with `nextWalk`
-    - ℹ️ navPath of length 1 was not resolving
-  - ✅ BUG slight jump after/during initial turn (quickly changing walk)
-    - both `controlNpc` and `walk`
-    - initial turn was cancelling walk
-  - ✅ BUG wrong rotation `walk` and infinite loop
-    - repro: click either side continually
-    - seen wayMetas empty
-    - lookAt wasn't throwing on cancel
-  - ✅ BUG npc jumps + infinite loop
-    - ✅ metas set post-cancellation via late set 
-    - ℹ️ repro: click during walkToIdle
-    - ℹ️ startAnimation("idle-breathe") was interrupting new walk
-    - ℹ️ the two walkToIdle were clashing
-  - ✅ clean up track motion
-
-- ✅ BUG `s.body.angle` null and npc disappears
-  - ℹ️ compareAngles was NaN due to numerical error term
-
-
 - 🚧 improve npc
   - ✅ drop shadow
   - ✅ better transition walk -> idle
@@ -55,7 +27,7 @@
   - ✅ BUG `controlNpc` never-ending walk by
     - clicking beyond blocked door many times
     - clicking next to npc many times
-  - 🚧 BUG npc disappears when click many times
+  - ✅ BUG npc disappears when click many times
     - ℹ️ `npc rob s.body.{x,y,rotation}` are null
     - ℹ️ turn off `pausableNpcs`, click diagonal of door entry many times...
     - ℹ️ not related to walkToIdle
@@ -63,6 +35,8 @@
       - catch initial lookAt before start walk
     - `click | walk rob` still crashes
     - saw for `click | walk --open foo` too
+    - ℹ️ compareAngles was doing `acos(1.00...02)` i.e. `NaN`
+  - ✅ controlNpc should lookAt slowly
   - 🚧 npc paused via process pause should resume
   - fix setWalkSpeed
   - should not go off-nav: `click | walk --open foo`
@@ -754,6 +728,33 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ handle wayMetas in npc.updateTime rather than via setTimeout
+- ✅ npc should follow path "exactly"
+  - ✅ ensure immediate move to vertex 0
+  - ✅ prevent move thru closed door
+    - early `updateWayMetas()`
+  - ✅ move along track by amount rootDelta
+  - ✅ BUG never-ending walk: on click many times near walk dst
+    - both `controlNpc` and `walk`
+    - happens w/o `walkToIdle`, with `nextWalk`
+    - ℹ️ navPath of length 1 was not resolving
+  - ✅ BUG slight jump after/during initial turn (quickly changing walk)
+    - both `controlNpc` and `walk`
+    - initial turn was cancelling walk
+  - ✅ BUG wrong rotation `walk` and infinite loop
+    - repro: click either side continually
+    - seen wayMetas empty
+    - lookAt wasn't throwing on cancel
+  - ✅ BUG npc jumps + infinite loop
+    - ✅ metas set post-cancellation via late set 
+    - ℹ️ repro: click during walkToIdle
+    - ℹ️ startAnimation("idle-breathe") was interrupting new walk
+    - ℹ️ the two walkToIdle were clashing
+  - ✅ clean up track motion
+
+- ✅ BUG `s.body.angle` null and npc disappears
+  - ℹ️ compareAngles was NaN due to numerical error term
 
 - ✅ start new repo `npc-cli`
   - ✅ connect new repo to netlify (renaming previous)

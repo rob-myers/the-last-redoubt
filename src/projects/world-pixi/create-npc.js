@@ -309,10 +309,7 @@ export default function createNpc(def, api) {
       }));
 
       if (path.length > 1 && this.nextWalk === null) {
-        await this.lookAt(path[1], {
-          force: true,
-          ms: 500 * geom.compareAngles(this.getAngle(), this.aux.angs[0] + Math.PI/2),
-        });
+        await this.lookAt(path[1], { force: true, ms: 500 });
       }
 
       this.nextWalk = null;
@@ -493,7 +490,11 @@ export default function createNpc(def, api) {
       const direction = Vect.from(point).sub(position);
       if (!(direction.x === 0 && direction.y === 0)) {
         const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
-        await this.animateRotate(targetRadians, opts.ms ?? 0, true); // throw on cancel
+        await this.animateRotate(
+          targetRadians,
+          opts.ms ? opts.ms * geom.compareAngles(this.getAngle(), targetRadians) : 0,
+          true, // throw on cancel
+        );
       }
     },
     nextWayTimeout() {

@@ -392,7 +392,7 @@
         
         // look
         await npc.cancel();
-        npc.lookAt(datum).catch(onError);
+        npc.lookAt(datum, { ms: 500 }).catch(onError);
       }
     },
 
@@ -612,13 +612,13 @@
    */
   utilFunctionsRunDefs.forEach((defs, i) =>
     Object.entries(defs).forEach(
-      //@ts-ignore
+      // @ts-expect-error
       ([key, fn]) => (utilFunctions[i] = utilFunctions[i] || [])[key] = wrap(fn),
     )
   );
   gameFunctionsRunDefs.forEach((defs, i) =>
     Object.entries(defs).forEach(
-      //@ts-ignore
+      // @ts-expect-error
       ([key, fn]) => (gameFunctions[i] = gameFunctions[i] || [])[key] = wrap(fn),
     )
   );
