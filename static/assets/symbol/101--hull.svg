@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-    <bx:grid x="0" y="0" width="60" height="60"/>
-    <pattern id="grid-0" patternUnits="userSpaceOnUse" width="60" height="60" patternTransform="matrix(1, 0, 0, 1, 0, 0)" bx:pinned="true">
-      <rect width="60" height="60" style="fill: none; stroke-width: 0.1px; stroke: rgb(0, 0, 0);"/>
-    </pattern>
     <radialGradient gradientUnits="userSpaceOnUse" cx="678.335" cy="770" r="110" id="gradient-0">
       <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
       <stop offset="1" style="stop-opacity: 0; stop-color: rgb(170, 170, 170);"/>
@@ -298,7 +294,7 @@
     <rect y="418.313" width="10" height="119.998" style="stroke: rgb(0, 0, 0); fill-opacity: 0.5; fill: rgb(0, 255, 0); transform-origin: -550px 418.313px;" x="-555" transform="matrix(1, 0.000072, 0.000072, -1, 1170.000455, 241.686901)">
       <title>view</title>
     </rect>
-    <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, 147.43399)">
+    <rect x="540" width="120" height="10" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; transform-box: fill-box; transform-origin: 50% 50%;" y="655">
       <title>relate-connectors</title>
     </rect>
   </g>

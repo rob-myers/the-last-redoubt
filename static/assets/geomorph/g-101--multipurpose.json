@@ -2637,9 +2637,7 @@
         "meta": {"relate-connectors": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[719.9999, 665], [479.9999, 665], [479.9999, 655], [719.9999, 655]]
-          ]
+          "coordinates": [[[660, 655], [660, 665], [540, 665], [540, 655]]]
         }
       },
       {
@@ -21222,12 +21220,12 @@
     },
     "22": {
       "doors": [20, 23],
-      "windows": [0, 1],
+      "windows": [],
       "metas": {"20": {"behind": [true, false]}, "23": {"behind": [true, true]}}
     },
     "23": {
       "doors": [21, 22],
-      "windows": [0, 1],
+      "windows": [],
       "metas": {"21": {"behind": [true, false]}, "22": {"behind": [true, true]}}
     },
     "24": {

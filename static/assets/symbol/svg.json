@@ -848,9 +848,7 @@
         "meta": {"relate-connectors": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[719.9999, 655], [479.9999, 655], [479.9999, 665], [719.9999, 665]]
-          ]
+          "coordinates": [[[540, 655], [540, 665], [660, 665], [660, 655]]]
         }
       }
     ],
@@ -858,7 +856,7 @@
     "height": 1200,
     "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
-    "lastModified": 1701358938620.549
+    "lastModified": 1707401021800.1038
   },
   "102--hull": {
     "key": "102--hull",
