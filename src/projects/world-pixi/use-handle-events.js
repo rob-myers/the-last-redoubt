@@ -190,7 +190,7 @@ export default function useHandleEvents(api, disabled) {
 
     handlePanZoomEvents(e) {
       switch (e.key) {
-        case 'pointerup':
+        case 'pointerup': {
           // mutate meta on click door/decor/debug
           const meta = api.geomorphs.getHitMeta(e.point);
           Object.assign(e.meta, meta);
@@ -199,16 +199,9 @@ export default function useHandleEvents(api, disabled) {
             api.debug.onClick(e);
             break;
           }
-          if (typeof e.meta.decorKey === 'string') {
-            api.npcs.events.next({
-              key: 'decor-click',
-              decor: api.decor.decor[e.meta.decorKey],
-            });
-            break;
-          }
 
+          // npc in front of decor points
           state.detectOverNpc(e);
-
           if (typeof e.meta.npcKey === 'string') {
             api.npcs.events.next({
               key: 'npc-clicked',
@@ -217,8 +210,17 @@ export default function useHandleEvents(api, disabled) {
               position: e.point,
             });
           }
+          
+          if (typeof e.meta.decorKey === 'string') {
+            api.npcs.events.next({
+              key: 'decor-click',
+              decor: api.decor.decor[e.meta.decorKey],
+            });
+            break;
+          }
 
           break;
+        }
         case 'pointermove': {
           const meta = api.geomorphs.getHitMeta(e.point);
           Object.assign(e.meta, meta);
