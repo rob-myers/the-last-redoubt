@@ -43,7 +43,7 @@
   - ✅ can pause npc on do point
   - ✅ cannot suppress throw in `walk`
   - ✅ cannot suppress throw in `do`
-  - move walkToIdle into `walk` finally block
+  - ✅ move walkToIdle into `walk` finally block
   - ensure walkToIdle is returning
     - e.g. transition{Finish,Cancel}
     - e.g. catch failure inside npc.cancel and noop

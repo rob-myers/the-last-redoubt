@@ -108,15 +108,11 @@ export default function createNpc(def, api) {
       if (targetRadians - sourceRadians > Math.PI) targetRadians -= 2 * Math.PI;
       if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
 
-      try {
-        await (this.a.rotate = api.tween(this.s.body)
-          .to({ rotation: targetRadians }, durationMs)
-          .onUpdate(() => this.updateHead())
-          .easing(TWEEN.Easing.Quadratic.Out)
-        ).promise();
-      } catch {
-        if (throwOnCancel) throw new Error('cancelled');
-      }
+      await (this.a.rotate = api.tween(this.s.body)
+        .to({ rotation: targetRadians }, durationMs)
+        .onUpdate(() => this.updateHead())
+        .easing(TWEEN.Easing.Quadratic.Out)
+      ).promise();
     },
     async cancel(overridePaused = false) {
       if (this.forcePaused && !overridePaused) {
@@ -126,16 +122,7 @@ export default function createNpc(def, api) {
       const cancelCount = ++this.cancelCount;
       this.clearWayMetas();
 
-      // 🚧 move to walk
-      if (this.animName === 'walk') {
-        this.nextWalk = null;
-        !this.paused && await this.walkToIdle();
-      }
 
-      this.paused = false;
-      this.s.body.tint = 0xffffff;
-      this.s.head.tint = 0xffffff;
-      this.walkOnSpot = false;
       this.a.opacity.stop();
       this.a.rotate.stop();
       this.walkCancel(new Error('cancelled'));
@@ -145,6 +132,11 @@ export default function createNpc(def, api) {
           api.lib.filter(e => e.key === "stopped-walking" && e.npcKey === this.key)
         ));
       }
+
+      this.paused = false;
+      this.s.body.tint = 0xffffff;
+      this.s.head.tint = 0xffffff;
+      this.walkOnSpot = false;
 
       if (cancelCount !== this.cancelCount) {
         // 🚧 repro
@@ -477,10 +469,6 @@ export default function createNpc(def, api) {
       }
       if (this.forcePaused) {
         throw Error('paused: cannot look');
-      }
-      // cancel when walking can break (?)
-      if (this.isPaused()) {
-        await this.cancel();
       }
       if (!opts.force && !this.canLook()) {
         throw Error('cannot look');
@@ -842,12 +830,11 @@ export default function createNpc(def, api) {
         this.nextWalk = null;
         return;
       }
+      if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
+        throw new Error('cancelled');
+      }
 
       try {
-        if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
-          throw new Error('cancelled');
-        }
-        // Walk along navpath, possibly throwing 'cancelled' on collide
         this.pendingWalk = true;
         api.npcs.events.next({
           key: 'started-walking', // extended walks too
@@ -859,16 +846,19 @@ export default function createNpc(def, api) {
 
         await this.followNavPath(navPath, opts.doorStrategy);
         
-        // Continue to next walk or transition to idle
-        await (this.nextWalk ? this.walk(this.nextWalk.navPath, opts) : this.walkToIdle());
+        if (this.nextWalk) {
+          await this.walk(this.nextWalk.navPath, opts);
+        }
 
       } catch (err) {
         throw err;
       } finally {
         if (isRoot) {
-          api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
-          this.startAnimation('idle-breathe');
+          this.animName === 'walk' && await this.walkToIdle();
           this.pendingWalk = false;
+          this.nextWalk = null;
+          this.startAnimation('idle-breathe');
+          api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
         }
       }
     },
@@ -881,7 +871,6 @@ export default function createNpc(def, api) {
       const frames = /** @type {number[]} */ (spineMeta.anim[this.animName].extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
       const nextId = frames.findIndex(x => x > this.frame);
-
       switch (nextId) {
         case  1: this.frameMap = base.slice(0, this.frame + 1).reverse(); break;
         case  2: this.frameMap = base.slice(this.frame, frames[2]); break;
@@ -896,7 +885,7 @@ export default function createNpc(def, api) {
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
         this.frameDurs[this.frame] = 200 / 1000;
       }
-      if (this.frameMap.length > 1) {
+      if (this.frameMap.length > 1) {// 🚧 frameFinish -> transitionFinish; ensure resolve
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
       }
     },
