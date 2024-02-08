@@ -269,7 +269,7 @@ export default function useHandleEvents(api, disabled) {
         case 'at-door': {
           const { gmId, doorId } = e.meta;
           if (!api.doors.lookup[gmId][doorId].open) {
-            await npc.cancel(); // At closed door
+            await npc.cancel().catch(warn); // At closed door
           }
           break;
         }
@@ -476,7 +476,7 @@ export default function useHandleEvents(api, disabled) {
           break;
         case 'safeOpen': // Always stop at locked inaccessible doors
           if (locked && !npc.has.key[gmId][nextDoorId]) {
-            await npc.cancel();
+            await npc.cancel().catch(warn);
           } else {
             api.doors.toggleDoor(gmId, nextDoorId, { open: true, npcKey: npc.key });
           }
@@ -549,7 +549,7 @@ export default function useHandleEvents(api, disabled) {
   function stopNpcs(...npcKeys) {
     // Npcs which are walking but not paused
     const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking() && !x.isPaused());
-    return Promise.all(walkingNpcs.map(x => x.cancel()));
+    return Promise.all(walkingNpcs.map(x => x.cancel().catch(warn)));
   }
 
 }
