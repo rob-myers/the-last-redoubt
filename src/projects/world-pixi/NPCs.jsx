@@ -270,7 +270,13 @@ export default function NPCs(props) {
         get(target, key) {
           if (key === 'cancel' || key === 'do' || key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
             /** @param {[any, any]} args */
-            return async function(...args) { await handlePaused(); await target[key](...args); }
+            return async function(...args) {
+              await handlePaused();
+              if (key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
+                await target.cancel();
+              } // permit 'do' open door whilst walking/looking
+              await target[key](...args);
+            }
           } else {
             return target[key];
           }
@@ -442,12 +448,12 @@ export default function NPCs(props) {
       }
     },
     getNpcsIntersecting(convexPoly) {
-      const extraForWalk = 20;
+      // 🚧 restrict to close npcs
       return Object.values(state.npc)
         .filter(x => geom.circleIntersectsConvexPolygon(
           x.getPosition(),
-          x.getRadius() + (x.isWalking() ? extraForWalk : 0),
-          convexPoly
+          x.getRadius(),
+          convexPoly,
         ));
     },
     getCloseNpcs(npcKey, isWalking) {// 🚧 restrict to close npcs

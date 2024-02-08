@@ -339,7 +339,7 @@
   
     controlNpc: async function* ({ api, args: [npcKey], home }) {
       const w = api.getCached(home.WORLD_KEY)
-      const npc = w.npcs.connectNpcToProcess(api, npcKey);
+      const npc = w.npcs.getNpc(npcKey, api);
       
       /** @param {*} e */
       const onError = e => api.verbose(e?.message ?? e);
@@ -347,13 +347,8 @@
 
       while ((datum = await api.read()) !== api.eof) {
         const { meta } = datum;
-        const position = npc.getPosition();
-
         if (meta.npc || npc.forcePaused) {
-          if (meta.npcKey === npcKey && meta.longClick) {
-            w.fov.mapAct("show-for", 3000);
-          }
-          continue;
+          continue; // controller ignores clicks while forcePaused
         }
 
         if (meta.door || meta.do || (npc.doMeta && meta.nav)) {
@@ -364,9 +359,9 @@
         }
         
         if (meta.nav && !meta.ui) {
-          if (meta.longClick && !npc.isWalking() || !w.npcs.isPointInNavmesh(position)) {
+          if (meta.longClick && !npc.isWalking() || !w.npcs.isPointInNavmesh(npc.getPosition())) {
             await npc.cancel();
-            if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
+            if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
               await npc.fadeSpawn(datum).catch(onError); // warp
             }
           } else {// walk
@@ -380,8 +375,7 @@
                 continue;
               }
             }
-            await npc.cancel();
-            const navPath = w.npcs.getGlobalNavPath(position, datum, {
+            const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), datum, {
               closedWeight: 10000,
               centroidsFallback: true,
             });
@@ -390,7 +384,6 @@
           continue;
         }
         
-        // look
         await npc.cancel();
         npc.lookAt(datum, { ms: 500 }).catch(onError);
       }
@@ -560,24 +553,16 @@
       ;
 
       const w = api.getCached(home.WORLD_KEY)
-      const npc = w.npcs.connectNpcToProcess(api, npcKey);
+      const npc = w.npcs.getNpc(npcKey, api);
 
       if (api.isTtyAt(0)) {
-        const datum = api.parseJsArg(datumStr);
-        return await npc.walk(
-          w.lib.isVectJson(datum)
-            ? w.npcs.getGlobalNavPath(npc.getPosition(), datum, { ...npc.navOpts, endsNavigable: true })
-            : datum,
-          { doorStrategy },
-        );
+        await npc.walk(api.parseJsArg(datumStr), { doorStrategy });
+        return;
       }
 
       await api.eagerReadLoop(/** @param {NPC.GlobalNavPath | Geomorph.PointMaybeMeta} datum */
         async (datum) => {
           try {
-            if (npc.isPaused()) {
-              return;
-            }
             if (w.lib.isVectJson(datum)) {
               if (datum.meta?.npc && datum.meta.npcKey === npc.key) {
                 return; // Ignore self clicks e.g. on unpause
@@ -585,7 +570,6 @@
               if (npc.isWalking(true) && !datum.meta?.longClick) {
                 npc.extendNextWalk(datum);
               } else {
-                await npc.cancel();
                 await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
               }
             } else {

@@ -37,7 +37,13 @@
     - saw for `click | walk --open foo` too
     - ℹ️ compareAngles was doing `acos(1.00...02)` i.e. `NaN`
   - ✅ controlNpc should lookAt slowly
-  - 🚧 npc paused via process pause should resume
+  - ✅ npc paused via process pause
+    - ✅ should resume on click twice (force pause/unpause)
+    - ✅ should resume on other process e.g. `click | walk --open rob`
+  - ✅ can pause npc on do point
+  - ensure walkToIdle is returning
+    - e.g. transition{Finish,Cancel}
+    - e.g. catch failure inside npc.cancel and noop
   - fix setWalkSpeed
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
@@ -46,17 +52,20 @@
   - darker npc
   - finish obscureBySurfaces
 
+- ✅ BUG jumps: (a) whilst walk, (b) force pause, (c) `walk --open rob $( click 1 )` and click, (d) unpause
+  - also when `controlNpc` paused
+  - 🔔 saw non-terminating walkToIdle transition using multiple non-awaited walks without pre-awaited cancel
+  - ✅ move `npc.cancel` into `npc.walk` when `npc` is connected to a process
+
 - BUG saw npc vs npc collisions not working when other npc walking
-```sh
-# 🚧 REPRO e.g. when collide after both going thru a door
-# spawn foo {"x":270.39,"y":339.25}
-# nav {"x":185.29,"y":381.72} {"x":304.3335158582145,"y":339.2981310698685} | walk rob --open
-```
+  - player fade spawns where other player is walking too
+  - two npcs collide after both going thru door?
 - BUG saw doors not opening when other npc is `walk --open`
 
 - try vary panZoom follow speed/acceleration
 - mistakenly setting e.g. `window.bar = 2` breaks `npc foo bar`
-  because `bar` gets evaluated as `2`
+  - because `bar` gets evaluated as `2`
+  - optionally interpret selectors outside global scope?
 - useQueries to improve GeomorphEdit?
 - ✅ sh generates named generators
 - npc cfg debug/debugPlayer show npc(s) bounds

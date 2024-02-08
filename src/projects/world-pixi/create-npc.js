@@ -74,6 +74,7 @@ export default function createNpc(def, api) {
       wayMetas: [],
     },
 
+    cancelCount: 0,
     doMeta: null,
     forcePaused: false,
     gmRoomId: null,
@@ -122,15 +123,18 @@ export default function createNpc(def, api) {
         throw Error('paused: cannot cancel');
       }
       info(`cancel: cancelling ${this.def.key}`);
+      const cancelCount = ++this.cancelCount;
       this.clearWayMetas();
 
-      // 🚧 move to walk's catch?
+      // 🚧 move to walk
       if (this.animName === 'walk') {
         this.nextWalk = null;
         !this.paused && await this.walkToIdle();
       }
 
       this.paused = false;
+      this.s.body.tint = 0xffffff;
+      this.s.head.tint = 0xffffff;
       this.walkOnSpot = false;
       this.a.opacity.stop();
       this.a.rotate.stop();
@@ -142,6 +146,10 @@ export default function createNpc(def, api) {
         ));
       }
 
+      if (cancelCount !== this.cancelCount) {
+        // 🚧 repro
+        throw Error('cancel was cancelled');
+      }
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
     canLook() {
@@ -192,14 +200,11 @@ export default function createNpc(def, api) {
       if (this.forcePaused) {
         throw Error('paused: cannot do');
       }
-      if (this.isPaused()) {
-        await this.cancel();
-      }
       point.meta ??= {};
-
+      
+      // Assume point.meta.door || point.meta.do | (point.meta.nav && npc.doMeta)
+      // i.e. (1) door, (2) do point, or (3) non-do nav point whilst at do point
       try {
-        // Assume point.meta.door || point.meta.do | (point.meta.nav && npc.doMeta)
-        // i.e. (1) door, (2) do point, or (3) non-do nav point whilst at do point
         if (point.meta.door && hasGmDoorId(point.meta)) {
           /** `undefined` -> toggle, `true` -> open, `false` -> close */
           const extraParam = opts.extraParams?.[0] === undefined ? undefined : !!opts.extraParams[0];
@@ -589,7 +594,7 @@ export default function createNpc(def, api) {
       }
       this.updateStaticBounds();
 
-      console.log(`pause: pausing ${this.def.key}`);
+      info(`pause: pausing ${this.def.key}`);
       this.a.opacity.pause();
       this.a.rotate.pause();
       this.paused = true;
@@ -601,6 +606,8 @@ export default function createNpc(def, api) {
         this.s.body.tint = 0xaaaaaa;
         this.s.head.tint = 0xaaaaaa;
       }
+      this.s.body.alpha = Math.max(0.1, this.s.body.alpha);
+      this.s.head.alpha = Math.max(0.1, this.s.head.alpha);
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'paused' });
     },
@@ -608,7 +615,7 @@ export default function createNpc(def, api) {
       if (this.forcePaused && !forced) {
         return;
       }
-      console.log(`resume: resuming ${this.def.key}`);
+      info(`resume: resuming ${this.def.key}`);
 
       this.a.opacity.resume();
       this.a.rotate.resume();
@@ -836,9 +843,6 @@ export default function createNpc(def, api) {
         this.nextWalk = null;
         throw Error('paused: cannot walk');
       }
-      if (this.isPaused()) {
-        await this.cancel(); // causes jerky extended walk?
-      }
       if (navPath.path.length === 0) {
         this.nextWalk = null;
         return;
@@ -898,7 +902,7 @@ export default function createNpc(def, api) {
       this.frameDurs = this.frameDurs.map(x => x/2);
 
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
-        this.frameDurs[this.frame] = 150 / 1000;
+        this.frameDurs[this.frame] = 200 / 1000;
       }
       if (this.frameMap.length > 1) {
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));

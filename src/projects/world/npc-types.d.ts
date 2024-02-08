@@ -114,6 +114,8 @@ declare namespace NPC {
     anim: NPCAnimData; // 🚧 old
     a: AnimData; 
 
+    /** Number of times we have cancelled */
+    cancelCount: number;
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
     /**
