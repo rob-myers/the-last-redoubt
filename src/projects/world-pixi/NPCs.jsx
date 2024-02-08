@@ -1,6 +1,5 @@
 import React from "react";
-import { merge, of, Subject, firstValueFrom } from "rxjs";
-import { filter, tap } from "rxjs/operators";
+import { Subject } from "rxjs";
 
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
@@ -266,7 +265,7 @@ export default function NPCs(props) {
       }
 
       return new Proxy(npc, {
-        /** @param {keyof typeof npc} key */
+        /** @param {keyof NPC.NPC} key */
         get(target, key) {
           if (key === 'cancel' || key === 'do' || key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
             /** @param {[any, any]} args */
@@ -274,7 +273,9 @@ export default function NPCs(props) {
               await handlePaused();
               if (key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
                 await target.cancel();
-              } // permit 'do' open door whilst walking/looking
+              } else if (key === 'do' && !args[0]?.meta?.door) {
+                await target.cancel();
+              } // permit open door whilst fading/looking/walking
               await target[key](...args);
             }
           } else {
