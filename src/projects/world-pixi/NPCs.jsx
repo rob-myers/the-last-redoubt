@@ -652,8 +652,6 @@ export default function NPCs(props) {
     },
     async removeNpc(npcKey) {
       const npc = state.getNpc(npcKey); // throw if n'exist pas
-
-      npc.paused = true;
       await npc.cancel();
 
       // clean lookups

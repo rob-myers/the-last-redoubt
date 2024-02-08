@@ -778,9 +778,9 @@ class cmdServiceClass {
       return read(this.meta, chunks);
     },
 
-    async eagerReadLoop(
-      loopBody: (datum: any) => Promise<void>,
-      onInterrupt?: (datum: any) => any,
+    async eagerReadLoop<T>(
+      loopBody: (datum: T) => Promise<void>,
+      onInterrupt?: (datum: T) => any,
     ) {
       let proms = [] as Promise<void>[];
       let datum = await read(this.meta);
