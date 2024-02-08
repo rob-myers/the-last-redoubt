@@ -57,6 +57,11 @@ export const npcService = {
   `.trim();
   },
 
+  /** @param {*} e */
+  isCancelError(e) {
+    return e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:'));
+  },
+
   /**
    * Compute `NPC.NpcAction` from `npc {action} {opts} [extras[i]]`.
    *

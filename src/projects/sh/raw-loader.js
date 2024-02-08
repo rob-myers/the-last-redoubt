@@ -353,7 +353,6 @@
 
         if (meta.door || meta.do || (npc.doMeta && meta.nav)) {
           // door, do point, or: nav point whilst at do point
-          !meta.door && await npc.cancel();
            await npc.do(datum).catch(onError);
            continue;
         }
@@ -379,7 +378,7 @@
               closedWeight: 10000,
               centroidsFallback: true,
             });
-            npc.walk(navPath, { doorStrategy: "none", throwOnCancel: true }).catch(onError);
+            npc.walk(navPath, { doorStrategy: "none" }).catch(onError);
           }
           continue;
         }
@@ -576,7 +575,7 @@
               await npc.walk(datum, { doorStrategy });
             }
           } catch (e) {
-            if (opts.forever) {
+            if (w.lib.isCancelError(e) || opts.forever) {
               api.verbose(/** @type {*} */(e)?.message ?? e);
             } else {
               throw e;

@@ -204,49 +204,43 @@ export default function createNpc(def, api) {
       
       // Assume point.meta.door || point.meta.do | (point.meta.nav && npc.doMeta)
       // i.e. (1) door, (2) do point, or (3) non-do nav point whilst at do point
-      try {
-        if (point.meta.door && hasGmDoorId(point.meta)) {
-          /** `undefined` -> toggle, `true` -> open, `false` -> close */
-          const extraParam = opts.extraParams?.[0] === undefined ? undefined : !!opts.extraParams[0];
-          const open = extraParam === true;
-          const close = extraParam === false;
-          const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
-          const isOpen = api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: this.key, close, open });
-          if (close) {
-            if (isOpen) throw Error('cannot close door');
-          } else if (open) {
-            if (!isOpen) throw Error('cannot open door');
-          } else {
-            if (wasOpen === isOpen) throw Error('cannot toggle door');
-          }
-          return;
+      if (point.meta.door && hasGmDoorId(point.meta)) {
+        /** `undefined` -> toggle, `true` -> open, `false` -> close */
+        const extraParam = opts.extraParams?.[0] === undefined ? undefined : !!opts.extraParams[0];
+        const open = extraParam === true;
+        const close = extraParam === false;
+        const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
+        const isOpen = api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: this.key, close, open });
+        if (close) {
+          if (isOpen) throw Error('cannot close door');
+        } else if (open) {
+          if (!isOpen) throw Error('cannot open door');
+        } else {
+          if (wasOpen === isOpen) throw Error('cannot toggle door');
         }
+        return;
+      }
 
-        // Handle (point.meta.nav && npc.doMeta) || point.meta.do
-        const onNav = api.npcs.isPointInNavmesh(this.getPosition());
-        if (!point.meta.do) {// point.meta.nav && npc.doMeta
-          this.doMeta = null;
-          if (onNav) {
-            const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
-            await this.walk(navPath, { throwOnCancel: false });
-          } else if (api.npcs.canSee(this.getPosition(), point, this.getInteractRadius())) {
-            await this.fadeSpawn(point);
-          } else {
-            throw Error('cannot reach navigable point')
-          }
-          return;
-        } else if (onNav) {// nav -> do point
-          this.doMeta = null;
-          await this.onMeshDoMeta(point, { ...opts, preferSpawn: !!point.meta.longClick });
-          this.doMeta = point.meta;
-        } else {// off nav -> do point
-          await this.offMeshDoMeta(point, opts);
-          this.doMeta = point.meta;
+      // Handle (point.meta.nav && npc.doMeta) || point.meta.do
+      const onNav = api.npcs.isPointInNavmesh(this.getPosition());
+      if (!point.meta.do) {// point.meta.nav && npc.doMeta
+        this.doMeta = null;
+        if (onNav) {
+          const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
+          await this.walk(navPath);
+        } else if (api.npcs.canSee(this.getPosition(), point, this.getInteractRadius())) {
+          await this.fadeSpawn(point);
+        } else {
+          throw Error('cannot reach navigable point')
         }
-      } catch (e) {// Swallow 'cancelled' errors e.g. start new walk, obstruction
-        if (!(e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:')))) {
-          throw e;
-        }
+        return;
+      } else if (onNav) {// nav -> do point
+        this.doMeta = null;
+        await this.onMeshDoMeta(point, { ...opts, preferSpawn: !!point.meta.longClick });
+        this.doMeta = point.meta;
+      } else {// off nav -> do point
+        await this.offMeshDoMeta(point, opts);
+        this.doMeta = point.meta;
       }
     },
     everWalked() {
@@ -571,7 +565,7 @@ export default function createNpc(def, api) {
       if (api.npcs.isPointInNavmesh(decorPoint) && !(opts.preferSpawn && closeVis)) {
         // Walk, [Turn], Do
         const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
-        await this.walk(navPath, { throwOnCancel: true });
+        await this.walk(navPath);
         typeof meta.orient === 'number' && await this.animateRotate((meta.orient + 90) * (Math.PI / 180), 100);
         this.startAnimationByMeta(meta);
         return;
@@ -832,6 +826,7 @@ export default function createNpc(def, api) {
     },
     async walk(navPath, opts = {}) {
       const isRoot = this.nextWalk === null;
+
       if (api.lib.isVectJson(navPath)) {
         navPath = api.npcs.getGlobalNavPath(this.getPosition(), navPath, this.navOpts);
       }
@@ -839,7 +834,7 @@ export default function createNpc(def, api) {
         this.nextWalk = null;
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
-      if (this.forcePaused) {
+      if (this.forcePaused) {// 🚧 handled by proxy?
         this.nextWalk = null;
         throw Error('paused: cannot walk');
       }
@@ -850,7 +845,7 @@ export default function createNpc(def, api) {
 
       try {
         if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
-          throw new Error('cancelled'); // move block above try?
+          throw new Error('cancelled');
         }
         // Walk along navpath, possibly throwing 'cancelled' on collide
         this.pendingWalk = true;
@@ -868,9 +863,6 @@ export default function createNpc(def, api) {
         await (this.nextWalk ? this.walk(this.nextWalk.navPath, opts) : this.walkToIdle());
 
       } catch (err) {
-        if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
-          return warn(`walk cancelled: ${this.key}`);
-        }
         throw err;
       } finally {
         if (isRoot) {

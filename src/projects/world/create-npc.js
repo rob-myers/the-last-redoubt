@@ -85,6 +85,7 @@ export default function createNpc(
     },
     a: /** @type {*} */ ({}),
 
+    cancelCount: 0,
     doMeta: null,
     forcePaused: false,
     gmRoomId: null,
