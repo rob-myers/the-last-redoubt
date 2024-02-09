@@ -501,9 +501,12 @@ click | world npcs.canSee $fixed -
 # spawn a bunch of bots and make them all look at some point
 
 # spawner
-multiSpawn() { # no spaces allowed
+multiSpawn() {
   echo name⏎ click, e.g. "rob --zhodani"
-  take | while true; do
+  take | filter '(text, {api}) =>
+    /^[a-z-]+(\s+--[a-z]+)?$/.test(text) ||
+    api.info("lowercase/hyphens only")
+  ' | while true; do
     spawn $( take 1 ) $( click 1 )
   done
 }
