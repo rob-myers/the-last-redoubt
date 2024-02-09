@@ -355,8 +355,8 @@
         }
         
         if (
-          (meta.longClick && !npc.isWalking()) ||
-          !w.npcs.isPointInNavmesh(npc.getPosition()) &&
+          ((meta.longClick && !npc.isWalking()) ||
+          !w.npcs.isPointInNavmesh(npc.getPosition())) &&
           w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())
         ) {
           await npc.fadeSpawn(datum).catch(api.verbose);
