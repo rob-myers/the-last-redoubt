@@ -341,11 +341,11 @@ export class ttyXtermClass {
     const ord = data.charCodeAt(0);
     let cursor: number;
 
-    if (data.length > 1 && this.input.startsWith(data)) {
-      // Ignore input-replacement deletes,
-      // because cannot handle them properly (ambiguous)
-      return;
-    }
+    // if (data.length > 1 && this.input.startsWith(data)) {
+    //   // Ignore input-replacement deletes,
+    //   // because cannot handle them properly (ambiguous)
+    //   return;
+    // }
 
     if (this.forceLowerCase && data.length > 1 && !data.includes(' ')) {
       // Force lowercase applies to "words swiped into mobile keyboard"
