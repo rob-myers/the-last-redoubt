@@ -115,7 +115,7 @@ export default function createNpc(def, api) {
     },
     async cancel(overridePaused = false) {
       if (this.forcePaused && !overridePaused) {
-        throw Error('paused: cannot cancel');
+        throw Error('frozen: cannot cancel');
       }
       info(`cancel: cancelling ${this.def.key}`);
       const cancelCount = ++this.cancelCount;
@@ -295,10 +295,6 @@ export default function createNpc(def, api) {
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
-
-      if (path.length > 1 && this.nextWalk === null) {
-        await this.lookAt(path[1], { force: true, ms: 500 });
-      }
 
       this.nextWalk = null;
       this.startAnimation('walk');
@@ -818,30 +814,35 @@ export default function createNpc(def, api) {
         this.nextWalk = null;
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
+      const { path } = navPath;
+
       if (this.forcePaused) {// 🚧 handled by proxy?
         this.nextWalk = null;
         throw Error('paused: cannot walk');
       }
-      if (navPath.path.length === 0) {
+      if (path.length === 0) {
         this.nextWalk = null;
         return;
       }
-      if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
+      if (this.isBlockedByOthers(path[0], path[1])) {
         throw new Error('cancelled');
       }
 
       try {
         this.pendingWalk = true;
+        const continuous = this.getPosition().distanceTo(path[0]) <= 0.01;
         api.npcs.events.next({
           key: 'started-walking', // extended walks too
           npcKey: this.key,
           navPath,
-          continuous: this.getPosition().distanceTo(navPath.path[0]) <= 0.01,
+          continuous,
           extends: !!this.nextWalk,
         });
 
+        if (isRoot && path.length > 1 && continuous) {
+          await this.lookAt(path[1], { force: true, ms: 500 });
+        }
         await this.followNavPath(navPath, opts.doorStrategy);
-        
         if (this.nextWalk) {
           await this.walk(this.nextWalk.navPath, opts);
         }
