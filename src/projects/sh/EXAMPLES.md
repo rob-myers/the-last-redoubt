@@ -511,6 +511,7 @@ multiSpawn() {
   done
 }
 multiSpawn
+
 # make them look
 click 1 | run '({ api, w: { npcs } }) {
   const point = await api.read()
@@ -519,6 +520,17 @@ click 1 | run '({ api, w: { npcs } }) {
     npc.lookAt(point, { ms: 500 });
   }
 }'
+
+# make them walk
+while true; do
+  click 1 | run '({ api, w: { npcs } }) {
+    const point = await api.read()
+    for (const npcKey in npcs.npc) {
+      const npc = npcs.getNpc(npcKey);
+      npc.walk(point, point);
+    }
+  }'
+done
 
 # using cli without while delay?
 # try `api ...` reading from stdin
