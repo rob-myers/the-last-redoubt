@@ -126,8 +126,10 @@ export default function createNpc(def, api) {
       this.walkCancel(new Error('cancelled'));
 
       this.paused = false;
-      this.s.body.tint = 0xffffff;
-      this.s.head.tint = 0xffffff;
+      if (!this.forcePaused) {
+        this.s.body.tint = 0xffffff;
+        this.s.head.tint = 0xffffff;
+      }
 
       if (this.pendingWalk) {
         await api.lib.firstValueFrom(api.npcs.events.pipe(
