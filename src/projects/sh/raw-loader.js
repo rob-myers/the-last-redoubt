@@ -232,6 +232,16 @@
       }
     },
   
+    lookAt: async function* ({ api, args: [npcKey], home, datum }) {
+      const w = api.getCached(home.WORLD_KEY);
+      const npc = w.npcs.getNpc(npcKey, api);
+      // 🚧 opts.ms
+
+      while ((datum = await api.read()) !== api.eof) {
+        npc.lookAt(datum, { ms: 500 }).catch(api.verbose);
+      }
+    },
+
     /**
      * Request navpath to position(s) or npc(s), e.g.
      * ```sh
@@ -310,39 +320,21 @@
         );
         yield await w.npcs.npcAct(npcAct, api);
       } else {
-        /** @param {*} e */
-        const onError = e => api.verbose(e?.message ?? e);
-
-        if (action === "get" && (args[2] === "walk" || args[2] === "lookAt")) {
-          // walk/look need to respond immediately
-          const npc = w.npcs.getNpc(args[1], api);
-          await api.eagerReadLoop(
-            async (datum) => {
-              const selector = api.generateSelector(args[2], api.addStdinToArgs(datum, args.slice(3).map(api.parseJsArg)));
-              await selector.call(npc, npc);
-            },
-            () => npc.cancel(),
-          );
-        } else {// Standard case
-          while ((datum = await api.read()) !== api.eof) {
-            const npcAct = args.length === 1
-              ? w.lib.normalizeNpcCommandOpts(action, datum, [])
-              // 🤔 careful parseJsArg does not misinterpret strings
-              : w.lib.normalizeNpcCommandOpts(action, args[1], api.addStdinToArgs(datum, args.slice(2).map(api.parseJsArg)))
-            ;
-            yield await w.npcs.npcAct(npcAct, api).catch(onError);
-          }
+        while ((datum = await api.read()) !== api.eof) {
+          const npcAct = args.length === 1
+            ? w.lib.normalizeNpcCommandOpts(action, datum, [])
+            // 🤔 careful parseJsArg does not misinterpret strings
+            : w.lib.normalizeNpcCommandOpts(action, args[1], api.addStdinToArgs(datum, args.slice(2).map(api.parseJsArg)))
+          ;
+          yield await w.npcs.npcAct(npcAct, api).catch(api.verbose);
         }
       }
-
     },
   
     controlNpc: async function* ({ api, args: [npcKey], home }) {
       const w = api.getCached(home.WORLD_KEY)
       const npc = w.npcs.getNpc(npcKey, api);
       
-      /** @param {*} e */
-      const onError = e => api.verbose(e?.message ?? e);
       let datum = /** @type {Geomorph.PointWithMeta} */ ({});
 
       while ((datum = await api.read()) !== api.eof) {
@@ -353,38 +345,40 @@
 
         if (meta.door || meta.do || (npc.doMeta && meta.nav)) {
           // door, do point, or: nav point whilst at do point
-           await npc.do(datum).catch(onError);
-           continue;
+          await npc.do(datum).catch(api.verbose);
+          continue;
         }
-        
-        if (meta.nav && !meta.ui) {
-          if (meta.longClick && !npc.isWalking() || !w.npcs.isPointInNavmesh(npc.getPosition())) {
-            await npc.cancel();
-            if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
-              await npc.fadeSpawn(datum).catch(onError); // warp
-            }
-          } else {// walk
-            if (npc.isWalking(true)) {// keep walking on long click or angle ≤ 90°
-              const [u, v] = npc.getPath().concat(npc.nextWalk?.visits ?? []).slice(-2);
-              if (!v || !u)
-                continue;
-              const dp = (v.x - u.x) * (datum.x - v.x) + (v.y - u.y) * (datum.y - v.y);
-              if (meta.longClick || dp >= 0) {
-                npc.extendNextWalk(datum);
-                continue;
-              }
-            }
-            const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), datum, {
-              closedWeight: 10000,
-              centroidsFallback: true,
-            });
-            npc.walk(navPath, { doorStrategy: "none" }).catch(onError);
-          }
+
+        if (!meta.nav || meta.ui) {
+          npc.lookAt(datum, { ms: 500 }).catch(api.verbose);
           continue;
         }
         
-        await npc.cancel();
-        npc.lookAt(datum, { ms: 500 }).catch(onError);
+        if (
+          (meta.longClick && !npc.isWalking()) ||
+          !w.npcs.isPointInNavmesh(npc.getPosition()) &&
+          w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())
+        ) {
+          await npc.fadeSpawn(datum).catch(api.verbose);
+          continue;
+        }
+
+        if (npc.isWalking(true)) {// keep walking on long click or angle ≤ 90°
+          const [u, v] = npc.getPath().concat(npc.nextWalk?.visits ?? []).slice(-2);
+          if (!v || !u)
+            continue;
+          const dp = (v.x - u.x) * (datum.x - v.x) + (v.y - u.y) * (datum.y - v.y);
+          if (meta.longClick || dp >= 0) {
+            npc.extendNextWalk(datum);
+            continue;
+          }
+        }
+
+        const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), datum, {
+          closedWeight: 10000,
+          centroidsFallback: true,
+        });
+        npc.walk(navPath, { doorStrategy: "none" }).catch(api.verbose);
       }
     },
 
@@ -562,17 +556,14 @@
       await api.eagerReadLoop(/** @param {NPC.GlobalNavPath | Geomorph.PointMaybeMeta} datum */
         async (datum) => {
           try {
-            if (w.lib.isVectJson(datum)) {
-              if (datum.meta?.npc && datum.meta.npcKey === npc.key) {
-                return; // Ignore self clicks e.g. on unpause
-              }
-              if (npc.isWalking(true) && !datum.meta?.longClick) {
-                npc.extendNextWalk(datum);
-              } else {
-                await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
-              }
-            } else {
+            if (!w.lib.isVectJson(datum)) {// navpath
               await npc.walk(datum, { doorStrategy });
+            } else if (npc.getPosition().distanceTo(datum) <= npc.getRadius()) {
+              return; // too close
+            } else if (npc.isWalking(true)) {
+              npc.extendNextWalk(datum);
+            } else {
+              await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
             }
           } catch (e) {
             if (w.lib.isCancelError(e) || opts.forever) {
@@ -582,7 +573,6 @@
             }
           }
         },
-        (datum) => !w.lib.isVectJson(datum) && npc.cancel(), // 🤔 could be empty
       );
     },
   },

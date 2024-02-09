@@ -805,10 +805,10 @@ class cmdServiceClass {
       yield* sleep(this.meta, seconds);
     },
 
-    verbose(message: any) {
+    verbose(e: any) {
       if (this.session.verbose) {
-        useSession.api.writeMsgCleanly(this.meta.sessionKey, `${message}`, { level: 'info' });
-        console.warn(message);
+        useSession.api.writeMsgCleanly(this.meta.sessionKey, `${e?.message ?? e}`, { level: 'info' });
+        console.warn(e);
       }
     },
 
