@@ -152,9 +152,10 @@ class semanticsServiceClass {
         const { ttyShell } = useSession.api.getSession(sessionKey);
 
         const process = useSession.api.getProcess(node.meta);
+        const childPids = [] as number[];
         function killPipeChildren(SIGINT?: boolean) {
           useSession.api.getProcesses(process.sessionKey, pgid)
-            .filter(x => x.key !== ppid)
+            .filter(x => childPids.includes(x.key))
             .reverse().forEach(x => killProcess(x, SIGINT))
           ;
         }
@@ -186,6 +187,7 @@ class semanticsServiceClass {
                 errors.push(e);
                 reject(e);
               } finally {
+                childPids.push(file.meta.pid);
                 (fifos[i] ?? stdOut).finishedWriting(); // pipe-child `i` won't write any more
                 (fifos[i - 1] ?? stdIn).finishedReading(); // pipe-child `i` won't read any more
                 

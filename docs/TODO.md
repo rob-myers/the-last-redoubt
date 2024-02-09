@@ -44,9 +44,8 @@
   - ✅ cannot suppress throw in `walk`
   - ✅ cannot suppress throw in `do`
   - ✅ move walkToIdle into `walk` finally block
-  - ensure walkToIdle is returning
-    - e.g. transition{Finish,Cancel}
-    - e.g. catch failure inside npc.cancel and noop
+  - ensure walkToIdle is returning:
+    - inTransition(), transition{Finish,Cancel}
   - fix setWalkSpeed
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
@@ -54,6 +53,18 @@
   - darker shoes; maybe not so far back
   - darker npc
   - finish obscureBySurfaces
+
+- ✅ BUG paste when repasting at end of line
+  - remove "mobile fix"
+- ✅ BUG second walk doesn't happen:
+  - 🔔 `myNav | walk foo --open; myNav | walk foo --open`
+  - this works: `walk foo --open $myNav; walk foo --open $myNav`
+  - ℹ️ both pipelines have pgid 0; the 1st mistakenly kills the 2nd's children!
+
+- 🚧 pausing npcs
+  - 🚧 pausing an npc process only pauses npc if an action in progress
+  - 🚧 if pausing a process paused an npc, resuming the npc only resumes the current action i.e. process goes back to being paused
+
 
 - ✅ BUG jumps: (a) whilst walk, (b) force pause, (c) `walk --open rob $( click 1 )` and click, (d) unpause
   - also when `controlNpc` paused
