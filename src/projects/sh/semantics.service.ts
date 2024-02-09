@@ -1,7 +1,7 @@
 import { uid } from 'uid';
 
 import type * as Sh from './parse';
-import { last, safeStringify } from '../service/generic';
+import { last, pause, safeStringify } from '../service/generic';
 import { parseJsArg } from '../service/dom';
 import useSession, { ProcessStatus } from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
@@ -152,10 +152,9 @@ class semanticsServiceClass {
         const { ttyShell } = useSession.api.getSession(sessionKey);
 
         const process = useSession.api.getProcess(node.meta);
-        const childPids = [] as number[];
         function killPipeChildren(SIGINT?: boolean) {
           useSession.api.getProcesses(process.sessionKey, pgid)
-            .filter(x => childPids.includes(x.key))
+            .filter(x => x.key !== ppid)
             .reverse().forEach(x => killProcess(x, SIGINT))
           ;
         }
@@ -187,7 +186,6 @@ class semanticsServiceClass {
                 errors.push(e);
                 reject(e);
               } finally {
-                childPids.push(file.meta.pid);
                 (fifos[i] ?? stdOut).finishedWriting(); // pipe-child `i` won't write any more
                 (fifos[i - 1] ?? stdIn).finishedReading(); // pipe-child `i` won't read any more
                 
@@ -201,6 +199,8 @@ class semanticsServiceClass {
               }
             }),
           ));
+          // Avoid killing pipe children of next pipeline when ppid 0
+          await pause(30);
 
           if (
             exitCode === undefined
@@ -627,3 +627,5 @@ export const semanticsService = new semanticsServiceClass;
 
 /** Local shortcut */
 const sem = semanticsService;
+
+let pipelineCount = 0;
