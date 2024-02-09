@@ -50,7 +50,6 @@ export default function createNpc(def, api) {
     tr: tracks['idle'],
     walkCancel: emptyFn,
     walkFinish: emptyFn,
-    walkOnSpot: false,
     walkSpeed: def.walkSpeed,
 
     el: /** @type {*} */ ({}), // Fix types during migration
@@ -122,24 +121,20 @@ export default function createNpc(def, api) {
       const cancelCount = ++this.cancelCount;
       this.clearWayMetas();
 
-
       this.a.opacity.stop();
       this.a.rotate.stop();
       this.walkCancel(new Error('cancelled'));
+
+      this.paused = false;
+      this.s.body.tint = 0xffffff;
+      this.s.head.tint = 0xffffff;
 
       if (this.pendingWalk) {
         await api.lib.firstValueFrom(api.npcs.events.pipe(
           api.lib.filter(e => e.key === "stopped-walking" && e.npcKey === this.key)
         ));
       }
-
-      this.paused = false;
-      this.s.body.tint = 0xffffff;
-      this.s.head.tint = 0xffffff;
-      this.walkOnSpot = false;
-
       if (cancelCount !== this.cancelCount) {
-        // 🚧 repro
         throw Error('cancel was cancelled');
       }
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
@@ -627,7 +622,6 @@ export default function createNpc(def, api) {
       this.framePtr = this.frame;
       this.frameMap = this.tr.bodys.map((_, i) => i);
       this.distance = 0;
-      this.walkOnSpot = false;
       
       const { stationaryFps } = spineAnimSetup[animName];
       this.frameDurs = this.tr.deltas?.map(x => x / this.walkSpeed) ?? this.tr.bodys.map(_ => 1 / stationaryFps);
@@ -745,8 +739,8 @@ export default function createNpc(def, api) {
       head.y = body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y;
     },
     updateMotion() {
-      if (this.tr.deltas == null || this.walkOnSpot === true) {
-        return;
+      if (this.tr.deltas == null || this.frameMap.length !== this.tr.length) {
+        return; // No motion, or walk transition
       }
 
       this.distance += this.tr.deltas[this.frame];
@@ -863,12 +857,12 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
-      if (this.walkOnSpot) {
+      if (this.tr.length !== this.frameMap.length) {
         return; // 🔔 prevent two concurrent transitions
       }
 
       // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` where first-cross `0`
-      const frames = /** @type {number[]} */ (spineMeta.anim[this.animName].extremeFrames);
+      const frames = /** @type {number[]} */ (spineMeta.anim.walk.extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
       const nextId = frames.findIndex(x => x > this.frame);
       switch (nextId) {
@@ -879,12 +873,11 @@ export default function createNpc(def, api) {
       }
       
       this.framePtr = 0;
-      this.walkOnSpot = true;
       this.frameDurs = this.frameDurs.map(x => x/2);
-
       if (nextId === 1 || nextId === 3) {// Pause before moving feet back
         this.frameDurs[this.frame] = 200 / 1000;
       }
+
       if (this.frameMap.length > 1) {// 🚧 frameFinish -> transitionFinish; ensure resolve
         await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
       }

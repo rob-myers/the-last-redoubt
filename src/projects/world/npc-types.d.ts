@@ -93,7 +93,6 @@ declare namespace NPC {
     walkCancel: (err: Error) => void;
     /** Invoked on walk finish */
     walkFinish: () => void;
-    walkOnSpot: boolean;
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
     

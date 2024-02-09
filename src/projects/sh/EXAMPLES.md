@@ -141,6 +141,8 @@ view 2 "$( click 1 )" 2
 spawn rob $( click 1 )
 npc rob lookAt $( click 1 )
 click | npc rob lookAt
+click | npc rob lookAt - {ms:500}
+click | lookAt rob
 ```
 
 ```sh
@@ -496,7 +498,7 @@ click | world npcs.canSee $fixed -
 ```
 
 ```sh
-# try spawn a bunch of bots and make them all look at some point
+# spawn a bunch of bots and make them all look at some point
 
 # spawner
 multiSpawn() { # no spaces allowed
@@ -506,13 +508,12 @@ multiSpawn() { # no spaces allowed
   done
 }
 multiSpawn
-
-# using js
+# make them look
 click 1 | run '({ api, w: { npcs } }) {
   const point = await api.read()
   for (const npcKey in npcs.npc) {
     const npc = npcs.getNpc(npcKey);
-    npc.lookAt(point);
+    npc.lookAt(point, { ms: 500 });
   }
 }'
 

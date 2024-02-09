@@ -306,8 +306,8 @@
           throw new Error(`${args[0]}: invalid action`);
         }
       }
-
       const action = /** @type {NPC.NpcActionKey} */ (args[0]);
+
       if (action === "events") {
         return yield* w.lib.yieldEvents(w, api);
       }

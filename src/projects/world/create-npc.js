@@ -38,7 +38,6 @@ export default function createNpc(
     tr: /** @type {*} */ ({}),
     walkCancel: emptyFn,
     walkFinish: emptyFn,
-    walkOnSpot: false,
     walkSpeed: 1,
 
     el: {
