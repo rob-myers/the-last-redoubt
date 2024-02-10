@@ -40,6 +40,7 @@ export default function NPCs(props) {
     playerKey: null,
     ready: true,
     session: {},
+    npcProcs: {},
 
     config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
       logTags: /** @type {boolean} */ (false),
@@ -229,40 +230,21 @@ export default function NPCs(props) {
       }
     },
     connectNpcToProcess(processApi, npcKey) {
-      const npc = state.getNpc(npcKey); // Throws if non-existent
+      const npc = state.getNpc(npcKey);
       const process = processApi.getProcess();
-
-      process.cleanups.push((SIGINT) => {// Ctrl-C overrides forcePaused
-        npc.cancel(SIGINT).catch(e => processApi.verbose(e?.message ?? e));
+      // cleaned on remove npc (but not process)
+      (state.npcProcs[npcKey] ??= []).push({
+        npcKey, sessionKey: process.sessionKey, pid: process.key,
       });
-      process.onSuspends.push(() => { npc.pause(false); return true; });
+
+      let npcControlled = false;
+      process.cleanups.push((SIGINT) => {
+        // Only run when process is controlling NPC
+        // npc.cancel(SIGINT).catch(processApi.verbose);
+        !npc.forcePaused && npcControlled && npc.cancel().catch(processApi.verbose);
+      });
+      process.onSuspends.push(() => { npcControlled && npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });
-
-      // kill on remove-npc
-      // 🚧 create a single subscription elsewhere
-      const subscription = this.events.subscribe({ next(x) {
-        if (x.key === 'removed-npc' && x.npcKey === npcKey) {
-          processApi.kill(true); // must kill whole process group
-          subscription.unsubscribe();
-        }
-      }});
-      process.cleanups.push(() => subscription.unsubscribe());
-
-      // waits for a "forcePaused npc" to be resumed; throws on process killed
-      async function handlePaused() {
-        npc.forcePaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          const subscription = state.events.subscribe({ next(x) {
-            if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
-              resolve();
-              subscription.unsubscribe();
-            }
-          }});
-          process.cleanups.push(
-            () => reject(processApi.getKillError()),
-            () => subscription.unsubscribe()
-          );
-        }));
-      }
 
       return new Proxy(npc, {
         /** @param {keyof NPC.NPC} key */
@@ -270,13 +252,20 @@ export default function NPCs(props) {
           if (key === 'cancel' || key === 'do' || key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
             /** @param {[any, any]} args */
             return async function(...args) {
-              await handlePaused();
+              target.forcePaused && await state.pauseConnectedProcess(processApi, npcKey);
+
               if (key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
                 await target.cancel();
               } else if (key === 'do' && !args[0]?.meta?.door) {
                 await target.cancel();
               } // permit open door whilst fading/looking/walking
-              await target[key](...args);
+
+              try {
+                npcControlled = true;
+                await target[key](...args);
+              } finally {
+                npcControlled = false;
+              }
             }
           } else {
             return target[key];
@@ -650,6 +639,18 @@ export default function NPCs(props) {
         throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
       }
     },
+    pauseConnectedProcess(processApi, npcKey) {
+      return new Promise((resolve, reject) => {
+        const subscription = state.events.subscribe({ next(x) {
+          if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
+            resolve();
+            subscription.unsubscribe();
+          }
+        }});
+        processApi.addCleanup(() => reject(new Error(`cancelled: connected process (${npcKey})`)));
+        processApi.addCleanup(() => subscription.unsubscribe());
+      });
+    },
     async removeNpc(npcKey) {
       const npc = state.getNpc(npcKey); // throw if n'exist pas
       await npc.cancel();
@@ -706,7 +707,7 @@ export default function NPCs(props) {
       }
 
       if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
-        throw new Error('cancelled');
+        throw new Error(`cancelled: cannot spawn ${e.npcKey}`);
       }
 
       let spawned = state.npc[e.npcKey];
@@ -774,6 +775,7 @@ export default function NPCs(props) {
         }})
       );
     },
+
   }), { deps: [api] });
   
   useQueryOnce('spritesheet',
@@ -832,6 +834,9 @@ export default function NPCs(props) {
  * @property {null | string} playerKey
  * @property {boolean} ready
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
+ * Terminal sessions connected to this World.
+ * @property {{ [npcKey: string]: NPC.NpcProcessCtxt[] }} npcProcs
+ * Terminal processes connected to an NPC.
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
  * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta, maxDistance?: number) => boolean} canSee
@@ -861,6 +866,7 @@ export default function NPCs(props) {
  * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
+ * @property {(processApi: ProcessApi, npcKey: string) => Promise<void>} pauseConnectedProcess
  * @property {(npcKey: string) => Promise<void>} removeNpc
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn

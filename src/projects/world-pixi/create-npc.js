@@ -96,7 +96,7 @@ export default function createNpc(def, api) {
         )).promise();
       } catch (e) {// Reset opacity if cancelled
         [this.s.body, this.s.head].forEach(s => s.alpha = 1);
-        throw Error('cancelled');
+        throw Error('cancelled: opacity animation');
       }
     },
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
@@ -123,7 +123,7 @@ export default function createNpc(def, api) {
 
       this.a.opacity.stop();
       this.a.rotate.stop();
-      this.walkCancel(new Error('cancelled'));
+      this.walkCancel(new Error('cancelled: walk'));
 
       this.paused = false;
       if (!this.forcePaused) {
@@ -137,7 +137,7 @@ export default function createNpc(def, api) {
         ));
       }
       if (cancelCount !== this.cancelCount) {
-        throw Error('cancel was cancelled');
+        throw Error('cancelled: cancel was cancelled');
       }
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
@@ -315,7 +315,7 @@ export default function createNpc(def, api) {
         info(`followNavPath: ${this.key} finished walk`);
       } catch (e) {
         info(`followNavPath: ${this.key} cancelled walk`);
-        throw Error('cancelled');
+        throw e;
       } finally {// Reset speed to default?
         this.walkSpeed = this.def.walkSpeed;
       }
@@ -816,16 +816,12 @@ export default function createNpc(def, api) {
       }
       const { path } = navPath;
 
-      if (this.forcePaused) {// 🚧 handled by proxy?
-        this.nextWalk = null;
-        throw Error('paused: cannot walk');
-      }
       if (path.length === 0) {
         this.nextWalk = null;
         return;
       }
       if (this.isBlockedByOthers(path[0], path[1])) {
-        throw new Error('cancelled');
+        throw new Error(`cancelled: blocked by other`);
       }
 
       try {

@@ -707,7 +707,7 @@ declare namespace NPC {
 
   //#endregion
 
-  //#region tty
+  //#region shell
 
   export interface SessionCtxt {
     /** Session key */
@@ -718,24 +718,11 @@ declare namespace NPC {
     // 🤔 npcKey -> related pids? for npc-wise pause/resume
   }
 
-  export type SessionTtyCtxt = {
-    lineText: string;
-    /** For example `[foo]` has link text `foo` */
-    linkText: string;
-    /** Where `linkText` occurs in `lineText` */
-    linkStartIndex: number;
-  } & (
-    | { key: 'room'; gmId: number; roomId: number; }
-    // ...
-  );
-
-  export type OnTtyLink = (
-    /** The computations are specific to tty i.e. its parent session */
-    sessionKey: string,
-    lineText: string,
-    linkText: string,
-    linkStartIndex: number,
-  ) => void;
+  export interface NpcProcessCtxt {
+    npcKey: string;
+    sessionKey: string;
+    pid: number;
+  }
 
   //#endregion
 

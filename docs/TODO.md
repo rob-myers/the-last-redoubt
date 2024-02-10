@@ -54,25 +54,16 @@
   - darker npc
   - finish obscureBySurfaces
 
-- ✅ BUG paste when repasting at end of line
-  - remove "mobile fix"
-- ✅ BUG second walk doesn't happen:
-  - 🔔 `myNav | walk foo --open; myNav | walk foo --open`
-  - this works: `walk foo --open $myNav; walk foo --open $myNav`
-  - ℹ️ both pipelines have pgid 0; the 1st mistakenly kills the 2nd's children!
 
 - 🚧 pausing npcs
-  - 🚧 pausing an npc process only pauses npc if an action in progress
-  - 🚧 if pausing a process paused an npc, resuming the npc only resumes the current action i.e. process goes back to being paused
+  - ✅ pausing an npc process only pauses npc if an action in progress
+  - ❌ if pausing a process paused an npc, resuming the npc only resumes the current action i.e. process goes back to being paused
+  - verify can induce immediate pause via `yield`
 
-
-- ✅ BUG jumps: (a) whilst walk, (b) force pause, (c) `walk --open rob $( click 1 )` and click, (d) unpause
-  - also when `controlNpc` paused
-  - 🔔 saw non-terminating walkToIdle transition using multiple non-awaited walks without pre-awaited cancel
-  - ✅ move `npc.cancel` into `npc.walk` when `npc` is connected to a process
+- fix `npc.isWalking()` e.g. in terms of `npc.pendingWalk`
 
 - BUG saw npc vs npc collisions not working when other npc walking
-  - player fade spawns where other player is walking too
+  - player fade spawns where other player is walking to
   - two npcs collide after both going thru door?
 - BUG saw doors not opening when other npc is `walk --open`
 
@@ -751,6 +742,18 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG paste when repasting at end of line
+  - remove "mobile fix"
+- ✅ BUG second walk doesn't happen:
+  - 🔔 `myNav | walk foo --open; myNav | walk foo --open`
+  - this works: `walk foo --open $myNav; walk foo --open $myNav`
+  - ℹ️ both pipelines have pgid 0; the 1st mistakenly kills the 2nd's children!
+
+- ✅ BUG jumps: (a) whilst walk, (b) force pause, (c) `walk --open rob $( click 1 )` and click, (d) unpause
+  - also when `controlNpc` paused
+  - 🔔 saw non-terminating walkToIdle transition using multiple non-awaited walks without pre-awaited cancel
+  - ✅ move `npc.cancel` into `npc.walk` when `npc` is connected to a process
 
 - ✅ handle wayMetas in npc.updateTime rather than via setTimeout
 - ✅ npc should follow path "exactly"

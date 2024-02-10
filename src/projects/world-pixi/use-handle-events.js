@@ -6,7 +6,8 @@ import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import { warn } from "../service/log";
 import { stripAnsi } from "../sh/util";
-import useSession from "../sh/session.store"; // 🤔 avoid dep?
+import useSession from "../sh/session.store";
+import { cmdService } from "../sh/cmd.service";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -123,6 +124,15 @@ export default function useHandleEvents(api, disabled) {
           // console.log(e);
           api.debug.updateDebugRoom();
           break;
+        case 'removed-npc': {
+          // kill connected process groups
+          const { npcProcs } = api.npcs;
+          npcProcs[e.npcKey]?.forEach(({ sessionKey, pid }) =>
+            cmdService.killProcesses(sessionKey, [pid], { group: true })
+          );
+          delete npcProcs[e.npcKey];
+          break;
+        }
         case 'set-verbose':
           Object.keys(api.npcs.session).forEach(sessionKey =>
             useSession.api.getSession(sessionKey).verbose = e.verbose
@@ -152,7 +162,6 @@ export default function useHandleEvents(api, disabled) {
         case 'decors-removed':
         case 'npc-clicked':
         case 'npc-internal':
-        case 'removed-npc':
         case 'set-player':
         case 'set-verbose':
         case 'resumed-track':
