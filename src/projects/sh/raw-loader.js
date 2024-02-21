@@ -473,7 +473,7 @@
         w.panZoom.follow(npc.s.body, { speed: 1 });
 
         api.addSuspend(() => {w.panZoom.animationAction("pauseFollow"); return true;});
-        api.addResume(() => {w.panZoom.animationAction("resumeFollow"); return true;});
+        api.addResume(() => { !npc.paused && w.panZoom.animationAction("resumeFollow"); return true;});
 
         await /** @type {Promise<void>} */ (new Promise(resolve => {
           const subscription = w.npcs.events.subscribe((e) => {
