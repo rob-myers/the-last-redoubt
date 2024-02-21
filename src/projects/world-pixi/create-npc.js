@@ -805,54 +805,49 @@ export default function createNpc(def, api) {
       }
     },
     async walk(navPath, opts = {}) {
-      const isRoot = this.nextWalk === null;
-
       if (api.lib.isVectJson(navPath)) {
         navPath = api.npcs.getGlobalNavPath(this.getPosition(), navPath, this.navOpts);
       }
       if (!api.lib.verifyGlobalNavPath(navPath)) {
-        this.nextWalk = null;
-        throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
+        throw Error(`invalid global navPath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
-      const { path } = navPath;
 
-      if (path.length === 0) {
-        this.nextWalk = null;
+      if (navPath.path.length === 0) {
         return;
       }
-      if (this.isBlockedByOthers(path[0], path[1])) {
+      if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
         throw new Error(`cancelled: blocked by other`);
+      }
+
+      let continuous = this.getPosition().distanceTo(navPath.path[0]) <= 0.01;
+      if (continuous && navPath.path[1]) {
+        await this.lookAt(navPath.path[1], { force: true, ms: 500 });
       }
 
       try {
         this.pendingWalk = true;
-        const continuous = this.getPosition().distanceTo(path[0]) <= 0.01;
-        api.npcs.events.next({
-          key: 'started-walking', // extended walks too
-          npcKey: this.key,
-          navPath,
-          continuous,
-          extends: !!this.nextWalk,
-        });
 
-        if (isRoot && path.length > 1 && continuous) {
-          await this.lookAt(path[1], { force: true, ms: 500 });
-        }
-        await this.followNavPath(navPath, opts.doorStrategy);
-        if (this.nextWalk) {
-          await this.walk(this.nextWalk.navPath, opts);
-        }
+        do {
+          api.npcs.events.next({
+            key: 'started-walking', // 🔔 change name when extends?
+            npcKey: this.key,
+            navPath,
+            continuous,
+            extends: this.nextWalk !== null,
+          });
 
-      } catch (err) {
-        throw err;
+          await this.followNavPath(navPath, opts.doorStrategy);
+
+          navPath = this.nextWalk?.navPath ?? navPath;
+          continuous = true;
+        } while (this.nextWalk);
+
       } finally {
-        if (isRoot) {
-          this.animName === 'walk' && await this.walkToIdle();
-          this.pendingWalk = false;
-          this.nextWalk = null;
-          this.startAnimation('idle-breathe');
-          api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
-        }
+        this.animName === 'walk' && await this.walkToIdle();
+        this.pendingWalk = false;
+        this.nextWalk = null;
+        this.startAnimation('idle-breathe');
+        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
       }
     },
     async walkToIdle() {

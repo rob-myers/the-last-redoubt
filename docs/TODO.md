@@ -4,11 +4,11 @@
 
 - 🚧 improve npc again
   - ✅ on pause npc tracking pauses
-  - 🚧 remove recursion from npc.walk
   - ✅ BUG cannot Ctrl-C when forcePaused walk
     - `npc rob walk $( click 1 )`
-  - can force `npc rob cancel` when forcePaused
-  - smooth rotate npc as walks
+  - ✅ `npc rob cancel 1` cancels when forcePaused
+  - ✅ remove recursion from npc.walk
+  - 🚧 smooth rotate npc as walks
 
   - ensure walkToIdle returns
     - implement inTransition
