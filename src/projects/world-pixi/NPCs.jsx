@@ -232,7 +232,7 @@ export default function NPCs(props) {
     connectNpcToProcess(processApi, npcKey) {
       const npc = state.getNpc(npcKey);
       const process = processApi.getProcess();
-      // cleaned on remove npc (but not process)
+      // 🔔 lookup cleaned on remove npc, but not process
       (state.npcProcs[npcKey] ??= []).push({
         npcKey, sessionKey: process.sessionKey, pid: process.key,
       });
@@ -252,7 +252,9 @@ export default function NPCs(props) {
           if (key === 'cancel' || key === 'do' || key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
             /** @param {[any, any]} args */
             return async function(...args) {
-              target.forcePaused && await state.pauseConnectedProcess(processApi, npcKey);
+              if (target.forcePaused && !(key === 'cancel' && !!args[0])) {
+                await state.pauseConnectedProcess(processApi, npcKey);
+              }
 
               if (key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
                 await target.cancel();
