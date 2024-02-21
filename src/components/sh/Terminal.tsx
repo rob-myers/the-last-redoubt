@@ -125,7 +125,7 @@ export default function Terminal(props: Props) {
       state.ready = true;
       update();
     }
-  }, [props.disabled]);
+  }, [props.disabled, state.ready]);
 
   React.useEffect(() => {// Handle session pause/resume
     if (!state.ready) {
@@ -179,12 +179,12 @@ export default function Terminal(props: Props) {
         delete state.pausedPids[p.key];
       });
     }
-  }, [props.disabled]);
+  }, [props.disabled, state.ready]);
 
   React.useEffect(() => () => {// Destroy session
     useSession.api.removeSession(props.sessionKey);
-    state.session = state.xterm = {} as any;
     state.ready = false;
+    state.session = state.xterm = {} as any;
     state.cleanup();
   }, []);
 
