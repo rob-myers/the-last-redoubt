@@ -2,50 +2,14 @@
 
 ## In progress
 
-- 🤔 first wait for world/geomorph editor in new repo
-  - 🚧 more decor images
-    - 🚧 `computer-2`
-    - `speaker-1`
-    - `communicator-1`
-    - `fabricator-1`
-  - place decor points on many tables
-  - more tables in 301
-  - more tables in 101
+- 🚧 improve npc again
+  - ✅ on pause npc tracking pauses
+  - 🚧 remove recursion from npc.walk
+  - smooth rotate npc as walks
 
-- 🚧 improve npc
-  - ✅ drop shadow
-  - ✅ better transition walk -> idle
-  - ✅ initial rotate before walking
-  - ✅ paused npc doing `click | walk --open foo` should not remember clicks whilst paused
-  - ✅ npc paused whilst walking should collide
-  - ✅ can escape collision with paused npc
-  - ✅ npc stuck on some stand points
-    - can turn away from on-nav do point
-  - ✅ can fadeSpawn to on-nav do point
-  - ✅ pause "npc" process darkens npc
-  - ✅ force pause "npc" process dark-reddens npc
-  - ✅ BUG `controlNpc` never-ending walk by
-    - clicking beyond blocked door many times
-    - clicking next to npc many times
-  - ✅ BUG npc disappears when click many times
-    - ℹ️ `npc rob s.body.{x,y,rotation}` are null
-    - ℹ️ turn off `pausableNpcs`, click diagonal of door entry many times...
-    - ℹ️ not related to walkToIdle
-    - ✅ `click | walk rob` sometimes throws `walk: run: cannot look`
-      - catch initial lookAt before start walk
-    - `click | walk rob` still crashes
-    - saw for `click | walk --open foo` too
-    - ℹ️ compareAngles was doing `acos(1.00...02)` i.e. `NaN`
-  - ✅ controlNpc should lookAt slowly
-  - ✅ npc paused via process pause
-    - ✅ should resume on click twice (force pause/unpause)
-    - ✅ should resume on other process e.g. `click | walk --open rob`
-  - ✅ can pause npc on do point
-  - ✅ cannot suppress throw in `walk`
-  - ✅ cannot suppress throw in `do`
-  - ✅ move walkToIdle into `walk` finally block
-  - ensure walkToIdle is returning:
-    - inTransition(), transition{Finish,Cancel}
+  - ensure walkToIdle returns
+    - implement inTransition
+    - implement transition{Finish,Cancel}
   - fix setWalkSpeed
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
@@ -53,7 +17,6 @@
   - darker shoes; maybe not so far back
   - darker npc
   - finish obscureBySurfaces
-
 
 - 🚧 pausing npcs
   - ✅ pausing an npc process only pauses npc if an action in progress
@@ -742,6 +705,39 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ improve npc
+  - ✅ drop shadow
+  - ✅ better transition walk -> idle
+  - ✅ initial rotate before walking
+  - ✅ paused npc doing `click | walk --open foo` should not remember clicks whilst paused
+  - ✅ npc paused whilst walking should collide
+  - ✅ can escape collision with paused npc
+  - ✅ npc stuck on some stand points
+    - can turn away from on-nav do point
+  - ✅ can fadeSpawn to on-nav do point
+  - ✅ pause "npc" process darkens npc
+  - ✅ force pause "npc" process dark-reddens npc
+  - ✅ BUG `controlNpc` never-ending walk by
+    - clicking beyond blocked door many times
+    - clicking next to npc many times
+  - ✅ BUG npc disappears when click many times
+    - ℹ️ `npc rob s.body.{x,y,rotation}` are null
+    - ℹ️ turn off `pausableNpcs`, click diagonal of door entry many times...
+    - ℹ️ not related to walkToIdle
+    - ✅ `click | walk rob` sometimes throws `walk: run: cannot look`
+      - catch initial lookAt before start walk
+    - `click | walk rob` still crashes
+    - saw for `click | walk --open foo` too
+    - ℹ️ compareAngles was doing `acos(1.00...02)` i.e. `NaN`
+  - ✅ controlNpc should lookAt slowly
+  - ✅ npc paused via process pause
+    - ✅ should resume on click twice (force pause/unpause)
+    - ✅ should resume on other process e.g. `click | walk --open rob`
+  - ✅ can pause npc on do point
+  - ✅ cannot suppress throw in `walk`
+  - ✅ cannot suppress throw in `do`
+  - ✅ move walkToIdle into `walk` finally block
 
 - ✅ BUG paste when repasting at end of line
   - remove "mobile fix"
