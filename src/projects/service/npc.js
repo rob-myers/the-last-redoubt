@@ -592,7 +592,7 @@ export const npcService = {
    * @returns {input is NPC.GlobalNavPath}
    */
   verifyGlobalNavPath(input) {
-    let x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);
+    const x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);
     return x?.key === 'global-nav'
       && x.path?.every?.(Vect.isVectJson)
       && Array.isArray(x.navMetas)
