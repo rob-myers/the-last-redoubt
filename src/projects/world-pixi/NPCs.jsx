@@ -239,9 +239,9 @@ export default function NPCs(props) {
 
       let npcControlled = false;
       process.cleanups.push((SIGINT) => {
-        // Only run when process is controlling NPC
-        // npc.cancel(SIGINT).catch(processApi.verbose);
-        !npc.forcePaused && npcControlled && npc.cancel().catch(processApi.verbose);
+        if (npcControlled && (SIGINT || !npc.forcePaused)) {
+          npc.cancel(SIGINT).catch(processApi.verbose);
+        }
       });
       process.onSuspends.push(() => { npcControlled && npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });
