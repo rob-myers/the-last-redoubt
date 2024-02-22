@@ -266,10 +266,6 @@ export default function useHandleEvents(api, disabled) {
             break;
           }
 
-          // 🚧 use tween npc.a.rotate instead
-          npc.s.body.rotation = npc.aux.angs[e.meta.index] + Math.PI/2;
-          npc.updateHead();
-          
           // npc is walking along a line segment
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc);

@@ -47,6 +47,11 @@ export default function createNpc(def, api) {
     neckAngle: 0,
     pendingWalk: false,
     time: 0,
+    turn: {
+      agg: 0,
+      dstDeg: -1,
+      dstNodeId: -1,
+    },
     tr: tracks['idle'],
     walkCancel: emptyFn,
     walkFinish: emptyFn,
@@ -288,6 +293,7 @@ export default function createNpc(def, api) {
       this.a.doorStrategy = doorStrategy ?? 'none';
       // reset to default speed?
       this.walkSpeed = this.def.walkSpeed;
+      this.turn.dstNodeId = -1;
 
       this.clearWayMetas();
       this.computeAnimAux(); // Convert navMetas to wayMetas:
@@ -730,7 +736,7 @@ export default function createNpc(def, api) {
       head.x = body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y;
       head.y = body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y;
     },
-    updateMotion() {
+    updateMotion(deltaMs) {
       if (this.tr.deltas == null || this.frameMap.length !== this.tr.length) {
         return; // No motion, or walk transition
       }
@@ -738,21 +744,40 @@ export default function createNpc(def, api) {
       this.distance += this.tr.deltas[this.frame];
       this.updateWayMetas(); // ones we're about to step over
       
+      // move along path
       const index = this.aux.index;
       const vertex = this.a.path[index]
       if (index === this.a.path.length - 1) {// goto end
         this.s.body.position.copyFrom(vertex);
+        return;
       } else {// position on track using `this.distance`
         const ratio = (this.distance - this.aux.sofars[index]) / this.aux.elens[index];
         const edge = this.aux.edges[index];
         this.s.body.position.set(vertex.x + ratio * edge.x, vertex.y + ratio * edge.y);
       }
+
+      // smooth turn towards current path angle
+      if (this.turn.dstNodeId !== index) {
+        this.turn.dstNodeId = index;
+        this.turn.agg = 0;
+        this.turn.dstDeg = (this.aux.angs[index] + Math.PI/2) * (180 / Math.PI);
+      }
+      this.s.body.angle = geom.lerpDegrees(
+        this.s.body.angle,
+        this.turn.dstDeg,
+        this.turn.agg += deltaMs * 5, // 🚧 dependent on walkSpeed
+      );
+
     },
     updateRoomWalkBounds(srcIndex) {
       // Fix types during migration
     },
     updateSprites() {
-      this.s.body.texture._uvs.set(/** @type {Rectangle} */ (this.tr.bodys[this.frame]), baseTexture, 0);
+      this.s.body.texture._uvs.set(
+        /** @type {Rectangle} */ (this.tr.bodys[this.frame]),
+        baseTexture,
+        0,
+      );
       this.updateHead();
       this.s.bounds?.position.copyFrom(this.s.body.position);
     },
@@ -767,9 +792,10 @@ export default function createNpc(def, api) {
         return;
       }
 
+      const deltaMs = deltaRatio * (1 / 60);
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-      let lag = ((this.time % 1) * durs[this.frame]) + (deltaRatio * (1 / 60));
+      let lag = ((this.time % 1) * durs[this.frame]) + deltaMs;
       while (lag >= durs[this.frame]) {
         lag -= durs[this.frame];
 
@@ -780,7 +806,7 @@ export default function createNpc(def, api) {
         }
         this.frame = frameMap[this.framePtr];
 
-        this.updateMotion();
+        this.updateMotion(deltaMs);
         this.updateSprites();
       }
 

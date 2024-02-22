@@ -39,12 +39,19 @@ declare namespace NPC {
 
     /** Track - there is one for each animation e.g. `walk` */
     tr: Track;
+    turn: {
+      /** Lerp aggregation in [0, 1] */
+      agg: number;
+      dstDeg: number;
+      /** Index in path we are turning towards */
+      dstNodeId: number;
+    };
     /**
      * Data derived from `a.path`.
      * However, `outsetWalkBounds` and `outsetSegBounds` depend on npc radius.
      */
     aux: {
-      /** Radians, aligned to `path` */
+      /** Radians, aligned to `edges` */
       angs: number[];
       /** Outgoing edges `path[i] -> path[i+1]` */
       edges: Geom.Vect[];
@@ -264,7 +271,7 @@ declare namespace NPC {
     animateOpacity(targetOpacity: number, durationMs: number, onlyBody?: boolean): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateHead(): void;
-    updateMotion(): void;
+    updateMotion(deltaMs: number): void;
     /**
      * Invoke initially, or just after `enter-room`.
      * @param srcIndex Index of 1st vertex in room.

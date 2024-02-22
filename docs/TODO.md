@@ -8,8 +8,8 @@
     - `npc rob walk $( click 1 )`
   - ✅ `npc rob cancel 1` cancels when forcePaused
   - ✅ remove recursion from npc.walk
-  - 🚧 smooth rotate npc as walks
-    - lerp towards angle further along navPath
+  - ✅ smooth rotate npc as walks
+    - lerp towards angle (degrees) further along navPath
 
   - ensure walkToIdle returns
     - implement inTransition
@@ -20,6 +20,7 @@
     - current walkToIdle only for abrupt stop
     - new walkToIdle: change final frame durs to arrive idle
   - improve navPath through doors
+  - smooth turn towards *future* path angle
 
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)

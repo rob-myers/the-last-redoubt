@@ -671,14 +671,14 @@ class geomServiceClass {
    * Source: https://github.com/Unity-Technologies/UnityCsReference/blob/79868d37d65d6efb5196aaf002f97a6f87b22f97/Runtime/Export/Math/Mathf.cs#L234
    * @param {number} src degrees
    * @param {number} dst degrees
-   * @param {number} t in `[0, 1]`
+   * @param {number} t ≥ 0, clamped at `1`
    */
   lerpDegrees(src, dst, t) {
     let delta = this.normalizeDegrees(dst - src);
     if (delta > 180) {
       delta -= 360;
     }
-    return src + delta * t;
+    return src + delta * (t > 1 ? 1 : t);
   }
 
   /**

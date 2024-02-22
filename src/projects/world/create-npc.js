@@ -36,6 +36,7 @@ export default function createNpc(
     pendingWalk: false,
     time: 0,
     tr: /** @type {*} */ ({}),
+    turn: /** @type {*} */ ({}),
     walkCancel: emptyFn,
     walkFinish: emptyFn,
     walkSpeed: 1,
