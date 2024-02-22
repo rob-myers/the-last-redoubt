@@ -31,7 +31,7 @@ export default function createNpc(
     frameDurs: [],
     frameMap: [0],
     framePtr: 0,
-    frameFinish: emptyFn,
+    resolveTransition: emptyFn,
     neckAngle: 0,
     pendingWalk: false,
     time: 0,

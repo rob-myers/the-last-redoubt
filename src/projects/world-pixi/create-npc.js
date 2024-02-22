@@ -41,11 +41,11 @@ export default function createNpc(def, api) {
     distance: 0,
     frame: 0,
     frameDurs: [Infinity],
-    frameFinish: emptyFn,
     frameMap: [0],
     framePtr: 0,
     neckAngle: 0,
     pendingWalk: false,
+    resolveTransition: null,
     time: 0,
     turn: {
       agg: 0,
@@ -453,7 +453,7 @@ export default function createNpc(def, api) {
     },
     isWalking(requireMoving) {
       return this.animName === 'walk'
-        && this.frameMap.length === this.tr.length // Avoids transition to idle
+        && this.resolveTransition === null // Avoids transition to idle
         && (!requireMoving || !this.isPaused());
     },
     async lookAt(point, opts = {}) {
@@ -616,7 +616,7 @@ export default function createNpc(def, api) {
 
       this.animName = animName;
       this.tr = tracks[animName];
-      this.frameFinish = emptyFn;
+      this.resolveTransition = null;
       this.framePtr = this.frame;
       this.frameMap = this.tr.bodys.map((_, i) => i);
       this.distance = 0;
@@ -737,7 +737,7 @@ export default function createNpc(def, api) {
       head.y = body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y;
     },
     updateMotion(deltaMs) {
-      if (this.tr.deltas == null || this.frameMap.length !== this.tr.length) {
+      if (this.tr.deltas == null || this.resolveTransition) {
         return; // No motion, or walk transition
       }
 
@@ -802,7 +802,8 @@ export default function createNpc(def, api) {
         this.time++;
         if (++this.framePtr === frameMap.length) {
           this.framePtr = 0;
-          this.frameFinish();
+          this.resolveTransition?.();
+          this.resolveTransition = null;
         }
         this.frame = frameMap[this.framePtr];
 
@@ -869,8 +870,8 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
-      if (this.tr.length !== this.frameMap.length) {
-        return; // 🔔 prevent two concurrent transitions
+      if (this.resolveTransition) {
+        return; // prevent two concurrent transitions
       }
 
       // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` where first-cross `0`
@@ -890,9 +891,9 @@ export default function createNpc(def, api) {
         this.frameDurs[this.frame] = 200 / 1000;
       }
 
-      if (this.frameMap.length > 1) {// 🚧 frameFinish -> transitionFinish; ensure resolve
-        await /** @type {Promise<void>} */ (new Promise(resolve => this.frameFinish = resolve));
-      }
+      this.frameMap.length > 1 && await /** @type {Promise<void>} */ (
+        new Promise(resolve => this.resolveTransition = resolve)
+      );
     },
     wayTimeout() {
       // Fix types during migration

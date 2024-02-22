@@ -11,10 +11,10 @@
   - ✅ smooth rotate npc as walks
     - lerp towards angle (degrees) further along navPath
 
-  - ensure walkToIdle returns
-    - implement inTransition
-    - implement transition{Finish,Cancel}
-  - fix setWalkSpeed
+  - ✅ ensure walkToIdle returns
+    - ℹ️ seems airtight: cannot cancel if `pendingWalk `until `stopped-walking`
+    - implement nullable resolveTransition
+  - 🚧 fix setWalkSpeed
 
   - walkToIdle improvements
     - current walkToIdle only for abrupt stop

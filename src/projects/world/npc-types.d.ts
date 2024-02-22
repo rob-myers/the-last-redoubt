@@ -77,8 +77,11 @@ declare namespace NPC {
     framePtr: number;
     /** Track frames i.e. 0-based frames less than @see tr length */
     frameMap: number[];
-    /** Invoked when finish @see frameMap */
-    frameFinish(): void;
+    /**
+     * Invoked on finish transition.
+     * Non-`null` iff a transition is in progress.
+     */
+    resolveTransition: null | (() => void);
 
     animName: SpineAnimName;
     /** Induced by @see time @see framePtr @see frameMap */
