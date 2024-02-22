@@ -813,28 +813,26 @@ export default function createNpc(def, api) {
         throw new Error(`cancelled: blocked by other`);
       }
 
-      let continuous = this.getPosition().distanceTo(navPath.path[0]) <= 0.01;
-      if (continuous && navPath.path[1]) {
+      const initialWarp = this.getPosition().distanceTo(navPath.path[0]) > 0.01;
+      if (!initialWarp && navPath.path[1]) {
         await this.lookAt(navPath.path[1], { force: true, ms: 500 });
       }
 
       try {
         this.pendingWalk = true;
-
+        
         do {
           api.npcs.events.next({
             key: 'started-walking', // 🔔 change name when extends?
             npcKey: this.key,
             navPath,
-            continuous,
+            continuous: this.nextWalk !== null || !initialWarp,
             extends: this.nextWalk !== null,
           });
 
           await this.followNavPath(navPath, opts.doorStrategy);
 
-          navPath = this.nextWalk?.navPath ?? navPath;
-          continuous = true;
-        } while (this.nextWalk);
+        } while (this.nextWalk && (navPath = this.nextWalk.navPath));
 
       } finally {
         this.animName === 'walk' && await this.walkToIdle();
