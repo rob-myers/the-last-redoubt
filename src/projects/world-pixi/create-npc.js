@@ -299,12 +299,6 @@ export default function createNpc(def, api) {
       this.nextWalk = null;
       this.startAnimation('walk');
 
-      // 🚧 chained rotation tweens
-      // const totalLen = this.a.aux.total;
-      // this.a.aux.sofars.reduce((agg, soFar) => {
-      //   return agg.chain({  });
-      // }, api.tween(this.s.body));
-
       try {
         info(`followNavPath: ${this.key} started walk`);
         await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {

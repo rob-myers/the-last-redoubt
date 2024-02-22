@@ -44,11 +44,11 @@ declare namespace NPC {
      * However, `outsetWalkBounds` and `outsetSegBounds` depend on npc radius.
      */
     aux: {
-      /** Radians */
+      /** Radians, aligned to `path` */
       angs: number[];
       /** Outgoing edges `path[i] -> path[i+1]` */
       edges: Geom.Vect[];
-      /** Aligned to `edges` */
+      /** Aligned to `edges` i.e. length of outgoing edges */
       elens: number[];
       /** Last seen index of path */
       index: number;

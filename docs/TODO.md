@@ -9,14 +9,20 @@
   - ✅ `npc rob cancel 1` cancels when forcePaused
   - ✅ remove recursion from npc.walk
   - 🚧 smooth rotate npc as walks
+    - lerp towards angle further along navPath
 
   - ensure walkToIdle returns
     - implement inTransition
     - implement transition{Finish,Cancel}
   - fix setWalkSpeed
+
+  - walkToIdle improvements
+    - current walkToIdle only for abrupt stop
+    - new walkToIdle: change final frame durs to arrive idle
+  - improve navPath through doors
+
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
-  - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
   - finish obscureBySurfaces
