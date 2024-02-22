@@ -71,6 +71,15 @@ class geomServiceClass {
   }
 
   /**
+   * @param {number} value 
+   * @param {number} min 
+   * @param {number} max 
+   */
+  clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  /**
    * @param {number} srcAng radians
    * @param {number} dstAng radians
    * @returns {number} between `0` and `1`, where `1` means equality
@@ -659,6 +668,20 @@ class geomServiceClass {
   }
 
   /**
+   * Source: https://github.com/Unity-Technologies/UnityCsReference/blob/79868d37d65d6efb5196aaf002f97a6f87b22f97/Runtime/Export/Math/Mathf.cs#L234
+   * @param {number} src degrees
+   * @param {number} dst degrees
+   * @param {number} t in `[0, 1]`
+   */
+  lerpDegrees(src, dst, t) {
+    let delta = this.normalizeDegrees(dst - src);
+    if (delta > 180) {
+      delta -= 360;
+    }
+    return src + delta * t;
+  }
+
+  /**
    * Compute light polygon.
    * @param {LightPolyDef} def
    */
@@ -729,6 +752,14 @@ class geomServiceClass {
     );
 
     return new Poly(deltas.map((p) => p.add(pos)));
+  }
+
+  /**
+   * @param {number} degrees any real number
+   * @returns {number} in `[0, 360)`
+   */
+  normalizeDegrees(degrees) {
+    return this.clamp(degrees - Math.floor(degrees / 360) * 360, 0, 360);
   }
 
   /**
