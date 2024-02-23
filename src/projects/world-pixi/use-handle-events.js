@@ -38,11 +38,9 @@ export default function useHandleEvents(api, disabled) {
         Object.assign(npcKeys, api.npcs.nearDoor[meta.gmId][meta.doorId]);
       }
 
-      for (const npcKey in npcKeys) {
-        const npc = api.npcs.npc[npcKey];
+      for (const npc of Object.values(api.npcs.npc)) {// 🚧 get close npcs
         if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
-          // Mutate meta
-          Object.assign(e.meta, { npc: true, npcKey: npc.key });
+          Object.assign(e.meta, { npc: true, npcKey: npc.key }); // Mutate meta
           return npc;
         }
       }
@@ -551,8 +549,10 @@ export default function useHandleEvents(api, disabled) {
 
   /** @param {...string} npcKeys */
   function stopNpcs(...npcKeys) {
-    // Npcs which are walking but not paused
-    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking() && !x.isPaused());
+    // NPCs which are walking but not paused
+    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(
+      x => x?.isWalking() && !x.isPaused()
+    );
     return Promise.all(walkingNpcs.map(x => x.cancel().catch(warn)));
   }
 

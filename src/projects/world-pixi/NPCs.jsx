@@ -439,8 +439,7 @@ export default function NPCs(props) {
         return npc;
       }
     },
-    getNpcsIntersecting(convexPoly) {
-      // 🚧 restrict to close npcs
+    getNpcsIntersecting(convexPoly) {// 🚧 restrict to close npcs
       return Object.values(state.npc)
         .filter(x => geom.circleIntersectsConvexPolygon(
           x.getPosition(),
@@ -621,25 +620,24 @@ export default function NPCs(props) {
     },
     parseNavigable(input) {
       if (Vect.isVectJson(input)) {
-        if (state.isPointInNavmesh(input)) return input;
-        throw Error(`point outside navmesh: ${JSON.stringify(input)}`);
-      } else if (input in state.npc) {
-        const npc = state.npc[input];
-        const point = npc.getPosition();
-        if (state.isPointInNavmesh(point)) {
-          return point;
-        }
-        // Fallback to close navigable point e.g. when:
-        // (a) npc intentionally outside mesh
-        // (b) npc stopped at intermediate path point "just outside mesh"
-        const result = api.gmGraph.getClosePoint(point, npc.gmRoomId ?? undefined);
-        if (result) return result.point;
-        throw Error(`npc ${input} lacks nearby navigable: ${
-          JSON.stringify({ point, gmRoomId: npc.gmRoomId })
-        }`)
-      } else {
-        throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
+        if (!state.isPointInNavmesh(input)) 
+          throw Error(`point outside navmesh: ${JSON.stringify(input)}`);
+        return input;
       }
+      // Otherwise `input` an npcKey
+      const point = state.npc[input]?.getPosition();
+      if (!point) {
+        throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
+      } else if (state.isPointInNavmesh(point)) {
+        return point;
+      }
+      // Fallback to close navigable point e.g. when:
+      // (a) npc intentionally outside mesh
+      // (b) npc stopped at intermediate path point "just outside mesh"
+      const result = api.gmGraph.getClosePoint(point, state.npc[input].gmRoomId ?? undefined);
+      if (!result)
+        throw Error(`npc ${input} lacks navigable near: ${JSON.stringify(point)}`);
+      return point;
     },
     pauseConnectedProcess(processApi, npcKey) {
       return new Promise((resolve, reject) => {

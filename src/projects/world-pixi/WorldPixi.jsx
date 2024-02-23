@@ -81,8 +81,8 @@ export default function WorldPixi(props) {
     },
     onTick(deltaRatio) {
       state.tweenGroup.update();
-      for (const npcKey in state.npcs.npc) {
-        state.npcs.npc[npcKey].updateTime(deltaRatio);
+      for (const npc of Object.values(state.npcs.npc)) {
+        npc.updateTime(deltaRatio);
       }
       state.panZoom.viewport.update(state.ticker.elapsedMS);
     },

@@ -268,7 +268,7 @@
         ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
       };
       
-      const w = api.getCached(home.WORLD_KEY)
+      const w = api.getCached(home.WORLD_KEY_ALT)
       const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       
       /** @param {(string | Geom.VectJson)[]} inputs  */
