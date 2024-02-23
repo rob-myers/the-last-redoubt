@@ -12,9 +12,7 @@
       "animBounds": {"x": -81, "y": -50, "width": 159, "height": 103},
       "headBounds": {"x": -47, "y": -42, "width": 93, "height": 87},
       "neckPositions": [{"x": 0, "y": 2.1132}],
-      "packedRects": [
-        {"x": 167.00056785917093, "y": 1315, "width": 159, "height": 103}
-      ],
+      "packedRects": [{"x": 1169, "y": 1109, "width": 159, "height": 103}],
       "headFrames": [
         {
           "x": -8.1006,
@@ -56,18 +54,18 @@
         {"x": -0.0004, "y": 2.1772}
       ],
       "packedRects": [
-        {"x": 166, "y": 1067, "width": 181, "height": 121},
-        {"x": 349, "y": 1067, "width": 181, "height": 121},
-        {"x": 532, "y": 1067, "width": 181, "height": 121},
-        {"x": 715, "y": 1067, "width": 181, "height": 121},
-        {"x": 898, "y": 1067, "width": 181, "height": 121},
         {"x": 986, "y": 428, "width": 181, "height": 121},
         {"x": 986, "y": 551, "width": 181, "height": 121},
         {"x": 986, "y": 674, "width": 181, "height": 121},
         {"x": 986, "y": 797, "width": 181, "height": 121},
         {"x": 986, "y": 920, "width": 181, "height": 121},
-        {"x": 1179, "y": 2, "width": 181, "height": 121},
-        {"x": 1179, "y": 125, "width": 181, "height": 121},
+        {"x": 986, "y": 1043, "width": 181, "height": 121},
+        {"x": 166, "y": 1067, "width": 181, "height": 121},
+        {"x": 349, "y": 1067, "width": 181, "height": 121},
+        {"x": 532, "y": 1067, "width": 181, "height": 121},
+        {"x": 715, "y": 1067, "width": 181, "height": 121},
+        {"x": 1197, "y": 2, "width": 181, "height": 121},
+        {"x": 1197, "y": 125, "width": 181, "height": 121},
         {"x": 1169, "y": 248, "width": 181, "height": 121},
         {"x": 1169, "y": 371, "width": 181, "height": 121},
         {"x": 1169, "y": 494, "width": 181, "height": 121},
@@ -75,7 +73,7 @@
         {"x": 1169, "y": 740, "width": 181, "height": 121},
         {"x": 1169, "y": 863, "width": 181, "height": 121},
         {"x": 1169, "y": 986, "width": 181, "height": 121},
-        {"x": 2, "y": 1192, "width": 181, "height": 121}
+        {"x": 2, "y": 1224, "width": 181, "height": 121}
       ],
       "headFrames": [
         {
@@ -226,17 +224,17 @@
       "animName": "lie",
       "frameCount": 1,
       "frameDurSecs": 0,
-      "animBounds": {"x": -93, "y": -283, "width": 191, "height": 336},
-      "headBounds": {"x": -37, "y": -39, "width": 74, "height": 82},
-      "neckPositions": [{"x": 0, "y": 2.1132}],
-      "packedRects": [{"x": 2, "y": 2, "width": 191, "height": 336}],
+      "animBounds": {"x": -102, "y": -310, "width": 209, "height": 368},
+      "headBounds": {"x": -41, "y": -43, "width": 81, "height": 90},
+      "neckPositions": [{"x": 0, "y": 2.3245}],
+      "packedRects": [{"x": 2, "y": 2, "width": 209, "height": 368}],
       "headFrames": [
         {
-          "x": -6.4664,
-          "y": -6.7675,
+          "x": -7.1127,
+          "y": -7.4437,
           "angle": 0,
-          "width": 12.9328,
-          "height": 14.3698
+          "width": 14.2254,
+          "height": 15.8067
         }
       ],
       "rootDeltas": [],
@@ -249,7 +247,7 @@
       "animBounds": {"x": -84, "y": -88, "width": 166, "height": 146},
       "headBounds": {"x": -47, "y": -42, "width": 93, "height": 87},
       "neckPositions": [{"x": 0, "y": 2.1132}],
-      "packedRects": [{"x": 1081, "y": 1109, "width": 166, "height": 146}],
+      "packedRects": [{"x": 185, "y": 1190, "width": 166, "height": 146}],
       "headFrames": [
         {
           "x": -8.1006,
@@ -301,36 +299,36 @@
         {"x": -0.0447, "y": 2.1148}
       ],
       "packedRects": [
-        {"x": 195, "y": 2, "width": 162, "height": 211},
-        {"x": 195, "y": 215, "width": 162, "height": 211},
-        {"x": 2, "y": 340, "width": 162, "height": 211},
-        {"x": 359, "y": 2, "width": 162, "height": 211},
-        {"x": 359, "y": 215, "width": 162, "height": 211},
-        {"x": 523, "y": 2, "width": 162, "height": 211},
-        {"x": 523, "y": 215, "width": 162, "height": 211},
-        {"x": 2, "y": 553, "width": 162, "height": 211},
+        {"x": 213, "y": 2, "width": 162, "height": 211},
+        {"x": 213, "y": 215, "width": 162, "height": 211},
+        {"x": 2, "y": 372, "width": 162, "height": 211},
+        {"x": 377, "y": 2, "width": 162, "height": 211},
+        {"x": 377, "y": 215, "width": 162, "height": 211},
+        {"x": 541, "y": 2, "width": 162, "height": 211},
+        {"x": 541, "y": 215, "width": 162, "height": 211},
+        {"x": 2, "y": 585, "width": 162, "height": 211},
         {"x": 166, "y": 428, "width": 162, "height": 211},
         {"x": 330, "y": 428, "width": 162, "height": 211},
         {"x": 494, "y": 428, "width": 162, "height": 211},
-        {"x": 687, "y": 2, "width": 162, "height": 211},
-        {"x": 687, "y": 215, "width": 162, "height": 211},
+        {"x": 705, "y": 2, "width": 162, "height": 211},
+        {"x": 705, "y": 215, "width": 162, "height": 211},
         {"x": 658, "y": 428, "width": 162, "height": 211},
-        {"x": 2, "y": 766, "width": 162, "height": 211},
+        {"x": 2, "y": 798, "width": 162, "height": 211},
         {"x": 166, "y": 641, "width": 162, "height": 211},
         {"x": 330, "y": 641, "width": 162, "height": 211},
         {"x": 494, "y": 641, "width": 162, "height": 211},
         {"x": 658, "y": 641, "width": 162, "height": 211},
-        {"x": 851, "y": 2, "width": 162, "height": 211},
-        {"x": 851, "y": 215, "width": 162, "height": 211},
+        {"x": 869, "y": 2, "width": 162, "height": 211},
+        {"x": 869, "y": 215, "width": 162, "height": 211},
         {"x": 822, "y": 428, "width": 162, "height": 211},
         {"x": 822, "y": 641, "width": 162, "height": 211},
-        {"x": 2, "y": 979, "width": 162, "height": 211},
+        {"x": 2, "y": 1011, "width": 162, "height": 211},
         {"x": 166, "y": 854, "width": 162, "height": 211},
         {"x": 330, "y": 854, "width": 162, "height": 211},
         {"x": 494, "y": 854, "width": 162, "height": 211},
         {"x": 658, "y": 854, "width": 162, "height": 211},
         {"x": 822, "y": 854, "width": 162, "height": 211},
-        {"x": 1015, "y": 2, "width": 162, "height": 211}
+        {"x": 1033, "y": 2, "width": 162, "height": 211}
       ],
       "headFrames": [
         {
@@ -553,21 +551,21 @@
         1.4796,
         1.4796,
         1.4796,
-        0.7568,
-        1.4055,
-        1.4056,
-        1.4057,
-        1.4057,
-        1.4058,
-        1.4059,
-        1.4059,
+        0.757,
+        1.4061,
+        1.4061,
+        1.4061,
+        1.4061,
+        1.4061,
+        1.4061,
+        1.4061,
         1.479,
+        1.4918,
         1.4919,
         1.4919,
         1.4919,
         1.4919,
-        1.4919,
-        1.4919,
+        1.4918,
         1.3366,
         1.4796,
         1.4796,
@@ -583,36 +581,36 @@
     "head/blonde-light": {
       "headSkinName": "head/blonde-light",
       "packedHead": {
-        "face": {"x": 185, "y": 1190, "width": 75, "height": 98},
-        "top": {"x": 1249, "y": 1109, "width": 93, "height": 89}
+        "face": {"x": 1063.000567859171, "y": 1166, "width": 82, "height": 108},
+        "top": {"x": 1033, "y": 215, "width": 93, "height": 89}
       }
     },
     "head/skin-head-dark": {
       "headSkinName": "head/skin-head-dark",
       "packedHead": {
-        "face": {"x": 1015, "y": 215, "width": 74, "height": 82},
-        "top": {"x": 1249, "y": 1200, "width": 93, "height": 87}
+        "face": {"x": 898, "y": 1067, "width": 81, "height": 90},
+        "top": {"x": 1033, "y": 306, "width": 93, "height": 87}
       }
     },
     "head/skin-head-light": {
       "headSkinName": "head/skin-head-light",
       "packedHead": {
-        "face": {"x": 1091, "y": 215, "width": 74, "height": 82},
-        "top": {"x": 262, "y": 1190, "width": 93, "height": 87}
+        "face": {"x": 1242.000567859171, "y": 1214, "width": 81, "height": 90},
+        "top": {"x": 1147.000567859171, "y": 1214, "width": 93, "height": 87}
       }
     }
   },
   "extra": {
     "circular-bounds": {
       "packedRect": {
-        "x": 2,
-        "y": 1315,
+        "x": 898,
+        "y": 1166,
         "width": 163.00056785917093,
         "height": 163.00056785917093
       }
     }
   },
-  "packedWidth": 1362,
-  "packedHeight": 1480.000567859171,
+  "packedWidth": 1380,
+  "packedHeight": 1347,
   "packedPadding": 2
 }

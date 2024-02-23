@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "sVTHy68WRKc",
+	"hash": "CZ5KFNLiRNo",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -12,7 +12,15 @@
 },
 "bones": [
 	{ "name": "root" },
-	{ "name": "right-hip", "parent": "root", "length": 418.23, "rotation": 90, "x": 272, "y": -163 },
+	{
+		"name": "right-hip",
+		"parent": "root",
+		"length": 418.23,
+		"rotation": 90,
+		"x": 272,
+		"y": -163,
+		"scaleY": -1
+	},
 	{ "name": "left-hip", "parent": "root", "length": 333.33, "rotation": 90, "x": -272, "y": -163 },
 	{
 		"name": "waist-accessory",
@@ -106,7 +114,7 @@
 		"scaleY": -1
 	},
 	{ "name": "left-arm-lower-clothed", "parent": "left-arm-lower", "rotation": 270.74, "x": 214.87, "y": -0.36, "scaleY": 1.012 },
-	{ "name": "right-shoe", "parent": "right-foot", "rotation": 270, "x": 92, "y": 3, "scaleX": -1 },
+	{ "name": "right-shoe", "parent": "right-foot", "rotation": 270, "x": 92, "y": 3 },
 	{ "name": "left-arm-lower-bare", "parent": "left-arm-lower", "rotation": 270.53, "x": 265.51, "y": 11.46 },
 	{ "name": "left-shoe", "parent": "left-foot", "rotation": -90, "x": 92, "y": -3 },
 	{ "name": "left-hand", "parent": "left-arm-lower", "length": 154.63, "rotation": 347.53, "x": -23.18, "y": 19.07 },
@@ -131,9 +139,9 @@
 	{ "name": "right-shoe", "bone": "right-shoe", "attachment": "right-shoe" },
 	{ "name": "left-leg-lower-bare", "bone": "left-leg-lower-bare", "attachment": "leg_lower" },
 	{ "name": "right-leg-lower-bare", "bone": "right-leg-lower-bare", "attachment": "leg_lower" },
-	{ "name": "right-leg-lower-clothed", "bone": "right-leg-lower-clothed", "attachment": "right-leg-lower-clothed" },
 	{ "name": "right-leg-upper-bare", "bone": "right-leg-upper-bare", "attachment": "right-leg-upper-bare" },
 	{ "name": "left-leg-upper-bare", "bone": "left-leg-upper-bare", "attachment": "leg_upper" },
+	{ "name": "right-leg-lower-clothed", "bone": "right-leg-lower-clothed", "attachment": "right-leg-lower-clothed" },
 	{ "name": "left-leg-lower-clothed", "bone": "left-leg-lower-clothed", "attachment": "left-leg-lower-clothed" },
 	{ "name": "left-leg-upper-clothed", "bone": "left-leg-upper-clothed", "attachment": "left-leg-upper-clothed" },
 	{ "name": "right-leg-upper-clothed", "bone": "right-leg-upper-clothed", "attachment": "right-leg-upper-clothed" },
@@ -1013,22 +1021,22 @@
 			},
 			"waist": {
 				"translate": [
-					{ "x": -2.37 }
+					{ "x": 20.64, "y": 0.21 }
 				]
 			},
 			"trunk": {
 				"translate": [
-					{ "x": -813.21 }
+					{ "x": -782.4 }
 				]
 			},
 			"shoulders-accessory": {
 				"translate": [
-					{ "x": -1048.05, "y": 19.06 }
+					{ "x": -1015.48, "y": 19.06 }
 				]
 			},
 			"shoulders": {
 				"translate": [
-					{ "x": -837.21, "y": 1.75 }
+					{ "x": -806.4, "y": 1.75 }
 				]
 			},
 			"waist-accessory": {
@@ -1104,6 +1112,9 @@
 			"right-hip": {
 				"translate": [
 					{ "x": -102.3, "y": 1764 }
+				],
+				"scale": [
+					{ "y": -1 }
 				]
 			},
 			"right-foot": {
@@ -1111,7 +1122,7 @@
 					{ "x": 431.69, "y": -143.83 }
 				],
 				"scale": [
-					{ "x": -1, "y": -1 }
+					{ "x": -1 }
 				]
 			},
 			"left-hip": {
@@ -1133,6 +1144,11 @@
 				],
 				"scale": [
 					{ "x": -1, "y": -1 }
+				]
+			},
+			"root": {
+				"scale": [
+					{ "x": 1.1, "y": 1.1 }
 				]
 			}
 		},

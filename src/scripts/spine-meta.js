@@ -99,7 +99,10 @@ const packedPadding = 2;
       rootDeltas: /** @type {number[]} */ ([]),
       /** Events seen during last frame (clear manually at end of frame) */
       justSawEvents: /** @type {import('@pixi-spine/runtime-4.1').Event[]} */ ([]),
-      /** 🔔 Assume motion is purely within y-axis 🔔 */
+      /**
+       * 🔔 Assume motion is purely within y-axis 🔔
+       * 🔔 Apply @see npcScaleFactor at this stage, so output PIXI World coords 🔔
+       */
       computeDelta() {
         const prev = motion.prevFootPos;
         const curr = motion.getFootPos();
