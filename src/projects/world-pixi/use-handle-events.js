@@ -467,8 +467,7 @@ export default function useHandleEvents(api, disabled) {
 
     async preWalkThroughDoor(npc, gmId, nextDoorId) {
       if (npc.a.doorStrategy !== 'none') {
-        // setTimeout avoids jerk?
-        setTimeout(() => npc.setWalkSpeed(npcSlowWalkSpeedFactor * npc.def.walkSpeed), 30);
+        npc.setWalkSpeed(40);
       }
       
       const { locked } = api.doors.lookup[gmId][nextDoorId];

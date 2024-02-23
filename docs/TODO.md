@@ -14,7 +14,7 @@
   - ✅ ensure walkToIdle returns
     - ℹ️ seems airtight: cannot cancel if `pendingWalk `until `stopped-walking`
     - implement nullable resolveTransition
-  - 🚧 fix setWalkSpeed
+  - ✅ fix setWalkSpeed
 
   - walkToIdle improvements
     - current walkToIdle only for abrupt stop

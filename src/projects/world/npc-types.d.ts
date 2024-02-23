@@ -274,7 +274,7 @@ declare namespace NPC {
     animateOpacity(targetOpacity: number, durationMs: number, onlyBody?: boolean): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateHead(): void;
-    updateMotion(deltaMs: number): void;
+    updateMotion(): void;
     /**
      * Invoke initially, or just after `enter-room`.
      * @param srcIndex Index of 1st vertex in room.

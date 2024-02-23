@@ -710,21 +710,20 @@ export default function createNpc(def, api) {
     setSpeedFactor(speedFactor, temporary = true) {
       // Fix types during migration
     },
-    setWalkSpeed(walkSpeed, temporary = true) {
-      // By default, speed changes whilst walking are temporary
-      if (!(this.animName === 'walk' && temporary)) {
+    setWalkSpeed(walkSpeed, permWhileWalk = false) {
+      if (this.tr.deltas !== null) {
+        permWhileWalk && (this.def.walkSpeed = walkSpeed);
+        this.frameDurs = this.tr.deltas.map(x => x / walkSpeed);
+      } else {// if not walking, perm change speed
         this.def.walkSpeed = walkSpeed;
       }
+
       if (this.walkSpeed === walkSpeed) {
-        return; // Avoid infinite loop?
+        return; // Loop protect?
       }
-      if (this.animName === 'walk') {
-        // 🚧 chained rotate tween
-        const totalMs = (this.aux.total - this.distance) * this.getAnimScaleFactor();
-        this.a.rotate.stop().to({}, totalMs).start();
-      }
-      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.walkSpeed, speed: walkSpeed });
+      const prevSpeed = this.walkSpeed;
       this.walkSpeed = walkSpeed;
+      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed, speed: walkSpeed });
     },
     updateHead() {
       const { body, head } = this.s;
@@ -736,8 +735,8 @@ export default function createNpc(def, api) {
       head.x = body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y;
       head.y = body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y;
     },
-    updateMotion(deltaMs) {
-      if (this.tr.deltas == null || this.resolveTransition) {
+    updateMotion() {
+      if (this.tr.deltas == null || this.resolveTransition !== null) {
         return; // No motion, or walk transition
       }
 
@@ -765,7 +764,7 @@ export default function createNpc(def, api) {
       this.s.body.angle = geom.lerpDegrees(
         this.s.body.angle,
         this.turn.dstDeg,
-        this.turn.agg += deltaMs * 5, // 🚧 dependent on walkSpeed
+        this.turn.agg += this.frameDurs[this.frame] * 5 * (40 / this.walkSpeed),
       );
 
     },
@@ -787,31 +786,28 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
-      const { frameDurs: durs, frameMap } = this;
-      if (this.paused === true || frameMap.length === 1) {
+      if (this.paused === true || this.frameMap.length === 1) {
         return;
       }
 
-      const deltaMs = deltaRatio * (1 / 60);
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-      let lag = ((this.time % 1) * durs[this.frame]) + deltaMs;
-      while (lag >= durs[this.frame]) {
-        lag -= durs[this.frame];
+      let lag = ((this.time % 1) * this.frameDurs[this.frame]) + (deltaRatio * (1 / 60));
+      while (lag >= this.frameDurs[this.frame]) {
+        lag -= this.frameDurs[this.frame];
 
         this.time++;
-        if (++this.framePtr === frameMap.length) {
+        if (++this.framePtr === this.frameMap.length) {
           this.framePtr = 0;
           this.resolveTransition?.();
-          this.resolveTransition = null;
         }
-        this.frame = frameMap[this.framePtr];
-
-        this.updateMotion(deltaMs);
+        
+        this.updateMotion();
         this.updateSprites();
+        this.frame = this.frameMap[this.framePtr];
       }
 
-      this.time = Math.floor(this.time) + (lag / durs[this.frame]);
+      this.time = Math.floor(this.time) + (lag / this.frameDurs[this.frame]);
     },
     updateWalkSegBounds(index) {
       const { path } = this.a;
@@ -892,7 +888,10 @@ export default function createNpc(def, api) {
       }
 
       this.frameMap.length > 1 && await /** @type {Promise<void>} */ (
-        new Promise(resolve => this.resolveTransition = resolve)
+        new Promise(resolve => this.resolveTransition = () => {
+          this.resolveTransition = null;
+          resolve();
+        })
       );
     },
     wayTimeout() {
