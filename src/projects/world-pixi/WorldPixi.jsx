@@ -55,7 +55,7 @@ export default function WorldPixi(props) {
     doors: /** @type {State['doors']} */  ({ ready: false }),
     fov: /** @type {State['fov']} */  ({ ready: false }),
     geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
-    npcs: /** @type {State['npcs']} */  ({ ready: false }),
+    npcs: /** @type {State['npcs']} */  ({ ready: false, npc: {} }),
     panZoom: /** @type {State['panZoom']} */  ({ ready: false }),
     lib: {
       filter, first, map, merge, take, firstValueFrom,
