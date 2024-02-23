@@ -89,7 +89,7 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
  */
 export const gmScale = 3.3;
 
-export const decorIconRadius = 5;
+export const decorIconRadius = 4;
 
 /**
  * - Each value is an integer in [0, 255].
