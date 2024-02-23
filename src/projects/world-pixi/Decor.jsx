@@ -101,6 +101,9 @@ export default function Decor(props) {
         case 'point': {
           const radius = decorIconRadius;
           const { meta } = decor;
+          if (meta.label) {
+            break; // use `npc map show-label` instead
+          }
           const texture = state.sheet.lookup[getDecorClassByMeta(meta)];
 
           if (typeof meta.width !== 'number') {// Icon with bg circle
