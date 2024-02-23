@@ -74,7 +74,7 @@
     <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293" y="1349">
       <title>decor go label=locker</title>
     </rect>
-    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2093" y="1289">
+    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2093" y="1309">
       <title>decor go label=toilet</title>
     </rect>
     <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1190" y="1855">
@@ -137,11 +137,17 @@
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1915" y="1361.858">
       <title>decor do stand sink orient=90</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2095" y="1381.858">
-      <title>decor do stand sink orient=270</title>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2095" y="1411.858">
+      <title>decor do sit toilet orient=270</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2275" y="1381.858">
-      <title>decor do stand sink orient=270</title>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2275" y="1411.858">
+      <title>decor do sit toilet orient=270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2095" y="1261.858">
+      <title>decor do stand orient=90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2275" y="1261.858">
+      <title>decor do stand orient=90</title>
     </rect>
     <rect x="588.138" y="1830" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px; paint-order: fill;">
       <title>door</title>

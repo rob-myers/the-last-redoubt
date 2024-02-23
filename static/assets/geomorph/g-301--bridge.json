@@ -2841,7 +2841,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[782.6, 317.8], [782.6, 321.8], [778.6, 321.8], [778.6, 317.8]]
+            [[782.6, 321.8], [782.6, 325.8], [778.6, 325.8], [778.6, 321.8]]
           ]
         }
       },
@@ -3107,15 +3107,31 @@
         "meta": {
           "decor": true,
           "do": true,
-          "stand": true,
-          "sink": true,
+          "sit": true,
+          "toilet": true,
           "orient": 270,
-          "icon": "standing-man"
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[781, 336.3716], [781, 338.3716], [779, 338.3716], [779, 336.3716]]
+            [[781, 342.3716], [781, 344.3716], [779, 344.3716], [779, 342.3716]]
+          ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "sit": true,
+          "toilet": true,
+          "orient": 270,
+          "icon": "sitting-man"
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[817, 342.3716], [817, 344.3716], [815, 344.3716], [815, 342.3716]]
           ]
         }
       },
@@ -3124,14 +3140,28 @@
           "decor": true,
           "do": true,
           "stand": true,
-          "sink": true,
-          "orient": 270,
+          "orient": 90,
           "icon": "standing-man"
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[817, 336.3716], [817, 338.3716], [815, 338.3716], [815, 336.3716]]
+            [[781, 312.3716], [781, 314.3716], [779, 314.3716], [779, 312.3716]]
+          ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "stand": true,
+          "orient": 90,
+          "icon": "standing-man"
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[817, 312.3716], [817, 314.3716], [815, 314.3716], [815, 312.3716]]
           ]
         }
       },
@@ -6206,9 +6236,9 @@
     },
     {
       "text": "toilet",
-      "center": {"x": 780.6, "y": 319.8},
+      "center": {"x": 780.6, "y": 323.8},
       "index": 11,
-      "rect": {"x": 765.6, "y": 315.8, "width": 30, "height": 8}
+      "rect": {"x": 765.6, "y": 319.8, "width": 30, "height": 8}
     },
     {
       "text": "briefing",
