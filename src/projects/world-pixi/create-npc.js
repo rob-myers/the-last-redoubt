@@ -3,7 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { precision } from "../service/generic";
+import { precision, testNever } from "../service/generic";
 import { info, warn } from "../service/log";
 import { geom } from "../service/geom";
 import { hasGmDoorId } from "../service/geomorph";
@@ -681,14 +681,23 @@ export default function createNpc(def, api) {
       }
     },
     startAnimation(animName) {
-      if (animName !== 'walk') {
-        this.a.rotate.stop();
-        // this.a.rotate = emptyTween;
-        this.clearWayMetas();
-        this.updateStaticBounds();
-      }
-      if (animName === 'sit') {
-        this.obscureBySurfaces();
+      switch (animName) {
+        case 'idle':
+        case 'idle-breathe':
+        case 'idle-straight':
+        case 'lie':
+        case 'sit':
+          this.a.rotate.stop();
+          this.clearWayMetas();
+          this.updateStaticBounds();
+          if (animName === 'sit') {
+            this.obscureBySurfaces();
+          }
+          break;
+        case 'walk':
+          break;
+        default:
+          throw testNever(animName, { suffix: 'create-npc.startAnimation' });
       }
       this.setupAnim(animName);
     },
@@ -860,7 +869,8 @@ export default function createNpc(def, api) {
         this.animName === 'walk' && await this.walkToIdle();
         this.pendingWalk = false;
         this.nextWalk = null;
-        this.startAnimation('idle-breathe');
+        // this.startAnimation('idle-breathe');
+        this.startAnimation('idle-straight');
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
       }
     },

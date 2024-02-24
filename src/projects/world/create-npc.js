@@ -835,6 +835,7 @@ export default function createNpc(
         }
         case 'idle':
         case 'idle-breathe':
+        case 'idle-straight':
         case 'lie':
         case 'sit': {
           this.clearWayMetas();

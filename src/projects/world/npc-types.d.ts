@@ -265,7 +265,7 @@ declare namespace NPC {
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
     showBounds(shouldShow: boolean): void;
-    startAnimation(spriteSheet: SpriteSheetKey): void;
+    startAnimation(spriteSheet: SpineAnimName): void;
     setupAnim(animName: SpineAnimName): void;
     setGmRoomId(gmRoomId: Geomorph.GmRoomId | null): void;
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
@@ -332,7 +332,7 @@ declare namespace NPC {
      */
     staticPosition: Geom.Vect;
 
-    spriteSheet: SpriteSheetKey;
+    spriteSheet: SpineAnimName;
     opacity: Animation;
     translate: Animation;
     rotate: Animation;
@@ -425,14 +425,6 @@ declare namespace NPC {
     rotateKeyframes: Keyframe[];
     opts: KeyframeAnimationOptions & { duration: number };
   }
-
-  type SpriteSheetKey = (
-    | 'idle'
-    | 'idle-breathe'
-    | 'lie'
-    | 'sit'
-    | 'walk'
-  );
 
   interface NPCDef {
     /** e.g. `rob` */
@@ -842,6 +834,7 @@ declare namespace NPC {
   type SpineAnimName = (
     | "idle"
     | "idle-breathe"
+    | "idle-straight"
     | "lie"
     | "sit"
     | "walk"
