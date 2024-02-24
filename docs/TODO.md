@@ -9,31 +9,43 @@
   - ✅ `npc rob cancel 1` cancels when forcePaused
   - ✅ remove recursion from npc.walk
   - ✅ smooth rotate npc as walks
-    - lerp towards angle (degrees) further along navPath
+    - lerp towards current angle (degrees) of path
 
   - ✅ ensure walkToIdle returns
     - ℹ️ seems airtight: cannot cancel if `pendingWalk `until `stopped-walking`
     - implement nullable resolveTransition
   - ✅ fix setWalkSpeed
 
-  - walkToIdle improvements
-    - current walkToIdle only for abrupt stop
-    - new walkToIdle: change final frame durs to arrive idle
+  - 🚧 walkToIdle improvements
+    - ℹ️ current walkToIdle only for abrupt stop
+    - ❌ normalize walk animation so half-way is exactly idle
+    - ❌ try stopping early at pseudo-idle
+    - try `idle-straight` i.e. closer to pseudo-idle
+    - try transition `straight-to-idle`
+    - try alternative `shuffle-walk`
+  
   - improve navPath through doors
-  - smooth turn towards *future* path angle
+  
+  - extended walks can change current walk
 
+  - smooth turn towards *future* path angle
+  - extended walks should turn slower when do 180
+
+  - BUG saw `npc{A,B}.isWalking(true)` both true,
+    but `assertNonNull(npcA.getLineSeg())` threw
+    - ℹ️ rewrite isWalking in terms of pendingWalk?
+  - can `npc rm foo` when foo is forcePaused
   - should not go off-nav: `click | walk --open foo`
   - fix controlNpc fadeSpawn from do point (on-nav)
   - darker shoes; maybe not so far back
   - darker npc
   - finish obscureBySurfaces
+  - fix `npc.isWalking()` e.g. in terms of `npc.pendingWalk`
 
 - 🚧 pausing npcs
   - ✅ pausing an npc process only pauses npc if an action in progress
   - ❌ if pausing a process paused an npc, resuming the npc only resumes the current action i.e. process goes back to being paused
   - verify can induce immediate pause via `yield`
-
-- fix `npc.isWalking()` e.g. in terms of `npc.pendingWalk`
 
 - BUG saw npc vs npc collisions not working when other npc walking
   - player fade spawns where other player is walking to
