@@ -509,16 +509,12 @@ export default function NPCs(props) {
       }
     },
     isPointNearClosedDoor(point, radius, gmRoomId) {
-      const gm = gms[gmRoomId.gmId];
-      const localPoint = gm.inverseMatrix.transformPoint({...point});
-      const closeDoor = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).find(({ doorId }) => 
-        !api.doors.lookup[gmRoomId.gmId][doorId].open &&
-        // 🚧 check distance from line segment instead?
-        geom.createOutset(gm.doors[doorId].poly, radius)[0].contains(localPoint)
+      point = gms[gmRoomId.gmId].inverseMatrix.transformPoint({...point});
+      return api.doors.byRoom[gmRoomId.gmId][gmRoomId.roomId].some(door =>
+        !door.open && door.door.center.distanceTo(point) < radius
       );
-      return !!closeDoor;
     },
-    isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
+    isPointSpawnable(npcKey, point) {
       if (state.npc[npcKey]?.isBlockedByOthers(point)) {
         return false; // Must not be close to another npc
       }
@@ -527,7 +523,7 @@ export default function NPCs(props) {
         return false; // Must be inside some room or doorway
       }
       const npcRadius = spineMeta.npcRadius;
-      if (state.isPointNearClosedDoor(point, npcRadius, gmRoomId)) {
+      if (state.isPointNearClosedDoor(point, npcRadius * 1.3, gmRoomId)) {
         return false; // Must not be close to a closed door
       }
       return true;
@@ -706,7 +702,7 @@ export default function NPCs(props) {
         throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
-      if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
+      if (!state.isPointSpawnable(e.npcKey, e.point)) {
         throw new Error(`cancelled: cannot spawn ${e.npcKey}`);
       }
 
@@ -862,7 +858,7 @@ export default function NPCs(props) {
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
- * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointMaybeMeta) => boolean} isPointSpawnable
+ * @property {(npcKey: string, p: Geomorph.PointMaybeMeta) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable

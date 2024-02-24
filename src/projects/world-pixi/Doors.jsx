@@ -36,6 +36,7 @@ export default function Doors(props) {
         visible: false,
       };
     })),
+    byRoom: gms.map(() => []),
 
     gfx: new Graphics(),
     tex: gms.map(gm => RenderTexture.create({
@@ -215,6 +216,10 @@ export default function Doors(props) {
       api.fov.initMaskTex(gmId);
       api.fov.render(gmId);
     });
+    state.byRoom = gms.map((gm, gmId) => gm.rooms.map(/** @returns {DoorState[]} */ (_, roomId) => {
+      const doors = state.lookup[gmId];
+      return gm.roomGraph.getAdjacentDoors(roomId).map(({ doorId }) => doors[doorId]);
+    }));
     props.onLoad(state);
     return () => state.lookup.forEach(x => x.forEach(y =>
       y.closeTimeoutId && window.clearTimeout(y.closeTimeoutId)
@@ -258,7 +263,8 @@ export default function Doors(props) {
 /**
  * @typedef State
  * @property {import('rxjs').Subject<DoorMessage>} events
- * @property {DoorState[][]} lookup
+ * @property {DoorState[][]} lookup `lookup[gmId][doorId]`
+ * @property {DoorState[][][]} byRoom `byRoom[gmId][roomId]`
  * @property {boolean} ready
  * @property {import('@pixi/graphics').Graphics} gfx
  * @property {import('@pixi/core').RenderTexture[]} tex
