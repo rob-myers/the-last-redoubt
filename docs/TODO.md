@@ -46,8 +46,17 @@
   
 
   - ✅ BUG animateRotate not always choosing smaller angle
-  - BUG saw `npc{A,B}.isWalking(true)` both true,
-    but `assertNonNull(npcA.getLineSeg())` threw
+  - BUG npc should not be able to get closer towards closed door when already close to door
+    ```tsx
+    if (// use something like this, but with api.npcs.nearDoor
+      this.gmRoomId
+      && api.npcs.isPointNearClosedDoor(this.getPosition(), npcRadius, this.gmRoomId)
+      && api.npcs.isPointNearClosedDoor(next, npcRadius, this.gmRoomId)
+    ) {
+      return true; // Must not be close to a closed door
+    }
+    ```
+  - BUG saw `npc{A,B}.isWalking(true)` both true but `assertNonNull(npcA.getLineSeg())` threw
     - ℹ️ rewrite isWalking in terms of pendingWalk?
   - can `npc rm foo` when foo is forcePaused
   - should not go off-nav: `click | walk --open foo`
