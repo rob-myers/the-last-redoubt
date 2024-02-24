@@ -526,6 +526,8 @@ declare namespace Geomorph {
 
   export interface BaseConnectorRect<P, V, R> extends Geom.AngledRect<R> {
     poly: P;
+    /** `poly.center` */
+    center: V;
     /** `poly.rect` i.e. rotated rectangle */
     rect: R;
     /** Segment through middle of door */
