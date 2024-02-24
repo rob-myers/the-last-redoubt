@@ -31,6 +31,7 @@
   - smooth turn towards *future* path angle
   - extended walks should turn slower when do 180
 
+  - ✅ BUG animateRotate not always choosing smaller angle
   - BUG saw `npc{A,B}.isWalking(true)` both true,
     but `assertNonNull(npcA.getLineSeg())` threw
     - ℹ️ rewrite isWalking in terms of pendingWalk?

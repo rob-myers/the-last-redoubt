@@ -107,13 +107,12 @@ export default function createNpc(def, api) {
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
       this.a.rotate.stop();
 
-      // Assume {source,target}Radians in [-π, π]
-      const sourceRadians = this.getAngle();
-      if (targetRadians - sourceRadians > Math.PI) targetRadians -= 2 * Math.PI;
-      if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
+      const srcRadians = this.getAngle();
+      let deltaRadians = geom.radRange(targetRadians - srcRadians);
+      if (deltaRadians > Math.PI) deltaRadians -= 2 * Math.PI;
 
       await (this.a.rotate = api.tween(this.s.body)
-        .to({ rotation: targetRadians }, durationMs)
+        .to({ rotation: srcRadians + deltaRadians }, durationMs)
         .onUpdate(() => this.updateHead())
         .easing(TWEEN.Easing.Quadratic.Out)
       ).promise();
@@ -870,7 +869,7 @@ export default function createNpc(def, api) {
         return; // prevent two concurrent transitions
       }
 
-      // 🔔 Assume `[first-cross, first-step, second-cross, second-step]` where first-cross `0`
+      // 🔔 Assume `[1st-cross, 1st-step, 2nd-cross, 2nd-step]` where 1st-cross `0`
       const frames = /** @type {number[]} */ (spineMeta.anim.walk.extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
       const nextId = frames.findIndex(x => x > this.frame);
@@ -882,9 +881,10 @@ export default function createNpc(def, api) {
       }
       
       this.framePtr = 0;
-      this.frameDurs = this.frameDurs.map(x => x/2);
-      if (nextId === 1 || nextId === 3) {// Pause before moving feet back
-        this.frameDurs[this.frame] = 200 / 1000;
+      if ((nextId === 1 || nextId === 3) && this.frameMap.length <= 5) {
+        this.frameDurs = this.frameDurs.map(x => x * 1.8);
+      } else {
+        this.frameDurs = this.frameDurs.map(x => x * 0.7);
       }
 
       this.frameMap.length > 1 && await /** @type {Promise<void>} */ (
