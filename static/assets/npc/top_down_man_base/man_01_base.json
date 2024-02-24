@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "MtqKu4uVNms",
+	"hash": "s4CBQVa/KI4",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -135,12 +135,12 @@
 ],
 "slots": [
 	{ "name": "right-hand-muzzle-flash", "bone": "right-hand-muzzle-flash", "attachment": "right-hand-muzzle-flash" },
-	{ "name": "left-shoe", "bone": "left-shoe", "attachment": "left-shoe" },
-	{ "name": "right-shoe", "bone": "right-shoe", "attachment": "right-shoe" },
 	{ "name": "left-leg-lower-bare", "bone": "left-leg-lower-bare", "attachment": "leg_lower" },
 	{ "name": "right-leg-lower-bare", "bone": "right-leg-lower-bare", "attachment": "leg_lower" },
 	{ "name": "right-leg-upper-bare", "bone": "right-leg-upper-bare", "attachment": "right-leg-upper-bare" },
 	{ "name": "left-leg-upper-bare", "bone": "left-leg-upper-bare", "attachment": "leg_upper" },
+	{ "name": "left-shoe", "bone": "left-shoe", "attachment": "left-shoe" },
+	{ "name": "right-shoe", "bone": "right-shoe", "attachment": "right-shoe" },
 	{ "name": "right-leg-lower-clothed", "bone": "right-leg-lower-clothed", "attachment": "right-leg-lower-clothed" },
 	{ "name": "left-leg-lower-clothed", "bone": "left-leg-lower-clothed", "attachment": "left-leg-lower-clothed" },
 	{ "name": "left-leg-upper-clothed", "bone": "left-leg-upper-clothed", "attachment": "left-leg-upper-clothed" },
@@ -777,6 +777,172 @@
 					{ "slot": "right-hand-muzzle-flash", "offset": 28 }
 				]
 			}
+		]
+	},
+	"idle-straight": {
+		"slots": {
+			"left-hand-grip": {
+				"attachment": [
+					{}
+				]
+			},
+			"right-hand-grip": {
+				"attachment": [
+					{}
+				]
+			},
+			"trunk": {
+				"attachment": [
+					{}
+				]
+			}
+		},
+		"bones": {
+			"spine": {
+				"rotate": [
+					{ "value": 1.06 }
+				]
+			},
+			"left-arm": {
+				"rotate": [
+					{ "value": -30.99 }
+				],
+				"translate": [
+					{ "x": 20.91, "y": -37.05 }
+				]
+			},
+			"left-arm-lower": {
+				"rotate": [
+					{ "value": 9.87 }
+				],
+				"translate": [
+					{ "x": -56.07, "y": 4.08 }
+				]
+			},
+			"left-arm-lower-bare": {
+				"translate": [
+					{ "x": -39.96, "y": -0.52 }
+				],
+				"scale": [
+					{ "y": 1.12 }
+				]
+			},
+			"left-arm-lower-clothed": {
+				"translate": [
+					{ "x": -53.71, "y": 17.19 }
+				],
+				"scale": [
+					{ "y": 1.082 }
+				]
+			},
+			"left-hand": {
+				"translate": [
+					{ "x": -70.4, "y": 1.74 }
+				]
+			},
+			"left-hand-accessory": {
+				"translate": [
+					{ "x": -25.11, "y": 0.71 }
+				]
+			},
+			"left-arm-upper-bare": {
+				"translate": [
+					{ "x": 41.81, "y": 38.59 }
+				],
+				"scale": [
+					{ "y": 1.258 }
+				]
+			},
+			"left-arm-upper-clothed": {
+				"translate": [
+					{ "x": 83.5, "y": 33.21 }
+				],
+				"scale": [
+					{ "y": 1.259 }
+				]
+			},
+			"neck": {
+				"rotate": [
+					{ "value": -3.45 }
+				]
+			},
+			"right-arm": {
+				"rotate": [
+					{ "value": 20.66 }
+				],
+				"translate": [
+					{ "x": -81.16, "y": 154.66 }
+				]
+			},
+			"right-arm-lower": {
+				"rotate": [
+					{ "value": 9.1 }
+				],
+				"translate": [
+					{ "x": -215.46, "y": 13.1 }
+				]
+			},
+			"right-arm-lower-bare": {
+				"translate": [
+					{ "x": -37.83, "y": 32.39 }
+				]
+			},
+			"right-arm-lower-clothed": {
+				"translate": [
+					{ "x": -37.83, "y": 32.39 }
+				]
+			},
+			"right-hand": {
+				"rotate": [
+					{ "value": -9.04 }
+				],
+				"translate": [
+					{ "x": -96.93, "y": 31.93 }
+				]
+			},
+			"right-arm-upper-bare": {
+				"translate": [
+					{ "x": -114.61 }
+				]
+			},
+			"right-arm-upper-clothed": {
+				"translate": [
+					{ "x": -114.61 }
+				]
+			},
+			"left-foot": {
+				"translate": [
+					{ "x": -104.73 }
+				]
+			},
+			"right-foot": {
+				"translate": [
+					{ "x": -104.73 }
+				]
+			},
+			"left-leg-lower-clothed": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			},
+			"right-leg-lower-clothed": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			},
+			"left-leg-lower-bare": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			},
+			"right-leg-lower-bare": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			}
+		},
+		"events": [
+			{ "name": "feet-cross" }
 		]
 	},
 	"lie": {
