@@ -884,7 +884,7 @@ export default function createNpc(def, api) {
       if ((nextId === 1 || nextId === 3) && this.frameMap.length <= 5) {
         this.frameDurs = this.frameDurs.map(x => x * 1.8);
       } else {
-        this.frameDurs = this.frameDurs.map(x => x * 0.7);
+        // this.frameDurs = this.frameDurs.map(x => x * 0.8);
       }
 
       this.frameMap.length > 1 && await /** @type {Promise<void>} */ (
