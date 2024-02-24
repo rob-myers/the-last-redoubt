@@ -55,7 +55,7 @@ export default function DebugWorld(props) {
       // ctxt.strokeStyle = '#ff0000';
       ctxt.lineWidth = 1;
       ctxt.lineJoin = 'bevel';
-      ctxt.setLineDash([4, 4]);
+      ctxt.setLineDash([3, 3]);
       ctxt.scale(gmScale, gmScale);
       ctxt.translate(-worldRect.x, -worldRect.y);
       ctxt.moveTo(path[0].x, path[0].y);
@@ -128,7 +128,7 @@ export default function DebugWorld(props) {
           }
           if (opts.windowOutlines) {
             gfx.lineStyle({ color: 'white', width: 1 });
-            room.gm.windows.forEach(({ baseRect, angle, poly }, i) => {
+            room.gm.windows.forEach(({ poly }, i) => {
               gfx.beginFill('#0000ff40');
               gfx.drawPolygon(poly.outline);
               gfx.endFill();
@@ -199,11 +199,11 @@ export default function DebugWorld(props) {
         gm,
         adjDoorIds,
         navArrows: adjDoorIds.map(doorId => {
-          const { poly, normal, roomIds } = gm.doors[doorId];
+          const { center, normal, roomIds } = gm.doors[doorId];
           /** Have seen hull doors where normal is "inverted" */
           const sign = roomIds[0] === roomId ? 1 : -1;
           const n = normal.clone().scale(-sign);
-          const arrowPos = poly.center.addScaledVector(n, -debugDoorOffset);
+          const arrowPos = center.addScaledVector(n, -debugDoorOffset);
           const angle = n.angle;
           const arrowPoly = Poly.fromRect(new Rect(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius, 2 * debugArrowRadius, 2 * debugArrowRadius)).applyMatrix(
             tempMat.setRotationAbout(angle, arrowPos)

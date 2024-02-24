@@ -211,7 +211,7 @@ export default function Geomorphs(props) {
 
       // doors adjacent to room
       gm.roomGraph.getAdjacentDoors(roomId).forEach(({ doorId }) => {
-        const { poly, seg: [u, v], normal } = gm.doors[doorId];
+        const { seg: [u, v], normal } = gm.doors[doorId];
         // Assuming ≤ 256 doors in a geomorph
         gfx.beginFill(`rgb(${hitTestRed.door}, 0, ${doorId})`, 1)
           .drawPolygon([

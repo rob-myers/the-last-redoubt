@@ -241,11 +241,11 @@ export async function renderGeomorph(
     const iconCircleRight = await getPng('/assets/icon/circle-right.svg');
     const saved = ctxt.getTransform();
     ctxt.globalAlpha = debugArrowAlpha;
-    layout.doors.forEach(({ poly, normal, roomIds }) => {
+    layout.doors.forEach(({ center, normal, roomIds }) => {
       roomIds.forEach((_, i) => {
         const sign = i === 0 ? 1 : -1;
         const { angle } = Vect.from(normal).scale(-sign);
-        const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset).translate(-debugArrowRadius, -debugArrowRadius);
+        const arrowPos = center.addScaledVector(normal, sign * debugDoorOffset).translate(-debugArrowRadius, -debugArrowRadius);
         drawRotatedImage(iconCircleRight, ctxt, { ...arrowPos, width: debugArrowRadius * 2, height: debugArrowRadius * 2 }, angle);
         ctxt.setTransform(saved);
       });

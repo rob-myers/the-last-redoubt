@@ -202,7 +202,7 @@ export class gmGraphClass extends BaseGraph {
       // );
 
       // These segs are not perfect i.e. part of door will be covered
-      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], areaGm.doors[area.doorId].poly.center));
+      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], areaGm.doors[area.doorId].center));
       const areaRoomId = area.hullRoomId ?? rootRoomId;
 
       const viewPositions = areaGm.getViewDoorPositions(areaRoomId, area.doorId);
@@ -861,7 +861,7 @@ export class gmGraphClass extends BaseGraph {
 
       ...gms.flatMap(({ key: gmKey, hullDoors, matrix, transform, pngRect, doors }, gmId) =>
         hullDoors.map(/** @returns {Graph.GmGraphNodeDoor} */ (hullDoor, hullDoorId) => {
-          const alongNormal = hullDoor.poly.center.addScaledVector(hullDoor.normal, 20);
+          const alongNormal = hullDoor.center.addScaledVector(hullDoor.normal, 20);
           const gmInFront = pngRect.contains(alongNormal);
           const direction = this.computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey);
           return {
@@ -877,7 +877,7 @@ export class gmGraphClass extends BaseGraph {
             sealed: true, // Overwritten below
 
             ...createBaseAstar({
-              centroid: matrix.transformPoint(hullDoor.poly.center),
+              centroid: matrix.transformPoint(hullDoor.center),
               // neighbours populated further below
             }),
             index: index++,
