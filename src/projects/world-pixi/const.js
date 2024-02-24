@@ -69,11 +69,6 @@ const fromSpineHeadSkinName = { "head/blonde-light": true, "head/skin-head-dark"
 
 export const spineHeadSkinNames = keys(fromSpineHeadSkinName);
 
-/** @type {Record<NPC.SpineAnimName, true>} */
-const fromSpineAnimName = { "idle": true, "idle-breathe": true, "idle-straight": true, "lie": true, "sit": true, "walk": true };
-
-export const spineAnimNames = keys(fromSpineAnimName);
-
 /** @type {Record<NPC.SpineHeadOrientKey, NPC.SpineHeadOrientMapping>} */
 const toSpineHeadOrient = {
   face: { headOrientKey: 'top', animName: 'idle', headAttachmentName: 'head', hairAttachmentName: 'hair' },
@@ -85,12 +80,15 @@ export const spineHeadOrients = Object.values(toSpineHeadOrient);
 /** @type {Record<NPC.SpineAnimName, NPC.SpineAnimSetup>} */
 export const spineAnimSetup = {
   idle: { animName: 'idle', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
+  "idle-breathe": { animName: 'idle-breathe', numFrames: 20, headOrientKey: 'top', stationaryFps: 10 },
   "idle-straight": { animName: 'idle-straight', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
   sit: { animName: 'sit', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
+  "straight-to-idle": { animName: 'straight-to-idle', numFrames: 10, headOrientKey: 'top', stationaryFps: 30 },
   lie: { animName: 'lie', numFrames: 1, headOrientKey: 'face', stationaryFps: 0 },
-  "idle-breathe": { animName: 'idle-breathe', numFrames: 20, headOrientKey: 'top', stationaryFps: 10 },
   walk: { animName: 'walk', numFrames: 30, headOrientKey: 'top', stationaryFps: 20 },
 };
+
+export const spineAnimNames = keys(spineAnimSetup);
 
 /** @type {Record<NPC.NpcClassKey, NPC.SpineHeadSkinName>} */
 export const npcClassToSpineHeadSkin = {

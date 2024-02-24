@@ -273,6 +273,7 @@ declare namespace NPC {
     setWalkSpeed(walkSpeed: number): void;
     animateOpacity(targetOpacity: number, durationMs: number, onlyBody?: boolean): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
+    awaitTransition(): Promise<void>;
     updateHead(): void;
     updateMotion(): void;
     /**
@@ -837,6 +838,7 @@ declare namespace NPC {
     | "idle-straight"
     | "lie"
     | "sit"
+    | "straight-to-idle"
     | "walk"
   );
 

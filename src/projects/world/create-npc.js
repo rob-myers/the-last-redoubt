@@ -143,6 +143,9 @@ export default function createNpc(
         animation.playState === 'finished' && animation.cancel();
       }
     },
+    async awaitTransition() {
+      // Fix types during migration
+    },
     async cancel(overridePaused = false) {
       if (this.forcePaused && !overridePaused) {
         throw Error('paused: cannot cancel');
@@ -837,7 +840,8 @@ export default function createNpc(
         case 'idle-breathe':
         case 'idle-straight':
         case 'lie':
-        case 'sit': {
+        case 'sit':
+        case 'straight-to-idle': {
           this.clearWayMetas();
           this.updateStaticBounds();
     

@@ -16,20 +16,34 @@
     - implement nullable resolveTransition
   - ✅ fix setWalkSpeed
 
-  - 🚧 walkToIdle improvements
+  - ✅ walkToIdle improvements
     - ℹ️ current walkToIdle only for abrupt stop
     - ❌ normalize walk animation so half-way is exactly idle
     - ❌ try stopping early at pseudo-idle
-    - try `idle-straight` i.e. closer to pseudo-idle
-    - try transition `straight-to-idle`
-    - try alternative `shuffle-walk`
-  
+    - ✅ try `idle-straight` i.e. closer to pseudo-idle
+      - must change const `spineAnimSetup`, `npc.startAnimation`
+    - ✅ try transition `straight-to-idle`
+      - cannot loop
+    - ✅ BUG walkToIdle can go an extra frame forward when should be going backwards
+      - frameMap `[3, 2, 1, 0]`
+      - frameMap `[18, 17, 16]`
+      - ℹ️ fixed by setting `npc.frame` earlier in `npc.update`
+
+  - improve single-frame animation `lie`
+    - gloves too white and small
+    - adjust body?
+    - adjust shoes?
+
   - improve navPath through doors
   
   - extended walks can change current walk
 
   - smooth turn towards *future* path angle
   - extended walks should turn slower when do 180
+  - improve transition `straight-to-idle`
+    - e.g. initial pose hands should be further back?
+  - create alternative slow walk i.e. `shuffle-walk`
+  
 
   - ✅ BUG animateRotate not always choosing smaller angle
   - BUG saw `npc{A,B}.isWalking(true)` both true,

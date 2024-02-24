@@ -117,6 +117,14 @@ export default function createNpc(def, api) {
         .easing(TWEEN.Easing.Quadratic.Out)
       ).promise();
     },
+    async awaitTransition() {
+      if (this.frameMap.length > 1) {
+        return new Promise(resolve => this.resolveTransition = () => {
+          this.resolveTransition = null;
+          resolve();
+        });
+      }
+    },
     async cancel(overridePaused = false) {
       if (this.forcePaused && !overridePaused) {
         throw Error('frozen: cannot cancel');
@@ -148,7 +156,8 @@ export default function createNpc(def, api) {
     canLook() {
       return (
         this.animName === 'idle' ||
-        this.animName === 'idle-breathe'
+        this.animName === 'idle-breathe' ||
+        this.animName === 'idle-straight'
       ) && !this.doMeta;
     },
     changeClass(npcClassKey) {
@@ -687,6 +696,7 @@ export default function createNpc(def, api) {
         case 'idle-straight':
         case 'lie':
         case 'sit':
+        case 'straight-to-idle':
           this.a.rotate.stop();
           this.clearWayMetas();
           this.updateStaticBounds();
@@ -797,7 +807,6 @@ export default function createNpc(def, api) {
       if (this.paused === true || this.frameMap.length === 1) {
         return;
       }
-
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
       let lag = ((this.time % 1) * this.frameDurs[this.frame]) + (deltaRatio * (1 / 60));
@@ -809,10 +818,10 @@ export default function createNpc(def, api) {
           this.framePtr = 0;
           this.resolveTransition?.();
         }
-        
+        // change frame before, else transition can flicker
+        this.frame = this.frameMap[this.framePtr];
         this.updateMotion();
         this.updateSprites();
-        this.frame = this.frameMap[this.framePtr];
       }
 
       this.time = Math.floor(this.time) + (lag / this.frameDurs[this.frame]);
@@ -866,19 +875,19 @@ export default function createNpc(def, api) {
         } while (this.nextWalk && (navPath = this.nextWalk.navPath));
 
       } finally {
-        this.animName === 'walk' && await this.walkToIdle();
+        await this.walkToIdle();
         this.pendingWalk = false;
         this.nextWalk = null;
-        // this.startAnimation('idle-breathe');
-        this.startAnimation('idle-straight');
+        this.startAnimation('idle-breathe');
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
       }
     },
     async walkToIdle() {
-      if (this.resolveTransition) {
-        return; // prevent two concurrent transitions
+      if (this.animName !== 'walk' || this.resolveTransition) {
+        return; // prevent concurrent transitions
       }
 
+      this.framePtr = 0;
       // 🔔 Assume `[1st-cross, 1st-step, 2nd-cross, 2nd-step]` where 1st-cross `0`
       const frames = /** @type {number[]} */ (spineMeta.anim.walk.extremeFrames);
       const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
@@ -889,20 +898,14 @@ export default function createNpc(def, api) {
         case  3: this.frameMap = base.slice(frames[2], this.frame + 1).reverse(); break;
         case -1: this.frameMap = base.slice(this.frame); break;
       }
-      
-      this.framePtr = 0;
-      if ((nextId === 1 || nextId === 3) && this.frameMap.length <= 5) {
-        this.frameDurs = this.frameDurs.map(x => x * 1.8);
-      } else {
-        // this.frameDurs = this.frameDurs.map(x => x * 0.8);
+      if ((nextId === 1 || nextId === 3) && this.frameMap.length <= 4) {
+        this.frameDurs[this.frameMap[0]] = 300 / 1000; // Hard-stop
       }
+      await this.awaitTransition();
 
-      this.frameMap.length > 1 && await /** @type {Promise<void>} */ (
-        new Promise(resolve => this.resolveTransition = () => {
-          this.resolveTransition = null;
-          resolve();
-        })
-      );
+      this.startAnimation('straight-to-idle');
+      this.frameDurs = this.frameDurs.map(x => x * 0.3);
+      await this.awaitTransition();
     },
     wayTimeout() {
       // Fix types during migration
