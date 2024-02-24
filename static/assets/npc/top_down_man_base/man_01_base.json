@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "s4CBQVa/KI4",
+	"hash": "VKtr2VBE+jw",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1429,6 +1429,227 @@
 					{ "slot": "right-hand-muzzle-flash", "offset": 28 }
 				]
 			}
+		]
+	},
+	"straight-to-idle": {
+		"slots": {
+			"left-eyebrow-birdseye": {
+				"attachment": [
+					{ "time": 1 }
+				]
+			},
+			"mask-lie": {
+				"attachment": [
+					{ "time": 1 }
+				]
+			},
+			"right-eyebrow-birdseye": {
+				"attachment": [
+					{ "time": 1 }
+				]
+			},
+			"right-hand-gun": {
+				"attachment": [
+					{ "time": 1 }
+				]
+			},
+			"right-hand-muzzle-flash": {
+				"attachment": [
+					{ "time": 1 }
+				]
+			},
+			"trunk": {
+				"attachment": [
+					{},
+					{ "time": 1, "name": "body_top" }
+				]
+			},
+			"waist-accessory": {
+				"attachment": [
+					{ "time": 1 }
+				]
+			}
+		},
+		"bones": {
+			"spine": {
+				"rotate": [
+					{ "value": 1.06 },
+					{ "time": 1 }
+				]
+			},
+			"left-arm": {
+				"rotate": [
+					{ "value": -30.99 },
+					{ "time": 1 }
+				],
+				"translate": [
+					{ "x": 20.91, "y": -37.05 },
+					{ "time": 1 }
+				]
+			},
+			"left-arm-lower": {
+				"rotate": [
+					{ "value": 9.87 },
+					{ "time": 1 }
+				],
+				"translate": [
+					{ "x": -56.07, "y": 4.08 },
+					{ "time": 1 }
+				]
+			},
+			"left-arm-lower-bare": {
+				"translate": [
+					{ "x": -39.96, "y": -0.52 },
+					{ "time": 1 }
+				],
+				"scale": [
+					{ "y": 1.12 },
+					{ "time": 1 }
+				]
+			},
+			"left-arm-lower-clothed": {
+				"translate": [
+					{ "x": -53.71, "y": 17.19 },
+					{ "time": 1 }
+				],
+				"scale": [
+					{ "y": 1.082 },
+					{ "time": 1 }
+				]
+			},
+			"left-hand": {
+				"translate": [
+					{ "x": -70.4, "y": 1.74 },
+					{ "time": 1 }
+				]
+			},
+			"left-hand-accessory": {
+				"translate": [
+					{ "x": -25.11, "y": 0.71 },
+					{ "time": 1 }
+				]
+			},
+			"left-arm-upper-bare": {
+				"translate": [
+					{ "x": 41.81, "y": 38.59 },
+					{ "time": 1 }
+				],
+				"scale": [
+					{ "y": 1.258 },
+					{ "time": 1 }
+				]
+			},
+			"left-arm-upper-clothed": {
+				"translate": [
+					{ "x": 83.5, "y": 33.21 },
+					{ "time": 1 }
+				],
+				"scale": [
+					{ "y": 1.259 },
+					{ "time": 1 }
+				]
+			},
+			"neck": {
+				"rotate": [
+					{ "value": -3.45 },
+					{ "time": 1 }
+				]
+			},
+			"right-arm": {
+				"rotate": [
+					{ "value": 20.66 },
+					{ "time": 1 }
+				],
+				"translate": [
+					{ "x": -81.16, "y": 154.66 },
+					{ "time": 1 }
+				]
+			},
+			"right-arm-lower": {
+				"rotate": [
+					{ "value": 9.1 },
+					{ "time": 1 }
+				],
+				"translate": [
+					{ "x": -215.46, "y": 13.1 },
+					{ "time": 1 }
+				]
+			},
+			"right-arm-lower-bare": {
+				"translate": [
+					{ "x": -37.83, "y": 32.39 },
+					{ "time": 1 }
+				]
+			},
+			"right-arm-lower-clothed": {
+				"translate": [
+					{ "x": -37.83, "y": 32.39 },
+					{ "time": 1 }
+				]
+			},
+			"right-hand": {
+				"rotate": [
+					{ "value": -9.04 },
+					{ "time": 1 }
+				],
+				"translate": [
+					{ "x": -96.93, "y": 31.93 },
+					{ "time": 1 }
+				]
+			},
+			"right-arm-upper-bare": {
+				"translate": [
+					{ "x": -114.61 },
+					{ "time": 1 }
+				]
+			},
+			"right-arm-upper-clothed": {
+				"translate": [
+					{ "x": -114.61 },
+					{ "time": 1 }
+				]
+			},
+			"left-foot": {
+				"translate": [
+					{ "x": -104.73 }
+				]
+			},
+			"right-foot": {
+				"translate": [
+					{ "x": -104.73 }
+				]
+			},
+			"left-leg-lower-clothed": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			},
+			"right-leg-lower-clothed": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			},
+			"left-leg-lower-bare": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			},
+			"right-leg-lower-bare": {
+				"translate": [
+					{ "x": 35.03 }
+				]
+			}
+		},
+		"drawOrder": [
+			{
+				"time": 1,
+				"offsets": [
+					{ "slot": "right-hand-muzzle-flash", "offset": 28 }
+				]
+			}
+		],
+		"events": [
+			{ "name": "feet-cross" }
 		]
 	},
 	"walk": {

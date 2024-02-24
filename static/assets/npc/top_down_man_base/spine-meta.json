@@ -282,6 +282,111 @@
       "rootDeltas": [],
       "extremeFrames": []
     },
+    "straight-to-idle": {
+      "animName": "straight-to-idle",
+      "frameCount": 10,
+      "frameDurSecs": 0.1,
+      "animBounds": {"x": -81, "y": -50, "width": 159, "height": 103},
+      "headBounds": {"x": -48, "y": -43, "width": 96, "height": 91},
+      "neckPositions": [
+        {"x": -0.0117, "y": 2.1133},
+        {"x": -0.0106, "y": 2.1133},
+        {"x": -0.0094, "y": 2.1133},
+        {"x": -0.0082, "y": 2.1133},
+        {"x": -0.007, "y": 2.1132},
+        {"x": -0.0059, "y": 2.1132},
+        {"x": -0.0047, "y": 2.1132},
+        {"x": -0.0035, "y": 2.1132},
+        {"x": -0.0023, "y": 2.1132},
+        {"x": -0.0012, "y": 2.1132}
+      ],
+      "packedRects": [
+        {"x": 353, "y": 1190, "width": 159, "height": 103},
+        {"x": 514, "y": 1190, "width": 159, "height": 103},
+        {"x": 675, "y": 1190, "width": 159, "height": 103},
+        {"x": 2, "y": 1347, "width": 159, "height": 103},
+        {"x": 163, "y": 1347, "width": 159, "height": 103},
+        {"x": 324, "y": 1338, "width": 159, "height": 103},
+        {"x": 485, "y": 1331.000567859171, "width": 159, "height": 103},
+        {"x": 646, "y": 1331.000567859171, "width": 159, "height": 103},
+        {"x": 807, "y": 1331.000567859171, "width": 159, "height": 103},
+        {"x": 968, "y": 1331.000567859171, "width": 159, "height": 103}
+      ],
+      "headFrames": [
+        {
+          "x": -7.7167,
+          "y": -7.5547,
+          "angle": 2.3896,
+          "width": 16.2188,
+          "height": 15.2864
+        },
+        {
+          "x": -7.7554,
+          "y": -7.523,
+          "angle": 2.1529,
+          "width": 16.2197,
+          "height": 15.2857
+        },
+        {
+          "x": -7.7942,
+          "y": -7.4895,
+          "angle": 1.9102,
+          "width": 16.219,
+          "height": 15.2851
+        },
+        {
+          "x": -7.8329,
+          "y": -7.4578,
+          "angle": 1.6737,
+          "width": 16.2187,
+          "height": 15.2867
+        },
+        {
+          "x": -7.8717,
+          "y": -7.4244,
+          "angle": 1.431,
+          "width": 16.2186,
+          "height": 15.285
+        },
+        {
+          "x": -7.9104,
+          "y": -7.3909,
+          "angle": 1.1945,
+          "width": 16.2188,
+          "height": 15.2853
+        },
+        {
+          "x": -7.9492,
+          "y": -7.3592,
+          "angle": 0.9581,
+          "width": 16.2193,
+          "height": 15.2858
+        },
+        {
+          "x": -7.9861,
+          "y": -7.3258,
+          "angle": 0.7155,
+          "width": 16.2183,
+          "height": 15.2849
+        },
+        {
+          "x": -8.0249,
+          "y": -7.2923,
+          "angle": 0.479,
+          "width": 16.2194,
+          "height": 15.286
+        },
+        {
+          "x": -8.0636,
+          "y": -7.2588,
+          "angle": 0.2426,
+          "width": 16.219,
+          "height": 15.2856
+        }
+      ],
+      "rootDeltas": [],
+      "extremeFrames": []
+    },
     "walk": {
       "animName": "walk",
       "frameCount": 30,
@@ -603,7 +708,7 @@
     "head/blonde-light": {
       "headSkinName": "head/blonde-light",
       "packedHead": {
-        "face": {"x": 1224.000567859171, "y": 1214, "width": 82, "height": 108},
+        "face": {"x": 1129, "y": 1319, "width": 82, "height": 108},
         "top": {"x": 1033, "y": 215, "width": 93, "height": 89}
       }
     },
@@ -617,8 +722,8 @@
     "head/skin-head-light": {
       "headSkinName": "head/skin-head-light",
       "packedHead": {
-        "face": {"x": 448, "y": 1190, "width": 81, "height": 90},
-        "top": {"x": 353, "y": 1190, "width": 93, "height": 87}
+        "face": {"x": 1224.000567859171, "y": 1214, "width": 81, "height": 90},
+        "top": {"x": 1213, "y": 1319, "width": 93, "height": 87}
       }
     }
   },
@@ -633,6 +738,6 @@
     }
   },
   "packedWidth": 1380,
-  "packedHeight": 1347,
+  "packedHeight": 1452,
   "packedPadding": 2
 }
