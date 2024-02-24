@@ -232,13 +232,16 @@
       }
     },
   
-    lookAt: async function* ({ api, args: [npcKey], home, datum }) {
+    lookAt: async function* ({ api, args: [npcKey, datumStr], home, datum }) {
+      // 🚧 opts.ms
       const w = api.getCached(home.WORLD_KEY);
       const npc = w.npcs.getNpc(npcKey, api);
-      // 🚧 opts.ms
-
-      while ((datum = await api.read()) !== api.eof) {
-        npc.lookAt(datum, { ms: 500 }).catch(api.verbose);
+      if (api.isTtyAt(0)) {
+        await npc.lookAt(api.parseJsArg(datumStr), { ms: 500 });
+      } else {
+        while ((datum = await api.read()) !== api.eof) {
+          npc.lookAt(datum, { ms: 500 }).catch(api.verbose);
+        }
       }
     },
 
