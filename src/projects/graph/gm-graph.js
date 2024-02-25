@@ -861,7 +861,7 @@ export class gmGraphClass extends BaseGraph {
 
       ...gms.flatMap(({ key: gmKey, hullDoors, matrix, transform, pngRect, doors }, gmId) =>
         hullDoors.map(/** @returns {Graph.GmGraphNodeDoor} */ (hullDoor, hullDoorId) => {
-          const alongNormal = hullDoor.center.addScaledVector(hullDoor.normal, 20);
+          const alongNormal = hullDoor.center.clone().addScaledVector(hullDoor.normal, 20);
           const gmInFront = pngRect.contains(alongNormal);
           const direction = this.computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey);
           return {
@@ -877,7 +877,7 @@ export class gmGraphClass extends BaseGraph {
             sealed: true, // Overwritten below
 
             ...createBaseAstar({
-              centroid: matrix.transformPoint(hullDoor.center),
+              centroid: matrix.transformPoint(hullDoor.center.clone()),
               // neighbours populated further below
             }),
             index: index++,

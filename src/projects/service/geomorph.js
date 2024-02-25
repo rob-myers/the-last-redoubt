@@ -1296,7 +1296,7 @@ export function computeLightPolygons(gm, intersectWithCircle = false) {
  */
 export function computeViewPosition(connector, srcRoomId, lightOffset) {
   const roomSign = connector.roomIds[0] === srcRoomId ? 1 : -1;
-  return connector.center.addScaledVector(connector.normal, lightOffset * roomSign);
+  return connector.center.clone().addScaledVector(connector.normal, lightOffset * roomSign);
 }
 
 /**

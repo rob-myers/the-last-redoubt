@@ -203,7 +203,7 @@ export default function DebugWorld(props) {
           /** Have seen hull doors where normal is "inverted" */
           const sign = roomIds[0] === roomId ? 1 : -1;
           const n = normal.clone().scale(-sign);
-          const arrowPos = center.addScaledVector(n, -debugDoorOffset);
+          const arrowPos = center.clone().addScaledVector(n, -debugDoorOffset);
           const angle = n.angle;
           const arrowPoly = Poly.fromRect(new Rect(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius, 2 * debugArrowRadius, 2 * debugArrowRadius)).applyMatrix(
             tempMat.setRotationAbout(angle, arrowPos)

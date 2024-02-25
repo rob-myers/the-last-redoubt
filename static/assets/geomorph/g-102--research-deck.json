@@ -6105,7 +6105,7 @@
         "type": "Polygon",
         "coordinates": [[[1023, 170], [1017, 170], [1017, 130], [1023, 130]]]
       },
-      "center": {"x": 1020, "y": 150},
+      "center": {"x": 2940, "y": 446},
       "rect": {"x": 1017, "y": 130, "width": 6, "height": 40},
       "meta": {"door": true},
       "seg": [{"x": 1020, "y": 170}, {"x": 1020, "y": 130}],
@@ -6121,7 +6121,7 @@
         "type": "Polygon",
         "coordinates": [[[1023, 230], [1017, 230], [1017, 190], [1023, 190]]]
       },
-      "center": {"x": 1020, "y": 210},
+      "center": {"x": 7020, "y": 1346},
       "rect": {"x": 1017, "y": 190, "width": 6, "height": 40},
       "meta": {"door": true},
       "seg": [{"x": 1020, "y": 230}, {"x": 1020, "y": 190}],
@@ -6137,7 +6137,7 @@
         "type": "Polygon",
         "coordinates": [[[1083, 128], [1083, 176], [1077, 176], [1077, 128]]]
       },
-      "center": {"x": 1080, "y": 152},
+      "center": {"x": -3000, "y": -568},
       "rect": {"x": 1077, "y": 128, "width": 6, "height": 48},
       "meta": {"door": true},
       "seg": [{"x": 1080, "y": 128}, {"x": 1080, "y": 176}],
@@ -6351,7 +6351,7 @@
           [[843, 711.6776], [837, 711.6776], [837, 667.6776], [843, 667.6776]]
         ]
       },
-      "center": {"x": 840, "y": 689.6776},
+      "center": {"x": 2280, "y": 2069.0328},
       "rect": {"x": 837, "y": 667.6776, "width": 6, "height": 44},
       "meta": {"door": true},
       "seg": [{"x": 840, "y": 711.6776}, {"x": 840, "y": 667.6776}],
@@ -6367,7 +6367,7 @@
         "type": "Polygon",
         "coordinates": [[[843, 968], [843, 1012], [837, 1012], [837, 968]]]
       },
-      "center": {"x": 840, "y": 990},
+      "center": {"x": 2280, "y": 2850},
       "rect": {"x": 837, "y": 968, "width": 6, "height": 44},
       "meta": {"door": true},
       "seg": [{"x": 840, "y": 968}, {"x": 840, "y": 1012}],
@@ -6385,7 +6385,7 @@
           [[957, 667.6776], [963, 667.6776], [963, 711.6776], [957, 711.6776]]
         ]
       },
-      "center": {"x": 960, "y": 689.6776},
+      "center": {"x": -720, "y": -689.6776},
       "rect": {"x": 957, "y": 667.6776, "width": 6, "height": 44},
       "meta": {"door": true},
       "seg": [{"x": 960, "y": 667.6776}, {"x": 960, "y": 711.6776}],
@@ -6401,7 +6401,7 @@
         "type": "Polygon",
         "coordinates": [[[957, 1028], [963, 1028], [963, 1072], [957, 1072]]]
       },
-      "center": {"x": 960, "y": 1050},
+      "center": {"x": -720, "y": -930},
       "rect": {"x": 957, "y": 1028, "width": 6, "height": 44},
       "meta": {"door": true},
       "seg": [{"x": 960, "y": 1028}, {"x": 960, "y": 1072}],
@@ -18913,40 +18913,40 @@
     "22": {
       "doors": [24],
       "windows": [],
-      "metas": {"24": {"behind": [true, false]}}
+      "metas": {"24": {"behind": [true, true]}}
     },
     "23": {
       "doors": [24],
       "windows": [],
-      "metas": {"24": {"behind": [true, false]}}
+      "metas": {"24": {"behind": [false, true]}}
     },
     "24": {
       "doors": [22, 23],
       "windows": [],
       "metas": {
-        "22": {"behind": [true, false]},
-        "23": {"behind": [true, false]}
+        "22": {"behind": [false, true]},
+        "23": {"behind": [false, true]}
       }
     },
     "36": {
       "doors": [38],
       "windows": [],
-      "metas": {"38": {"behind": [true, false]}}
+      "metas": {"38": {"behind": [true, true]}}
     },
     "37": {
       "doors": [39],
       "windows": [],
-      "metas": {"39": {"behind": [false, true]}}
+      "metas": {"39": {"behind": [false, false]}}
     },
     "38": {
       "doors": [36],
       "windows": [],
-      "metas": {"36": {"behind": [true, false]}}
+      "metas": {"36": {"behind": [false, true]}}
     },
     "39": {
       "doors": [37],
       "windows": [],
-      "metas": {"37": {"behind": [true, false]}}
+      "metas": {"37": {"behind": [false, true]}}
     }
   },
   "parallelDoorId": {
