@@ -12,7 +12,7 @@
       "animBounds": {"x": -81, "y": -50, "width": 159, "height": 103},
       "headBounds": {"x": -47, "y": -42, "width": 93, "height": 87},
       "neckPositions": [{"x": 0, "y": 2.1132}],
-      "packedRects": [{"x": 1169, "y": 1109, "width": 159, "height": 103}],
+      "packedRects": [{"x": 1226, "y": 248, "width": 159, "height": 103}],
       "headFrames": [
         {
           "x": -8.1006,
@@ -54,26 +54,26 @@
         {"x": -0.0004, "y": 2.1772}
       ],
       "packedRects": [
-        {"x": 986, "y": 428, "width": 181, "height": 121},
-        {"x": 986, "y": 551, "width": 181, "height": 121},
-        {"x": 986, "y": 674, "width": 181, "height": 121},
-        {"x": 986, "y": 797, "width": 181, "height": 121},
-        {"x": 986, "y": 920, "width": 181, "height": 121},
-        {"x": 986, "y": 1043, "width": 181, "height": 121},
-        {"x": 166, "y": 1067, "width": 181, "height": 121},
-        {"x": 349, "y": 1067, "width": 181, "height": 121},
-        {"x": 532, "y": 1067, "width": 181, "height": 121},
-        {"x": 715, "y": 1067, "width": 181, "height": 121},
-        {"x": 1197, "y": 2, "width": 181, "height": 121},
-        {"x": 1197, "y": 125, "width": 181, "height": 121},
-        {"x": 1169, "y": 248, "width": 181, "height": 121},
-        {"x": 1169, "y": 371, "width": 181, "height": 121},
-        {"x": 1169, "y": 494, "width": 181, "height": 121},
-        {"x": 1169, "y": 617, "width": 181, "height": 121},
-        {"x": 1169, "y": 740, "width": 181, "height": 121},
-        {"x": 1169, "y": 863, "width": 181, "height": 121},
-        {"x": 1169, "y": 986, "width": 181, "height": 121},
-        {"x": 2, "y": 1224, "width": 181, "height": 121}
+        {"x": 998, "y": 382, "width": 181, "height": 121},
+        {"x": 998, "y": 505, "width": 181, "height": 121},
+        {"x": 998, "y": 628, "width": 181, "height": 121},
+        {"x": 998, "y": 751, "width": 181, "height": 121},
+        {"x": 998, "y": 874, "width": 181, "height": 121},
+        {"x": 168, "y": 997, "width": 181, "height": 121},
+        {"x": 351, "y": 997, "width": 181, "height": 121},
+        {"x": 534, "y": 997, "width": 181, "height": 121},
+        {"x": 717, "y": 997, "width": 181, "height": 121},
+        {"x": 900, "y": 997, "width": 181, "height": 121},
+        {"x": 2, "y": 1132, "width": 181, "height": 121},
+        {"x": 185, "y": 1120, "width": 181, "height": 121},
+        {"x": 368, "y": 1120, "width": 181, "height": 121},
+        {"x": 551, "y": 1120, "width": 181, "height": 121},
+        {"x": 734, "y": 1120, "width": 181, "height": 121},
+        {"x": 917, "y": 1120, "width": 181, "height": 121},
+        {"x": 1083, "y": 997, "width": 181, "height": 121},
+        {"x": 1209, "y": 2, "width": 181, "height": 121},
+        {"x": 1209, "y": 125, "width": 181, "height": 121},
+        {"x": 1043, "y": 248, "width": 181, "height": 121}
       ],
       "headFrames": [
         {
@@ -227,9 +227,7 @@
       "animBounds": {"x": -81, "y": -50, "width": 159, "height": 103},
       "headBounds": {"x": -48, "y": -43, "width": 96, "height": 91},
       "neckPositions": [{"x": -0.0117, "y": 2.1133}],
-      "packedRects": [
-        {"x": 1063.000567859171, "y": 1214, "width": 159, "height": 103}
-      ],
+      "packedRects": [{"x": 1100, "y": 1120, "width": 159, "height": 103}],
       "headFrames": [
         {
           "x": -7.7167,
@@ -269,7 +267,7 @@
       "animBounds": {"x": -84, "y": -88, "width": 166, "height": 146},
       "headBounds": {"x": -47, "y": -42, "width": 93, "height": 87},
       "neckPositions": [{"x": 0, "y": 2.1132}],
-      "packedRects": [{"x": 185, "y": 1190, "width": 166, "height": 146}],
+      "packedRects": [{"x": 1181, "y": 371, "width": 166, "height": 146}],
       "headFrames": [
         {
           "x": -8.1006,
@@ -301,16 +299,16 @@
         {"x": -0.0012, "y": 2.1132}
       ],
       "packedRects": [
-        {"x": 353, "y": 1190, "width": 159, "height": 103},
-        {"x": 514, "y": 1190, "width": 159, "height": 103},
-        {"x": 675, "y": 1190, "width": 159, "height": 103},
-        {"x": 2, "y": 1347, "width": 159, "height": 103},
-        {"x": 163, "y": 1347, "width": 159, "height": 103},
-        {"x": 324, "y": 1338, "width": 159, "height": 103},
-        {"x": 485, "y": 1331.000567859171, "width": 159, "height": 103},
-        {"x": 646, "y": 1331.000567859171, "width": 159, "height": 103},
-        {"x": 807, "y": 1331.000567859171, "width": 159, "height": 103},
-        {"x": 968, "y": 1331.000567859171, "width": 159, "height": 103}
+        {"x": 1181, "y": 684.0005678591709, "width": 159, "height": 103},
+        {"x": 1181, "y": 789.0005678591709, "width": 159, "height": 103},
+        {"x": 2, "y": 1255, "width": 159, "height": 103},
+        {"x": 163, "y": 1255, "width": 159, "height": 103},
+        {"x": 324, "y": 1243, "width": 159, "height": 103},
+        {"x": 485, "y": 1243, "width": 159, "height": 103},
+        {"x": 646, "y": 1243, "width": 159, "height": 103},
+        {"x": 807, "y": 1243, "width": 159, "height": 103},
+        {"x": 968, "y": 1243, "width": 159, "height": 103},
+        {"x": 1129, "y": 1225, "width": 159, "height": 103}
       ],
       "headFrames": [
         {
@@ -391,7 +389,7 @@
       "animName": "walk",
       "frameCount": 30,
       "frameDurSecs": 0.05333333412806193,
-      "animBounds": {"x": -79, "y": -108, "width": 162, "height": 211},
+      "animBounds": {"x": -80, "y": -92, "width": 164, "height": 188},
       "headBounds": {"x": -48, "y": -43, "width": 96, "height": 91},
       "neckPositions": [
         {"x": -0.0117, "y": 2.1133},
@@ -426,36 +424,36 @@
         {"x": -0.043, "y": 2.1147}
       ],
       "packedRects": [
-        {"x": 213, "y": 2, "width": 162, "height": 211},
-        {"x": 213, "y": 215, "width": 162, "height": 211},
-        {"x": 2, "y": 372, "width": 162, "height": 211},
-        {"x": 377, "y": 2, "width": 162, "height": 211},
-        {"x": 377, "y": 215, "width": 162, "height": 211},
-        {"x": 541, "y": 2, "width": 162, "height": 211},
-        {"x": 541, "y": 215, "width": 162, "height": 211},
-        {"x": 2, "y": 585, "width": 162, "height": 211},
-        {"x": 166, "y": 428, "width": 162, "height": 211},
-        {"x": 330, "y": 428, "width": 162, "height": 211},
-        {"x": 494, "y": 428, "width": 162, "height": 211},
-        {"x": 705, "y": 2, "width": 162, "height": 211},
-        {"x": 705, "y": 215, "width": 162, "height": 211},
-        {"x": 658, "y": 428, "width": 162, "height": 211},
-        {"x": 2, "y": 798, "width": 162, "height": 211},
-        {"x": 166, "y": 641, "width": 162, "height": 211},
-        {"x": 330, "y": 641, "width": 162, "height": 211},
-        {"x": 494, "y": 641, "width": 162, "height": 211},
-        {"x": 658, "y": 641, "width": 162, "height": 211},
-        {"x": 869, "y": 2, "width": 162, "height": 211},
-        {"x": 869, "y": 215, "width": 162, "height": 211},
-        {"x": 822, "y": 428, "width": 162, "height": 211},
-        {"x": 822, "y": 641, "width": 162, "height": 211},
-        {"x": 2, "y": 1011, "width": 162, "height": 211},
-        {"x": 166, "y": 854, "width": 162, "height": 211},
-        {"x": 330, "y": 854, "width": 162, "height": 211},
-        {"x": 494, "y": 854, "width": 162, "height": 211},
-        {"x": 658, "y": 854, "width": 162, "height": 211},
-        {"x": 822, "y": 854, "width": 162, "height": 211},
-        {"x": 1033, "y": 2, "width": 162, "height": 211}
+        {"x": 213, "y": 2, "width": 164, "height": 188},
+        {"x": 213, "y": 192, "width": 164, "height": 188},
+        {"x": 2, "y": 372, "width": 164, "height": 188},
+        {"x": 379, "y": 2, "width": 164, "height": 188},
+        {"x": 379, "y": 192, "width": 164, "height": 188},
+        {"x": 545, "y": 2, "width": 164, "height": 188},
+        {"x": 545, "y": 192, "width": 164, "height": 188},
+        {"x": 2, "y": 562, "width": 164, "height": 188},
+        {"x": 168, "y": 382, "width": 164, "height": 188},
+        {"x": 334, "y": 382, "width": 164, "height": 188},
+        {"x": 500, "y": 382, "width": 164, "height": 188},
+        {"x": 711, "y": 2, "width": 164, "height": 188},
+        {"x": 711, "y": 192, "width": 164, "height": 188},
+        {"x": 666, "y": 382, "width": 164, "height": 188},
+        {"x": 2, "y": 752, "width": 164, "height": 188},
+        {"x": 168, "y": 572, "width": 164, "height": 188},
+        {"x": 334, "y": 572, "width": 164, "height": 188},
+        {"x": 500, "y": 572, "width": 164, "height": 188},
+        {"x": 666, "y": 572, "width": 164, "height": 188},
+        {"x": 877, "y": 2, "width": 164, "height": 188},
+        {"x": 877, "y": 192, "width": 164, "height": 188},
+        {"x": 832, "y": 382, "width": 164, "height": 188},
+        {"x": 832, "y": 572, "width": 164, "height": 188},
+        {"x": 2, "y": 942, "width": 164, "height": 188},
+        {"x": 168, "y": 762, "width": 164, "height": 188},
+        {"x": 334, "y": 762, "width": 164, "height": 188},
+        {"x": 500, "y": 762, "width": 164, "height": 188},
+        {"x": 666, "y": 762, "width": 164, "height": 188},
+        {"x": 832, "y": 762, "width": 164, "height": 188},
+        {"x": 1043, "y": 2, "width": 164, "height": 188}
       ],
       "headFrames": [
         {
@@ -708,36 +706,36 @@
     "head/blonde-light": {
       "headSkinName": "head/blonde-light",
       "packedHead": {
-        "face": {"x": 1129, "y": 1319, "width": 82, "height": 108},
-        "top": {"x": 1033, "y": 215, "width": 93, "height": 89}
+        "face": {"x": 1290, "y": 894.0005678591709, "width": 82, "height": 108},
+        "top": {"x": 1290, "y": 1004.0005678591709, "width": 93, "height": 89}
       }
     },
     "head/skin-head-dark": {
       "headSkinName": "head/skin-head-dark",
       "packedHead": {
-        "face": {"x": 898, "y": 1067, "width": 81, "height": 90},
-        "top": {"x": 1033, "y": 306, "width": 93, "height": 87}
+        "face": {"x": 1181, "y": 894.0005678591709, "width": 81, "height": 90},
+        "top": {"x": 1290, "y": 1095.000567859171, "width": 93, "height": 87}
       }
     },
     "head/skin-head-light": {
       "headSkinName": "head/skin-head-light",
       "packedHead": {
-        "face": {"x": 1224.000567859171, "y": 1214, "width": 81, "height": 90},
-        "top": {"x": 1213, "y": 1319, "width": 93, "height": 87}
+        "face": {"x": 2, "y": 1360, "width": 81, "height": 90},
+        "top": {"x": 1290, "y": 1184.000567859171, "width": 93, "height": 87}
       }
     }
   },
   "extra": {
     "circular-bounds": {
       "packedRect": {
-        "x": 898,
-        "y": 1166,
+        "x": 1181,
+        "y": 519,
         "width": 163.00056785917093,
         "height": 163.00056785917093
       }
     }
   },
-  "packedWidth": 1380,
+  "packedWidth": 1392,
   "packedHeight": 1452,
   "packedPadding": 2
 }
