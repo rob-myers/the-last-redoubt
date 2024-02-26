@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "VKtr2VBE+jw",
+	"hash": "Bj9X4P6CLIA",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1662,7 +1662,7 @@
 			"left-shoe": {
 				"attachment": [
 					{ "time": 0.0393, "name": "shoes/trainer_black_01" },
-					{ "time": 0.808, "name": "shoes/trainer_black_03" },
+					{ "time": 0.8, "name": "shoes/trainer_black_03" },
 					{ "time": 1.22, "name": "left-shoe" }
 				]
 			},
@@ -1680,7 +1680,7 @@
 				"attachment": [
 					{ "time": 0.014, "name": "shoes/trainer_black_03" },
 					{ "time": 0.412, "name": "right-shoe" },
-					{ "time": 0.85, "name": "shoes/trainer_black_01" }
+					{ "time": 0.8, "name": "shoes/trainer_black_01" }
 				]
 			},
 			"waist-accessory": {
@@ -1694,7 +1694,7 @@
 				"translate": [
 					{ "x": 116.58, "y": -5.68 },
 					{ "time": 0.412, "x": 245.74, "y": -5.68 },
-					{ "time": 0.808, "x": 73.33, "y": -5.68 },
+					{ "time": 0.8, "x": 73.33, "y": -5.68 },
 					{ "time": 1.22, "x": 2.54, "y": -5.68 },
 					{ "time": 1.6, "x": 116.58, "y": -5.68 }
 				]
@@ -1759,7 +1759,7 @@
 				"translate": [
 					{ "x": -52.78, "y": -5.48 },
 					{ "time": 0.412, "x": 25.34, "y": -11.15 },
-					{ "time": 0.808, "x": -0.02, "y": -5.57 },
+					{ "time": 0.8, "x": -0.02, "y": -5.57 },
 					{ "time": 1.22, "x": -47.35, "y": -4.44 },
 					{ "time": 1.6, "x": -52.78, "y": -5.48 }
 				]
@@ -2081,7 +2081,7 @@
 		"events": [
 			{ "name": "feet-cross" },
 			{ "time": 0.412, "name": "footstep", "string": "right" },
-			{ "time": 0.8267, "name": "feet-cross" },
+			{ "time": 0.8, "name": "feet-cross" },
 			{ "time": 1.22, "name": "footstep", "string": "left" }
 		]
 	}
