@@ -42,3 +42,4 @@ media/NPC/spine/top_down_man_base/**/*.png
 !media/NPC/spine/top_down_man_base/shoes/*black*.png
 !media/NPC/spine/top_down_man_base/torso_overlay/*black*.png
 !media/NPC/spine/top_down_man_base/upper_body/*black*.png
+!media/NPC/spine/top_down_man_base/head_hair/*.png
