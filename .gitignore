@@ -30,10 +30,15 @@ media/NPC/spriter/top_down_humans_svg/spriter_file_body_parts/*
 !media/NPC/spriter/top_down_humans_svg/spriter_file_body_parts/*.scml
 media/NPC/spriter/top_down_humans_svg/spriter_file_body_parts/*.autosave.scml
 
-media/NPC/spine/top_down_man_base/**/*.png
 media/NPC/spine/top_down_man_base/**/*.atlas
 media/NPC/spine/exported/**/*.png
 media/NPC/spine/exported/**/*.webp
+
+media/NPC/spine/top_down_man_base/**/*.png
 !media/NPC/spine/top_down_man_base/grey_gloves/*.png
 !media/NPC/spine/top_down_man_base/body/**/*.png
-!media/NPC/spine/top_down_man_base/legs/black_leg*.png
+!media/NPC/spine/top_down_man_base/legs/*black*.png
+!media/NPC/spine/top_down_man_base/torso/*black*.png
+!media/NPC/spine/top_down_man_base/shoes/*black*.png
+!media/NPC/spine/top_down_man_base/torso_overlay/*black*.png
+!media/NPC/spine/top_down_man_base/upper_body/*black*.png
