@@ -36,3 +36,4 @@ media/NPC/spine/exported/**/*.png
 media/NPC/spine/exported/**/*.webp
 !media/NPC/spine/top_down_man_base/grey_gloves/*.png
 !media/NPC/spine/top_down_man_base/body/**/*.png
+!media/NPC/spine/top_down_man_base/legs/black_leg*.png
