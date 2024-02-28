@@ -240,6 +240,10 @@ spawn rob2 $( click 1 ) --zhodani
 npc rob lookAt $( npc rob2 getPosition)
 ```
 
+```sh
+navPath/path/at'(-1)'
+```
+
 ## Migrating
 
 > https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md

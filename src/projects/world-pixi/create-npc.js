@@ -616,6 +616,7 @@ export default function createNpc(def, api) {
         } else {
           this.time = 0; // 🚧 remove hard-coding:
           this.frame = Math.random() > 0.5 ? 0 : 16;
+          // this.frame = 0; // deterministic during testing
         }
       } else {
         this.time = 0;
@@ -754,13 +755,12 @@ export default function createNpc(def, api) {
       head.y = body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y;
     },
     updateMotion() {
-      if (this.tr.deltas == null || this.resolveTransition !== null) {
+      if (this.tr.deltas == null || this.resolveTransition) {
         return; // No motion, or walk transition
       }
 
       this.distance += this.tr.deltas[this.frame];
       this.updateWayMetas(); // ones we're about to step over
-      
       // move along path
       const index = this.aux.index;
       const vertex = this.a.path[index]
@@ -879,6 +879,7 @@ export default function createNpc(def, api) {
         this.pendingWalk = false;
         this.nextWalk = null;
         this.startAnimation('idle-breathe');
+        // this.startAnimation('idle-straight');
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
       }
     },
@@ -888,18 +889,22 @@ export default function createNpc(def, api) {
       }
 
       this.framePtr = 0;
-      // 🔔 Assume `[1st-cross, 1st-step, 2nd-cross, 2nd-step]` where 1st-cross `0`
-      const frames = /** @type {number[]} */ (spineMeta.anim.walk.extremeFrames);
-      const base = this.tr.bodys.map((_, i) => i); // [0...maxFrame]
-      const nextId = frames.findIndex(x => x > this.frame);
-      switch (nextId) {
-        case  1: this.frameMap = base.slice(0, this.frame + 1).reverse(); break;
-        case  2: this.frameMap = base.slice(this.frame, frames[2]); break;
-        case  3: this.frameMap = base.slice(frames[2], this.frame + 1).reverse(); break;
-        case -1: this.frameMap = base.slice(this.frame); break;
-      }
-      if ((nextId === 1 || nextId === 3) && this.frameMap.length <= 4) {
-        this.frameDurs[this.frameMap[0]] = 300 / 1000; // Hard-stop
+      this.frameDurs = this.frameDurs.map(x => x * 1.5);
+      
+      // 🔔 assume "symmetric" walk-cycle
+      const quarterFrames = [0.25, 0.5, 0.75].map(x => Math.ceil(x * this.tr.length));
+      const allFrames = [...Array(this.tr.length)].map((_, i) => i);
+
+      if (this.frame <= quarterFrames[0]) {
+        this.frameMap = allFrames.slice(0, this.frame + 1).reverse();
+        this.frameMap.length <= 4 && (this.frameDurs[this.frameMap[0]] = 300 / 1000); // Hard-stop
+      } else if (this.frame <= quarterFrames[1]) {
+        this.frameMap = allFrames.slice(this.frame, quarterFrames[1]);
+      } else if (this.frame <= quarterFrames[2]) {
+        this.frameMap = allFrames.slice(quarterFrames[1], this.frame + 1).reverse();
+        this.frameMap.length <= 4 && (this.frameDurs[this.frameMap[0]] = 300 / 1000); // Hard-stop
+      } else {
+        this.frameMap = allFrames.slice(this.frame);
       }
       await this.awaitTransition();
 

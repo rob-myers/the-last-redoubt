@@ -29,13 +29,12 @@
       - frameMap `[18, 17, 16]`
       - ℹ️ fixed by setting `npc.frame` earlier in `npc.update`
 
-  - 🚧 walkToIdle improvements
+  - ✅ walkToIdle improvements
     - ✅ make walk more uniform
       - now 1st (2nd) half-cycle walks 20.6948 (20.6949)
-    - predict distance of final pseudo-idle
-    - if remaining distance ≤ `20.6948 / 2` then "lengthen" previous half-cycle
-      - if no previous half-cycle exists use existing approach (rock back)
-    - if remaining distance > `20.6948 / 2` then ...
+    - ✅ can predict distance of any pseudo-idle
+    - ✅ decided against more complex stopping animation
+    - ✅ clean current approach 
 
   - improve single-frame animation `lie`
     - gloves too white and small
