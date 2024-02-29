@@ -895,7 +895,7 @@ export default function createNpc(def, api) {
       }
 
       this.framePtr = 0;
-      this.frameDurs = this.frameDurs.map(x => x * 1.2);
+      this.frameDurs = this.frameDurs.map(x => x * 0.8);
       
       // 🔔 assume "symmetric" walk-cycle
       const quarterFrames = [0.25, 0.5, 0.75].map(x => Math.ceil(x * this.tr.length));
