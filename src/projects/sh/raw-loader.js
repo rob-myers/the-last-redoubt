@@ -561,16 +561,16 @@
           try {
             if (!w.lib.isVectJson(datum)) {// navpath
               await npc.walk(datum, { doorStrategy });
-            } else if (npc.getPosition().distanceTo(datum) <= npc.getRadius()) {
+            } else if (datum.meta?.npc) {
               return; // too close
             } else if (npc.isWalking(true)) {
               npc.extendNextWalk(datum);
             } else {
-              await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
+              await npc.walk(datum, { doorStrategy });
             }
           } catch (e) {
             if (w.lib.isCancelError(e) || opts.forever) {
-              api.verbose(/** @type {*} */(e)?.message ?? e);
+              api.verbose(e);
             } else {
               throw e;
             }
