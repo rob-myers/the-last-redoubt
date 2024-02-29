@@ -207,10 +207,10 @@ export default function NPCs(props) {
       process.onSuspends.push(() => { npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });
 
-      // kill on remove-npc 🚧 one sub elsewhere
+      // kill on remove-npc 🚧 create global sub elsewhere
       const subscription = this.events.subscribe({ next(x) {
         if (x.key === 'removed-npc' && x.npcKey === npcKey) {
-          processApi.kill(true); // must kill whole process group
+          processApi.kill({ group: true }); // must kill whole process group
           subscription.unsubscribe();
         }
       }});

@@ -625,13 +625,7 @@ class cmdServiceClass {
   killProcesses(
     sessionKey: string,
     pids: number[],
-    opts: {
-      STOP?: boolean;
-      CONT?: boolean;
-      /** Ctrl-C, originating from pid 0 */
-      SIGINT?: boolean;
-      group?: boolean;
-    } = {},
+    opts: KillOpts = {},
   ) {
     const session = useSession.api.getSession(sessionKey);
     for (const pid of pids) {
@@ -746,8 +740,8 @@ class cmdServiceClass {
       return isTtyAt(this.meta, fd);
     },
 
-    kill(group = false) {
-      cmdService.killProcesses(this.meta.sessionKey, [this.meta.pid], { group });
+    kill(opts: KillOpts) {
+      cmdService.killProcesses(this.meta.sessionKey, [this.meta.pid], opts);
     },
 
     observableToAsyncIterable,
@@ -1001,6 +995,14 @@ interface ChoiceReadValue {
   text: string;
   defaultValue?: any;
   secs?: number;
+}
+
+export interface KillOpts {
+  STOP?: boolean;
+  CONT?: boolean;
+  /** Ctrl-C, originating from pid 0 */
+  SIGINT?: boolean;
+  group?: boolean;
 }
 
 export const cmdService = new cmdServiceClass;
