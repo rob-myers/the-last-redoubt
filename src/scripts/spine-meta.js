@@ -107,7 +107,7 @@ const packedPadding = 2;
         const prev = motion.prevFootPos;
         const curr = motion.getFootPos();
         // console.log(Math.abs(curr.y - prev.y), prev, curr);
-        return precision(Math.abs(curr.y - prev.y) * npcScaleFactor, 4);
+        return precision(Math.abs(curr.y - prev.y) * npcScaleFactor, 8);
       },
       getFootPos() {
         const bone = spine.skeleton.findBone(`${motion.footDown}-shoe`);
