@@ -840,6 +840,7 @@ declare namespace NPC {
     | "sit"
     | "straight-to-idle"
     | "walk"
+    | "walk-alt"
   );
 
   type SpineHeadSkinName = (

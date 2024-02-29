@@ -147,7 +147,7 @@ const packedPadding = 2;
     const frameDurSecs = anim.duration / numFrames;
     const extremeFrames = /** @type {number[]} */ ([]);
 
-    if (animName === 'walk') {
+    if (['walk', 'walk-alt'].includes(animName)) {
       /**
        * Run through animation so `motion` initially setup.
        * 

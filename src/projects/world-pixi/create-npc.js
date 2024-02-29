@@ -310,8 +310,15 @@ export default function createNpc(def, api) {
         length: this.computeWayMetaLength(navMeta),
       }));
 
+      if (this.nextWalk) {
+        this.startAnimation(this.animName);
+      } else {
+        // this.startAnimation('walk');
+        // this.startAnimation('walk-alt');
+        this.startAnimation(Math.random() > 0.5 ? 'walk-alt' : 'walk');
+      }
+
       this.nextWalk = null;
-      this.startAnimation('walk');
 
       try {
         info(`followNavPath: ${this.key} started walk`);
@@ -460,7 +467,7 @@ export default function createNpc(def, api) {
       }
     },
     isWalking(requireMoving) {
-      return this.animName === 'walk'
+      return ['walk', 'walk-alt'].includes(this.animName)
         && this.resolveTransition === null // Avoids transition to idle
         && (!requireMoving || !this.isPaused());
     },
@@ -612,7 +619,7 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
     setupAnim(animName) {
-      if (animName === 'walk') {
+      if (['walk', 'walk-alt'].includes(animName)) {
         if (this.animName === animName) {
           // preserve walk
         } else {
@@ -708,6 +715,7 @@ export default function createNpc(def, api) {
           }
           break;
         case 'walk':
+        case 'walk-alt':
           break;
         default:
           throw testNever(animName, { suffix: 'create-npc.startAnimation' });
@@ -886,7 +894,7 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
-      if (this.animName !== 'walk' || this.resolveTransition) {
+      if (!['walk', 'walk-alt'].includes(this.animName) || this.resolveTransition) {
         return; // prevent concurrent transitions
       }
 

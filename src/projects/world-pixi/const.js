@@ -86,6 +86,7 @@ export const spineAnimSetup = {
   "straight-to-idle": { animName: 'straight-to-idle', numFrames: 10, headOrientKey: 'top', stationaryFps: 30 },
   lie: { animName: 'lie', numFrames: 1, headOrientKey: 'face', stationaryFps: 0 },
   walk: { animName: 'walk', numFrames: 30, headOrientKey: 'top', stationaryFps: 20 },
+  "walk-alt": { animName: 'walk-alt', numFrames: 30, headOrientKey: 'top', stationaryFps: 20 },
 };
 
 export const spineAnimNames = keys(spineAnimSetup);

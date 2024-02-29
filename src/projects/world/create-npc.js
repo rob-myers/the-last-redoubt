@@ -797,7 +797,8 @@ export default function createNpc(
         this.anim.sprites.cancel();
       }
       switch (this.anim.spriteSheet) {
-        case 'walk': {
+        case 'walk':
+        case 'walk-alt': {
           const { anim } = this;
           // this.el.root.getAnimations().forEach(x => x.cancel());
           isAnimAttached(anim.rotate, this.el.body) && anim.rotate.commitStyles(); // else sometimes jerky on start/end walk
