@@ -232,7 +232,7 @@ export default function NPCs(props) {
     connectNpcToProcess(processApi, npcKey) {
       const npc = state.getNpc(npcKey);
       const process = processApi.getProcess();
-      // 🔔 lookup cleaned on remove npc, but not process
+      // 🔔 lookup cleaned on remove npc, but not on remove process
       (state.npcProcs[npcKey] ??= []).push({
         npcKey, sessionKey: process.sessionKey, pid: process.key,
       });
@@ -253,7 +253,9 @@ export default function NPCs(props) {
             /** @param {[any, any]} args */
             return async function(...args) {
               if (target.forcePaused && !(key === 'cancel' && !!args[0])) {
-                await state.pauseConnectedProcess(processApi, npcKey);
+                // avoid e.g. following stale clicks when `click | walk foo`
+                // avoid stacks of promises
+                throw new Error('cancelled: npc is frozen');
               }
 
               if (key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
@@ -635,18 +637,6 @@ export default function NPCs(props) {
         throw Error(`npc ${input} lacks navigable near: ${JSON.stringify(point)}`);
       return point;
     },
-    pauseConnectedProcess(processApi, npcKey) {
-      return new Promise((resolve, reject) => {
-        const subscription = state.events.subscribe({ next(x) {
-          if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
-            resolve();
-            subscription.unsubscribe();
-          }
-        }});
-        processApi.addCleanup(() => reject(new Error(`cancelled: connected process (${npcKey})`)));
-        processApi.addCleanup(() => subscription.unsubscribe());
-      });
-    },
     async removeNpc(npcKey) {
       const npc = state.getNpc(npcKey); // throw if n'exist pas
       await npc.cancel();
@@ -862,7 +852,6 @@ export default function NPCs(props) {
  * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
- * @property {(processApi: ProcessApi, npcKey: string) => Promise<void>} pauseConnectedProcess
  * @property {(npcKey: string) => Promise<void>} removeNpc
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
