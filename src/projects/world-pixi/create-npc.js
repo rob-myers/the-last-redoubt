@@ -104,7 +104,7 @@ export default function createNpc(def, api) {
         throw Error('cancelled: opacity animation');
       }
     },
-    async animateRotate(targetRadians, durationMs, throwOnCancel) {
+    async animateRotate(targetRadians, durationMs) {
       this.a.rotate.stop();
 
       const srcRadians = this.getAngle();
@@ -480,8 +480,7 @@ export default function createNpc(def, api) {
         const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
         await this.animateRotate(
           targetRadians,
-          opts.ms ? opts.ms * geom.compareAngles(this.getAngle(), targetRadians) : 0,
-          true, // throw on cancel
+          (opts.ms ?? 0) * geom.compareAngles(this.getAngle(), targetRadians),
         );
       }
     },
@@ -555,7 +554,10 @@ export default function createNpc(def, api) {
         // Walk, [Turn], Do
         const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
         await this.walk(navPath);
-        typeof meta.orient === 'number' && await this.animateRotate((meta.orient + 90) * (Math.PI / 180), 100);
+        if (typeof meta.orient === 'number') {
+          const targetRadians = (meta.orient + 90) * (Math.PI / 180);
+          await this.animateRotate(targetRadians, 500 * geom.compareAngles(this.getAngle(), targetRadians));
+        }
         this.startAnimationByMeta(meta);
         return;
       }
@@ -889,7 +891,7 @@ export default function createNpc(def, api) {
       }
 
       this.framePtr = 0;
-      this.frameDurs = this.frameDurs.map(x => x * 1.5);
+      this.frameDurs = this.frameDurs.map(x => x * 1.2);
       
       // 🔔 assume "symmetric" walk-cycle
       const quarterFrames = [0.25, 0.5, 0.75].map(x => Math.ceil(x * this.tr.length));
