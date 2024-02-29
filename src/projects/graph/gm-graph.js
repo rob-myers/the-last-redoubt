@@ -202,7 +202,7 @@ export class gmGraphClass extends BaseGraph {
       // );
 
       // These segs are not perfect i.e. part of door will be covered
-      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], areaGm.doors[area.doorId].center));
+      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], areaGm.doors[area.doorId].center.clone()));
       const areaRoomId = area.hullRoomId ?? rootRoomId;
 
       const viewPositions = areaGm.getViewDoorPositions(areaRoomId, area.doorId);

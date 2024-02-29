@@ -294,7 +294,7 @@ export async function createLayout(opts) {
             behind: /** @type {[boolean, boolean]} */ (srcDoor.roomIds.map(srcRoomId => {
               if (srcRoomId !== null) {
                 const viewDir = srcDoor.normal.clone().scale(srcDoor.roomIds[0] === srcRoomId ? -1 : 1);
-                return doors[dstDoorId].center.sub(srcDoor.center).dot(viewDir) <= 0;
+                return doors[dstDoorId].center.clone().sub(srcDoor.center).dot(viewDir) <= 0;
               } else {
                 return false;
               }
