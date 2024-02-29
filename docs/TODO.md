@@ -29,12 +29,13 @@
       - frameMap `[18, 17, 16]`
       - ℹ️ fixed by setting `npc.frame` earlier in `npc.update`
 
-  - ✅ walkToIdle improvements
+  - 🚧 walkToIdle improvements
     - ✅ make walk more uniform
       - now 1st (2nd) half-cycle walks 20.6948 (20.6949)
     - ✅ can predict distance of any pseudo-idle
     - ✅ decided against more complex stopping animation
     - ✅ clean current approach 
+    - create half-stride walk i.e. `walk-shorter`
 
   - improve single-frame animation `lie`
     - gloves too white and small
@@ -49,7 +50,6 @@
   - extended walks should turn slower when do 180
   - improve transition `straight-to-idle`
     - e.g. initial pose hands should be further back?
-  - create alternative slow walk i.e. `shuffle-walk`
   
 
   - ✅ BUG animateRotate not always choosing smaller angle
