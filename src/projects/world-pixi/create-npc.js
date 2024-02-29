@@ -310,13 +310,9 @@ export default function createNpc(def, api) {
         length: this.computeWayMetaLength(navMeta),
       }));
 
-      if (this.nextWalk) {
-        this.startAnimation(this.animName);
-      } else {
-        // this.startAnimation('walk');
-        // this.startAnimation('walk-alt');
-        this.startAnimation(Math.random() > 0.5 ? 'walk-alt' : 'walk');
-      }
+      const animName = this.nextWalk ? this.animName : this.aux.total > 60 ? 'walk' : 'walk-alt';
+      if (animName === 'walk-alt') this.walkSpeed *= 0.8;
+      this.startAnimation(animName);
 
       this.nextWalk = null;
 
@@ -620,12 +616,12 @@ export default function createNpc(def, api) {
     },
     setupAnim(animName) {
       if (['walk', 'walk-alt'].includes(animName)) {
-        if (this.animName === animName) {
-          // preserve walk
-        } else {
-          this.time = 0; // 🚧 remove hard-coding:
-          this.frame = Math.random() > 0.5 ? 0 : 16;
+        if (this.animName !== animName) {
+          this.time = 0;
+          this.frame = Math.random() > 0.5 ? 0 : Math.ceil(tracks[animName].length / 2);
           // this.frame = 0; // deterministic during testing
+        } else {
+          // Preserve walk or walk-alt
         }
       } else {
         this.time = 0;
